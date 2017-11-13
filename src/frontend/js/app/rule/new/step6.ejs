@@ -1,0 +1,31 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form class="form-horizontal">
+            <div class="modal-header text-left">
+                <h4 class="modal-title">Template Options</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">You can optionally customise your notification.</p>
+
+                <%
+                var template = getTemplate();
+
+                _.map(template.default_options, function (val, key) {
+                    %>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"><%- niceVarName(key) %></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="<%- val %>" name="<%- key %>" value="">
+                        </div>
+                    </div>
+                    <%
+                });
+                %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-accent save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

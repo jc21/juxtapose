@@ -1,0 +1,32 @@
+#services {
+  .service .panel-body {
+    position: relative;
+    padding-left: 80px;
+    min-height: 70px;
+
+    img {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  .status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .status-online {
+    background-color: #32ce32;
+  }
+
+  .status-offline {
+    background-color: #ff5959;
+  }
+}

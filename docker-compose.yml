@@ -1,0 +1,28 @@
+version: "2"
+services:
+  app:
+    image: jc21/node
+    ports:
+      - ${HTTP_PORT}:80
+    environment:
+      - DEBUG=${DEBUG}
+      - NODE_ENV=${NODE_ENV}
+    volumes:
+      - .:/srv/app
+    depends_on:
+      - db
+    links:
+      - db
+    command: node --max_old_space_size=250 --abort_on_uncaught_exception node_modules/nodemon/bin/nodemon.js
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "juxtapose"
+      MYSQL_DATABASE: "juxtapose"
+      MYSQL_USER: "juxtapose"
+      MYSQL_PASSWORD: "juxtapose"
+    volumes:
+      - ./config/my.cnf:/etc/mysql/conf.d/juxtapose.cnf
+      - ./data/mysql:/var/lib/mysql
+      - ./data/initial-sql:/docker-entrypoint-initdb.d
+

@@ -1,0 +1,31 @@
+#rules {
+
+  .panel {
+    margin-bottom: 0;
+  }
+
+  .rule {
+    position: relative;
+    margin-bottom: 15px;
+
+    h4 .fa {
+      font-size: 12px;
+    }
+
+    .links {
+      font-size: 19px;
+      position: absolute;
+      right: 16px;
+      top: 14px;
+    }
+
+    .alert {
+      padding: 3px 5px;
+      margin-bottom: 10px;
+
+      a:link, & a:visited {
+        color: #ffe491;
+      }
+    }
+  }
+}

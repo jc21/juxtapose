@@ -1,0 +1,24 @@
+<aside class="navigation">
+    <nav>
+        <ul class="nav luna-nav">
+            <li>
+                <a href="#rules">Rules</a>
+            </li>
+
+            <% if (isAdmin()) { %>
+            <li>
+                <a href="#users">Users</a>
+            </li>
+            <li>
+                <a href="#services">Services</a>
+            </li>
+            <li>
+                <a href="#templates">Templates</a>
+            </li>
+            <% } %>
+            <li>
+                <a href="#notifications">Notification History</a>
+            </li>
+        </ul>
+    </nav>
+</aside>

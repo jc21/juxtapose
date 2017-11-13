@@ -1,0 +1,54 @@
+$pagination-background: lighten($background-color, 22%);
+
+.pagination {
+
+  > li {
+    > a,
+    > span {
+      //padding: $padding-base-vertical $padding-base-horizontal;
+      //line-height: $line-height-base;
+      color: $color-font;
+      background-color: transparent;
+      border: 1px solid lighten($background-color, 18%);
+    }
+  }
+
+  > li > a,
+  > li > span {
+    &:hover,
+    &:focus {
+      color: #ffffff;
+      background-color: rgba(red($pagination-background), green($pagination-background), blue($pagination-background), 0.1);
+      border-color: $pagination-background;
+    }
+  }
+
+  > .active > a,
+  > .active > span {
+    &,
+    &:hover,
+    &:focus {
+      color: #ffffff;
+      background-color: rgba(red($pagination-background), green($pagination-background), blue($pagination-background), 0.1);
+      border-color: $pagination-background;
+    }
+  }
+
+  > .disabled {
+    > span,
+    > span:hover,
+    > span:focus,
+    > a,
+    > a:hover,
+    > a:focus {
+      color: $color-font;
+      background-color: $color-accent;
+      border-color: lighten($background-color, 12%);
+    }
+  }
+
+  button.active, button.active:hover {
+    color: #fff;
+    background-color: $color-accent;
+  }
+}

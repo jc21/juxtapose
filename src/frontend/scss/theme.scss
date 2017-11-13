@@ -1,0 +1,45 @@
+//$color-accent: #f6a821; // Yellow
+$color-accent: #2684FF;
+$color-font: #333;
+
+$background-color: #eee;
+$background-light-color: #44464f;
+$form-control-light-color: #eee;
+$navigation-color: darken($background-color, 2%);
+$border-color: lighten($background-color, 6%);
+$color-placeholder: darken($color-font, 14%);
+
+$navigation-width: 200px;
+
+$color-headers: #333;
+$color-primary: #0F83C9;
+$color-info: #56C0E0;
+$color-warning: #f7af3e;
+$color-danger: #DB524B;
+$color-success: #1bbf89;
+
+$loader-bg: rgba(176, 176, 176, 0.43);
+$loader-fg: rgba(38, 132, 225, 1);
+
+@import "theme/loader";
+@import "theme/mixins/buttons";
+@import "theme/mixins/table-row";
+@import "theme/buttons";
+@import "theme/text";
+@import "theme/margins";
+@import "theme/base";
+@import "theme/navbar";
+@import "theme/nav";
+@import "theme/panels";
+@import "theme/pagination";
+@import "theme/progress";
+@import "theme/modals";
+@import "theme/fonts";
+@import "theme/timeline";
+@import "theme/nestable";
+@import "theme/tabs";
+@import "theme/tables";
+@import "theme/alerts";
+@import "theme/forms";
+@import "theme/pages/support";
+@import "theme/pages/flotcharts";

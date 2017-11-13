@@ -1,0 +1,304 @@
+.label-accent {
+  background-color: $color-accent;
+}
+
+
+body {
+  background: $background-color;
+  font-family: 'Roboto', sans-serif;
+  color: $color-font;
+
+  &#login {
+    background-color: transparent;
+  }
+}
+
+.content {
+  margin-top: 60px;
+  /*margin-left: $navigation-width;*/
+  position: relative;
+  /*padding: 30px;*/
+  transition: margin-left 0.3s ease-out;
+  -webkit-transition: margin-left 0.3s ease-out;
+/*
+  &:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: -2;
+    left: 0;
+    right:0;
+    background-image: -webkit-radial-gradient(top, circle cover, #393b45 0%, lighten($background-color,1%) 70%);
+    background-image: -moz-radial-gradient(center, circle cover, #393b45 0%, lighten($background-color,1%) 70%);
+    background-image: -o-radial-gradient(center, circle cover, #393b45 0%, lighten($background-color,1%) 70%);
+    background-image: radial-gradient(center, circle cover, #393b45 0%, lighten($background-color,1%) 70%);
+    background-position: 50%, 50%;
+  }
+*/
+}
+
+
+.navigation {
+  margin-top: 60px;
+  background-color: darken($background-color, 5%);;
+  width: $navigation-width;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  transition: left 0.3s ease-out;
+  -webkit-transition: left 0.3s ease-out;
+
+  /*
+  nav {
+    background-color: $navigation-color;
+  }
+  */
+
+  &:before {
+    transition: left 0.3s ease-out;
+    -webkit-transition: left 0.3s ease-out;
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    left: 0;
+    background-color: darken($background-color, 5%);
+    width: 200px;
+  }
+}
+
+.hostselect {
+  background-color: darken($background-color, 5%);;
+  width: $navigation-width;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  transition: left 0.3s ease-out;
+  -webkit-transition: left 0.3s ease-out;
+
+  .luna-nav.nav {
+    li.selected {
+      background-color: #98B643;
+      pointer-events: none;
+
+      a {
+        color: #fff;
+        pointer-events: none;
+      }
+
+      :before {
+        font-family: FontAwesome;
+        content: "\f061 ";
+        margin-left: -18px;
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+
+
+body.nav-toggle {
+  .content {
+    margin-left: 0;
+  }
+  .navigation {
+    left: -200px;
+
+    &:before {
+      left: -200px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .content {
+    margin-left: 0;
+    padding: 30px 0 10px 0;
+
+  }
+  .navigation {
+    left: -200px;
+    z-index: 2;
+
+    &:before {
+      left: -200px;
+    }
+  }
+
+  body.nav-toggle {
+    .content {
+      margin-left: 0;
+    }
+    .navigation {
+      left: 0;
+      z-index: 2;
+
+      &:before {
+        left: 0;
+      }
+    }
+  }
+}
+
+body.blank {
+  .content {
+    margin: 0;
+
+  }
+}
+
+.container-center {
+  max-width: 400px;
+  margin: 10% auto 0;
+  padding: 20px;
+
+
+  &.sm {
+    max-width: 200px;
+  }
+
+  &.md {
+    max-width: 600px;
+  }
+
+  &.lg {
+    max-width: 800px;
+  }
+
+}
+
+
+
+
+
+/* Various */
+
+
+a {
+  color: $color-accent;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    color: lighten($color-accent, 10%);
+    outline: none;
+  }
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid lighten($color-accent, 20%);
+}
+
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: $color-accent;
+  background-color: darken($background-color, 5%);
+  border-radius: 3px;
+}
+
+pre {
+  //padding: 2px 4px;
+  font-size: 90%;
+  color: $color-font;
+  background-color: darken($background-color, 5%);
+  border-radius: 3px;
+  border: none;
+}
+
+mark {
+  background-color: #e9e599;
+  border-radius: 2px;
+  padding: .1em .4em;
+}
+
+label {
+  color: $color-font;
+  font-weight: 500;
+}
+
+sup {
+  font-size: 12px;
+  top: -.8em;
+}
+
+.help-block {
+  color: darken($color-font, 15%);
+}
+
+.bs-example {
+  background-color: $background-color;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.show-grid [class^="col-"] {
+  background-color: $background-color !important;
+  border: 1px solid lighten($background-color, 6%);
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.slight {
+  font-size: 11px;
+  font-weight: 300;
+}
+
+.show-grid {
+  margin: 10px 0 !important;
+}
+
+.row {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Icons */
+
+.font-example-box:hover {
+  color: #ffffff;
+
+}
+
+.font-example-box {
+  text-align: center;
+  min-height: 90px;
+  margin: 10px 0;
+  font-size: 42px;
+}
+
+.font-example-box i {
+  font-size: 22px;
+}
+
+.icon-example-name {
+  display: block;
+  font-size: 11px;
+}
+
+.back-link {
+  float: left;
+  width: 100%;
+  margin: 10px;
+}
+
+/* UI Sortable */
+.ui-sortable .panel-body {
+  cursor: move;
+}
+
+.ui-sortable-placeholder {
+  border: 1px dashed lighten($border-color, 10%) !important;
+  visibility: visible !important;
+}

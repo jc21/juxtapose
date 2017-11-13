@@ -1,0 +1,71 @@
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  border-top: 1px solid $border-color;
+}
+
+.table > thead > tr > th {
+  border-bottom: none;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(red($background-light-color), green($background-light-color), blue($background-light-color), 0.5);
+}
+
+.table > thead > tr > td.active, .table > tbody > tr > td.active, .table > tfoot > tr > td.active, .table > thead > tr > th.active, .table > tbody > tr > th.active, .table > tfoot > tr > th.active, .table > thead > tr.active > td, .table > tbody > tr.active > td, .table > tfoot > tr.active > td, .table > thead > tr.active > th, .table > tbody > tr.active > th, .table > tfoot > tr.active > th {
+  background-color: lighten($background-light-color,2%);
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: lighten($background-light-color,2%);
+}
+
+.table-bordered, .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+  border-color: $border-color;
+}
+
+
+.panel-filled {
+  .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    border-color: lighten($border-color, 5%);
+  }
+
+  .table-bordered, .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border-color: lighten($border-color, 5%);
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: $background-light-color;
+  }
+
+  .table-hover > tbody > tr:hover {
+    background-color: lighten($background-light-color,2%);
+  }
+}
+
+th {
+  color: $color-font;
+}
+
+// Generate the contextual variants
+@include table-row-variant(success, $color-success);
+@include table-row-variant(info, $color-info);
+@include table-row-variant(warning, $color-warning);
+@include table-row-variant(danger, $color-danger);
+
+
+// DataTables copy info
+
+div.dt-button-info {
+  background-color: darken($background-color, 6%);
+  border-radius: 6px;
+  border: none;
+
+  h2 {
+    background-color: transparent;
+    border-color: $border-color;
+  }
+
+}
+
+.table-responsive {
+  border-color: lighten($border-color, 5%) !important;
+}

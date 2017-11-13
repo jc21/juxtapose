@@ -1,0 +1,73 @@
+.form-control {
+  color: $color-font;
+  border: none;
+  border-radius: 4px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
+  background-color: lighten($form-control-light-color, 2%);
+
+  &:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: darken($form-control-light-color, 10%);
+  opacity: 1;
+}
+
+.navbar-form .form-control {
+  background-color: #ffffff;
+}
+
+.has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label {
+  color: darken($color-success, 10%);
+}
+
+.has-warning .checkbox, .has-warning .checkbox-inline, .has-warning .control-label, .has-warning .help-block, .has-warning .radio, .has-warning .radio-inline, .has-warning.checkbox label, .has-warning.checkbox-inline label, .has-warning.radio label, .has-warning.radio-inline label {
+  color: darken($color-warning, 10%);
+}
+
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label {
+  color: darken($color-danger, 10%);
+}
+
+.has-success .form-control {
+  border-color: darken($color-success, 10%);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.has-warning .form-control {
+  border-color: darken($color-warning, 10%);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.has-error .form-control {
+  border-color: darken($color-danger, 10%);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.form-control-inline {
+  display: inline-block;
+}
+
+.input-group-addon {
+  border: none;
+}
+
+input:invalid, textarea:invalid {
+  border: 1px solid #f35b5b;
+}

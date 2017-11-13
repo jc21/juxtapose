@@ -1,0 +1,17 @@
+<div class="panel panel-filled">
+    <div class="panel-body">
+        <div class="status status-<%- online ? 'on' : 'off' %>line" title="<%- online ? 'On' : 'Off' %>line"></div>
+        <img src="images/services/<%- type %>.png" alt="<%- type %>" border="0">
+        <h4 class="m-b-none"><%- name %></h4>
+        <div>
+            <a href="#" class="edit">Edit</a>
+            <% if (type === 'slack') { %>
+                &mdash;
+                <a href="#" class="test">Test</a>
+            <% } else if (type === 'jira-webhook' || type === 'bitbucket-webhook') { %>
+                &mdash;
+                <a href="#" class="endpoint">View Endpoint</a>
+            <% } %>
+        </div>
+    </div>
+</div>

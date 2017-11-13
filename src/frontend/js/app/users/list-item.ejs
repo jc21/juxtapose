@@ -1,0 +1,10 @@
+<td width="30"><img src="<%- getAvatar() %>" border="0" class="img-circle" alt="" width="18"></td>
+<td class="text-white truncate"><a href="/user/<%- id %>" class="user-link<%- is_disabled ? ' text-strikethrough' : '' %>"><span title="<%- name %>"><%- name %></span></a></td>
+<td class="text-white truncate"><%- email %></td>
+<td class="text-white truncate"><%- roles.join(', ') %></td>
+<td class="text-white fixed-lg"><%- niceNumber(rule_count) %></td>
+<td class="text-white fixed-md text-right">
+    <button class="btn btn-xs btn-default btn-edit"><i class="fa fa-pencil" aria-hidden="true" title="Edit"></i></button>
+    <button class="btn btn-xs btn-default btn-password"><i class="fa fa-lock" aria-hidden="true" title="Change Password"></i></button>
+    <button class="btn btn-xs btn-default btn-service-settings"><i class="fa fa-cog" aria-hidden="true" title="Service Settings"></i></button>
+</td>

@@ -1,0 +1,137 @@
+.vertical-container {
+  /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
+  width: 98%;
+  //  max-width: 1170px;
+  margin: 0 auto;
+}
+.vertical-container::after {
+  /* clearfix */
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.v-timeline {
+  position: relative;
+  padding:0;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.v-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  height: 100%;
+  width: 4px;
+  background: $border-color;
+
+}
+
+.vertical-timeline-content .btn {
+  float: right;
+}
+
+.vertical-timeline-block {
+  position: relative;
+  margin: 2em 0;
+}
+.vertical-timeline-block:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.vertical-timeline-block:first-child {
+  margin-top: 0;
+}
+.vertical-timeline-block:last-child {
+  margin-bottom: 0;
+}
+
+.vertical-timeline-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 16px;
+  border: 1px solid $border-color;
+  text-align: center;
+  background: $background-color;
+  color: #ffffff;
+}
+.vertical-timeline-icon i {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin-left: -12px;
+  margin-top: -9px;
+}
+
+.vertical-timeline-content {
+  position: relative;
+  margin-left: 60px;
+  background-color: rgba(red($background-light-color), green($background-light-color), blue($background-light-color), 0.5);
+  border-radius: 0.25em;
+  border: 1px solid $border-color;
+}
+.vertical-timeline-content:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.vertical-timeline-content h2 {
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+
+.vertical-timeline-content p {
+  margin: 1em 0 0 0;
+  line-height: 1.6;
+}
+
+
+.vertical-timeline-content .vertical-date {
+  font-weight: 500;
+  text-align: right;
+  //font-size: 13px;
+}
+
+.vertical-date small {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.vertical-timeline-content:after, .vertical-timeline-content:before {
+  right: 100%;
+  top: 20px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.vertical-timeline-content:after {
+  border-color: transparent;
+  border-right-color: $border-color;
+  border-width: 10px;
+  margin-top: -10px;
+}
+
+.vertical-timeline-content:before {
+  border-color: transparent;
+  border-right-color: $border-color;
+  border-width: 11px;
+  margin-top: -11px;
+}
+
+.vertical-timeline-content h2 {
+  font-size: 16px;
+}

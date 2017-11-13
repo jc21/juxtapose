@@ -1,0 +1,144 @@
+.panel {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  color: $color-font;
+  border-radius: 3px;
+}
+
+.panel .panel-body {
+  padding: 5px 15px 10px 15px;
+}
+
+.panel.panel-filled .panel-body {
+  padding-top: 10px;
+}
+
+.panel .panel-footer {
+  background-color: transparent;
+  border: none;
+}
+
+.panel > .panel-heading {
+  color: #ffffff;
+}
+
+.panel-tools {
+  display: inline-block;
+  float: right;
+  margin-top: 0;
+  padding: 0;
+  position: relative;
+}
+
+.panel-tools a {
+  margin-left: 2px;
+  color: $color-font;
+  cursor: pointer;
+
+  &:hover {
+    color: #ffffff;
+  }
+}
+
+.panel.panel-c-white {
+  border-left: 3px solid $color-font;
+}
+
+.panel.panel-c-accent {
+  border-left: 3px solid $color-accent;
+}
+
+.panel.panel-c-primary {
+  border-left: 3px solid $color-primary;
+}
+
+.panel.panel-c-warning {
+  border-left: 3px solid $color-warning;
+}
+
+.panel.panel-c-info {
+  border-left: 3px solid $color-info;
+}
+
+.panel.panel-c-success {
+  border-left: 3px solid $color-success;
+}
+
+.panel.panel-c-danger {
+  border-left: 3px solid $color-danger;
+}
+
+.panel.panel-b-accent {
+  background-color: $color-accent;
+  color: #ffffff;
+}
+
+
+.panel.panel-b-white {
+  background-color: white;
+
+  color: darken($color-font, 20%);
+
+  .panel-heading {
+    color: darken($color-font, 20%);
+  }
+
+  .panel-footer {
+    color: darken($color-font, 20%);
+  }
+}
+
+
+.panel.panel-filled {
+  background-color: rgba(red($background-light-color), green($background-light-color), blue($background-light-color), 0.1);
+}
+
+.panel.panel-white {
+  background-color: #fff;
+}
+
+
+.view-header {
+
+  /*margin: 20px 0;*/
+  min-height: 20px;
+  padding: 0 15px;
+
+  .header-icon {
+    font-size: 60px;
+    color: $color-accent;
+
+    width: 68px;
+    float: left;
+
+    margin-top: -8px;
+    line-height: 0;
+  }
+
+  .header-title {
+
+    h3 {
+      margin-bottom: 2px;
+    }
+
+  }
+
+
+}
+
+.panel.collapsed .panel-body, .panel.collapsed .panel-footer {
+  display: none;
+}
+
+.panel.collapsed .fa.fa-chevron-up:before {
+  content: "\f078";
+}
+.panel.collapsed .fa.fa-chevron-down:before {
+  content: "\f077";
+}
+
+.header-title a.pull-right {
+  margin-left: 10px;
+}

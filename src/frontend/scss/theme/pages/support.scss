@@ -1,0 +1,27 @@
+.support-question {
+
+  a {
+    color: $color-font;
+
+    &:hover {
+      //color: #ffffff;
+      text-decoration: none;
+    }
+
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &:hover {
+    background-color: rgba(red($background-light-color), green($background-light-color), blue($background-light-color), 0.7);
+  }
+
+  &.active {
+    border-left: 3px solid $color-accent;
+
+    .panel-body {
+      padding-left: 13px;
+    }
+  }
+}

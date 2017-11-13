@@ -1,0 +1,70 @@
+@mixin button-active-background($color) {
+  background-color: rgba(red($color), green($color),blue($color), 0.1);
+}
+
+@mixin button-variant($color, $background, $button-color) {
+  color: $color;
+  background-color: $background;
+  border-color: $button-color;
+
+
+  &:focus,
+  &.focus {
+    color: #ffffff;
+    @include button-active-background($button-color);
+    border-color: $button-color;
+    outline: 0;
+    box-shadow: none;
+  }
+  &:hover {
+    color: #ffffff;
+    @include button-active-background($button-color);
+    border-color: $button-color;
+  }
+  &:active,
+  &.active,
+  .open > .dropdown-toggle {
+    color: #ffffff;
+    @include button-active-background($button-color);
+    border-color: $button-color;
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: #ffffff;
+      @include button-active-background($button-color);
+      border-color: lighten($button-color,10%);
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+  &:active,
+  &.active,
+  .open > .dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      @include button-active-background($button-color);
+      border-color: $button-color;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
+}
+
+.btn {
+
+  &:active,
+  &.active {
+    box-shadow: none;
+  }
+
+}

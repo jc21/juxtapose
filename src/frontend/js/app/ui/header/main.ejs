@@ -1,0 +1,41 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div id="mobile-menu">
+                <div class="left-nav-toggle">
+                    <a href="#">
+                        <i class="stroke-hamburgermenu"></i>
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-brand" href="#rules">
+                <img src="images/logo.png" border="0">
+            </a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+            <div class="left-nav-toggle">
+                <a href="">
+                    <i class="stroke-hamburgermenu"></i>
+                </a>
+            </div>
+
+            <h2>Juxtapose</h2>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown profil-link">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="profile-address"><%- getName() %></span>
+                        <img src="<%- getAvatar() %>" border="0" class="img-circle" alt="">
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="profile-link">Profile Settings</a></li>
+                        <li><a href="#" class="services-link">Service Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" class="logout-link">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

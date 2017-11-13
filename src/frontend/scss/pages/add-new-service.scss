@@ -1,0 +1,24 @@
+#add-new-service {
+  .service-item {
+    text-align: center;
+    border-radius: 4px;
+    padding: 10px 5px 5px 5px;
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+
+    &.disabled img {
+      filter: grayscale(100%);
+    }
+
+    &.selectable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($background-color, 15%);
+      }
+    }
+  }
+}

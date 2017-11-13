@@ -1,0 +1,66 @@
+/* Progress bar */
+
+.progress {
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  background-color: $background-color;
+  text-align: right;
+  padding-right: 10px;
+  color: $color-font;
+}
+
+.progress-small, .progress-small .progress-bar {
+  height: 10px;
+}
+
+.progress-bar-primary {
+  border-right: 4px solid darken($color-primary, 5%);
+}
+
+.progress-bar-success {
+  border-right: 4px solid darken($color-success, 5%);
+}
+
+.progress-bar-info {
+  border-right: 4px solid darken($color-primary, 5%);
+}
+
+.progress-bar-warning {
+  border-right: 4px solid darken($color-warning, 5%);
+}
+
+.progress-bar-danger {
+  border-right: 4px solid darken($color-danger, 5%);
+}
+
+.full .progress-bar-success {
+  background-color:  $color-success;
+  border-right: 4px solid darken($color-success, 5%);
+}
+
+.full .progress-bar-info {
+  background-color:  $color-primary;
+  border-right: 4px solid darken($color-primary, 5%);
+}
+
+.full .progress-bar-warning {
+  background-color:  $color-warning;
+  border-right: 4px solid darken($color-warning, 5%);
+}
+
+.full .progress-bar-danger {
+  background-color:  $color-danger;
+  border-right: 4px solid darken($color-danger, 5%);
+}
+
+.full .progress-bar-primary {
+  background-color:  $color-primary;
+  border-right: 4px solid darken($color-primary, 5%);
+}
+
+.full .progress-bar {
+  color: #ffffff;
+}

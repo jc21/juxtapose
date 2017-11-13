@@ -1,0 +1,31 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form class="form-horizontal">
+            <div class="modal-header text-left">
+                <h4 class="modal-title">Select a Trigger Event</h4>
+            </div>
+            <div class="modal-body">
+                <%
+                var triggers = getTriggers();
+                for (var i = 0; i < triggers.length; i++) {
+                    %>
+                    <h5><%- triggers[i].name %></h5>
+                    <ul>
+                        <%
+                        for (var j = 0; j < triggers[i].events.length; j++) {
+                            %>
+                            <li><a href="#" class="trigger" data-trigger="<%- triggers[i].events[j].type %>"><%- triggers[i].events[j].name %></a></li>
+                            <%
+                        }
+                        %>
+                    </ul>
+                    <%
+                }
+                %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+#add-new-rule, #add-new-rule4 {
+  .service-item {
+    text-align: center;
+    border-radius: 4px;
+    padding: 10px 5px 5px 5px;
+
+    img {
+      width: 60px;
+      height: 60px;
+    }
+
+    &.selectable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($background-color, 15%);
+      }
+    }
+  }
+}
+
+#add-new-rule5 {
+  .modal-dialog {
+    width: 800px;
+  }
+
+  .panel.panel-white {
+    border: 2px solid white;
+
+    &:hover {
+      cursor: pointer;
+      border: 2px solid #09e6ca;
+    }
+  }
+}

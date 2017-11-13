@@ -1,0 +1,70 @@
+h1, h2, h3, h4, h5, h6 {
+  color: $color-headers;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 10px;
+}
+
+.c-accent {
+  color: $color-accent;
+}
+
+.c-white {
+  color: #FFFFFF;
+}
+
+.c-text {
+  color: $color-font;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.font-extra-bold {
+  font-weight: 700;
+}
+
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
+  color: lighten($color-font, 6%);
+}
+
+.label-default {
+  background-color: $background-light-color;
+}
+
+.label-primary {
+  background-color: $color-primary;
+}
+
+.label-success {
+  background-color: $color-success;
+}
+
+.label-info {
+  background-color: $color-info;
+}
+
+.label-warning {
+  background-color: $color-warning;
+}
+
+.label-danger {
+  background-color: $color-danger;
+}
+
+.badge {
+  background-color: transparent;
+  border: 1px solid $background-light-color;
+  font-weight: 300;
+  color: lighten($background-light-color, 40%);
+}

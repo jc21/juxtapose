@@ -1,0 +1,77 @@
+.luna-nav.nav {
+
+  padding-top: 15px;
+
+  li > a,
+  .nav-category {
+    padding: 8px 15px 8px 25px;
+    margin: 0 0;
+  }
+
+  .nav-info {
+
+
+    // Only for demo purpose
+    margin-top: 50px;
+
+    padding: 20px 25px 25px 25px;
+    font-size: 12px;
+    background-color: darken($background-color, 5%);
+
+    i {
+      font-size: 34px;
+    }
+
+  }
+
+  .nav-second li > a {
+    padding-left: 40px;
+  }
+
+  li.active .nav-second li > a {
+    padding-left: 40px;
+    border-left: none;
+    color: lighten($color-placeholder, 8%);
+  }
+
+  li.active .nav-second li.active a {
+    padding-left: 34px;
+    border-left: 6px solid darken($color-accent, 15%);
+    color: lighten($color-placeholder, 30%);
+  }
+
+  li.active .nav-second li a:hover {
+    color: lighten($color-placeholder, 30%);
+  }
+
+  li > a {
+    color: lighten($color-placeholder, 8%);
+  }
+
+  li.active a {
+    border-left: 6px solid $color-accent;
+    padding-left: 19px;
+    color: lighten($color-placeholder, 30%);
+  }
+
+  li a:hover,
+  li a:focus {
+    color: lighten($color-placeholder, 30%);
+    background: inherit;
+  }
+
+  .nav-category {
+    color: #FFFFFF;
+    margin-top: 10px;
+
+  }
+
+  .sub-nav-icon {
+    float: right;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+}

@@ -1,0 +1,193 @@
+#app {
+
+  &.loading {
+    min-height: 400px;
+    overflow: hidden;
+
+    .loader {
+      display: block;
+    }
+  }
+
+  #main {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+    &.full-ui {
+      margin: 80px 10px 10px 220px;
+    }
+  }
+
+  section {
+    display: block;
+
+    &.loading {
+      min-height: 400px;
+    }
+  }
+
+  #header {
+    .title {
+      font-size: 28px;
+      padding-top: 8px;
+    }
+  }
+
+  div.pagination {
+    display: block;
+    margin: 0 auto 10px auto;
+    text-align: center;
+  }
+
+  .panel {
+    &.loading {
+      min-height: 200px;
+      background: url('/images/ring.gif') 50% 50% no-repeat;
+
+      &.panel-filled {
+        background-color: rgba(68, 70, 79, .5);
+      }
+    }
+  }
+
+  .panel .table > tbody > tr > td {
+    border-color: lighten($background-light-color, 55%);
+  }
+
+  .panel-filled .table > tbody > tr > td {
+    border-color: lighten($background-light-color, 40%);
+  }
+
+  table {
+    thead tr {
+      th {
+        a {
+          color: $color-font;
+
+          &:hover {
+            color: lighten($color-font, 20%);
+          }
+        }
+
+        &.sort-asc a:after {
+          font-family: FontAwesome;
+          content: "\f0d8";
+          padding-left: 4px;
+          color: #aaa;
+        }
+
+        &.sort-desc a:after {
+          font-family: FontAwesome;
+          content: "\f0d7";
+          padding-left: 4px;
+          color: #aaa;
+        }
+      }
+    }
+
+    tbody tr {
+      td {
+
+        &.truncate {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: table-cell;
+          max-width: 100px; /* the value of this doesn't seem to matter */
+        }
+
+        &.fixed-xs {
+          width: 20px;
+          max-width: 20px;
+        }
+
+        &.fixed-sm {
+          width: 50px;
+          max-width: 50px;
+        }
+
+        &.fixed-md {
+          width: 100px;
+          max-width: 100px;
+        }
+
+        &.fixed-lg {
+          width: 150px;
+          max-width: 150px;
+        }
+
+        &.fixed-xl {
+          width: 250px;
+          max-width: 250px;
+        }
+      }
+    }
+  }
+
+  .disabled-overlay {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .input-group-addon {
+    background-color: #494b54;
+    border: none;
+
+    &:last-child {
+      border-left: 1px solid #545660;
+    }
+  }
+
+  .panel-body.popular_tags {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+    padding-left: 10px;
+
+    > div {
+      font-size: 11px;
+      display: inline-block;
+      color: #333;
+      margin-right: 5px;
+      padding: 0;
+
+      > .count {
+        padding: 2px 5px;
+        border-radius: 2px 0 0 2px;
+        display: inline-block;
+        border-right: 1px solid #333;
+        background-color: #c3dc7d;
+      }
+
+      > .tag {
+        padding: 2px 5px;
+        border-radius: 0 2px 2px 0;
+        display: inline-block;
+        background-color: #e5f7b2;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  #app #main.full-ui {
+    margin-left: 10px;
+  }
+}
+
+.clear {
+  clear: both;
+}
+
+ul.clean {
+  list-style: none;
+  padding-left: 22px;
+
+  li label {
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+}

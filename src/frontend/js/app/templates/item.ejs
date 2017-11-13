@@ -1,0 +1,15 @@
+<h4>
+    <img src="images/services/<%- in_service_type %>.png" alt="<%- in_service_type %>" title="<%- in_service_type %>" border="0" width="20" height="20">
+    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+    <img src="images/services/<%- service_type %>.png" alt="<%- service_type %>" border="0" width="20" height="20"> <%- name %>
+    <small class="pull-right"><!--<i class="fa fa-telegram" aria-hidden="true"></i> <%- in_service_type %> &nbsp; --><i class="fa fa-tags" aria-hidden="true"></i> <%- event_types.join(', ') %></small>
+</h4>
+<div class="panel panel-filled">
+    <div class="panel-body">
+        <%= getPreview() %>
+        <div class="links">
+            <a href="#" class="edit">Edit</a>
+        </div>
+    </div>
+</div>
+

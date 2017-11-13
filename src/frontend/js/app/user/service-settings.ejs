@@ -1,0 +1,60 @@
+<%
+var services = getServices();
+%>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form class="form-horizontal">
+            <div class="modal-header text-left">
+                <h4 class="modal-title">Service Settings for <%- name %></h4>
+            </div>
+            <div class="modal-body">
+                <% if (services.length) { %>
+                    <dl>
+                        <% _.each(services, function (service) { %>
+                            <h4>
+                                <img src="images/services/<%- service.type %>.png" width="20" alt="<%- service.type %>">
+                                <%- service.name %>
+                            </h4>
+                            <div class="row">
+                                <% if (service.type === 'slack') { %>
+                                    <div class="col-md-4 text-right field-label">
+                                        Slack Username:
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">@</div>
+                                            <input type="text" class="form-control" name="settings[<%- service.id %>][username]" value="<%- getServiceSetting(service.id, 'username') %>">
+                                        </div>
+                                    </div>
+                                <% } else if (service.type === 'jira-webhook') { %>
+                                    <div class="col-md-4 text-right field-label">
+                                        Jira Username:
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="settings[<%- service.id %>][username]" value="<%- getServiceSetting(service.id, 'username') %>">
+                                    </div>
+                                <% } else if (service.type === 'bitbucket-webhook') { %>
+                                    <div class="col-md-4 text-right field-label">
+                                        Bitbucket Username:
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="settings[<%- service.id %>][username]" value="<%- getServiceSetting(service.id, 'username') %>">
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% }); %>
+                    </dl>
+                <% } else { %>
+                    <p class="text-center">There are no services to configure.</p>
+                <% } %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <% if (services.length) { %>
+                    <button type="submit" class="btn btn-accent save">Save</button>
+                <% } %>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+.navbar {
+  min-height: 60px;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:focus {
+  width: $navigation-width;
+  background-color: $color-accent;
+  height: 60px;
+  padding: 0;
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: #FFFFFF;
+}
+
+.navbar-default .navbar-brand {
+  color: #FFFFFF;
+  text-align: center;
+}
+
+/*
+.navbar-default .navbar-brand:hover {
+  color: #FFFFFF;
+  background-color: darken($color-accent, 3%);
+}
+*/
+
+.navbar-brand span {
+  letter-spacing: normal;
+  float: right;
+  font-size: 12px;
+  margin-left: -15px;
+  color: lighten($color-accent, 30%);
+
+}
+
+.navbar-default {
+  border-bottom: none;
+  background-color: $color-accent;//#FFFFFF;
+}
+
+.left-nav-toggle {
+  float: left;
+  padding: 9px 10px 8px 25px;
+
+  &:hover a {
+    color: $color-accent;
+  }
+}
+
+.left-nav-toggle a {
+  font-size: 30px;
+  color: $color-font;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: darken($color-font,16%);
+}
+
+.left-nav-toggle a:hover,
+.left-nav-toggle a:focus {
+  text-decoration: none;
+}
+
+.navbar-form {
+  margin-top: 11px;
+  padding: 0;
+}
+
+.navbar-form input.form-control {
+  border: none;
+  box-shadow: none;
+  color: $color-font;
+}
+
+.navbar-form input.form-control::-webkit-input-placeholder {
+  color: $color-placeholder;
+}
+
+.navbar-form input.form-control:-moz-placeholder {
+  color: $color-placeholder;
+}
+
+.navbar-form input.form-control::-moz-placeholder {
+  color: $color-placeholder;
+}
+
+.navbar-form input.form-control:-ms-input-placeholder {
+  color: $color-placeholder;
+}
+
+
+
+.navbar-nav > li > a {
+  padding: 20px 15px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.navbar-nav > li:first-child > a {
+  padding-left: 0;
+}
+
+.navbar-nav > li:last-child > a {
+  padding: 10px 25px 10px 15px;
+}
+
+.navbar-nav.navbar-right a .label {
+  margin: -5px 0 0 5px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: $form-control-light-color;
+  text-transform: none;
+
+  &:hover, &:visited, &:active, &:focus {
+    color: $form-control-light-color;
+  }
+
+  &:hover, &:active {
+    background-color: lighten($color-accent, 5%);
+  }
+}
+
+.navbar-default .navbar-nav > .open > a {
+  background-color: lighten($color-accent, 5%);
+  color: $form-control-light-color;
+
+  &:hover, &:focus, &:active {
+    background-color: lighten($color-accent, 5%);
+    color: $form-control-light-color;
+  }
+}
+
+.profil-link {
+  //padding: 10px 15px;
+  cursor: pointer;
+  color: $form-control-light-color;
+
+  img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+  }
+}
+
+#mobile-menu {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  #mobile-menu {
+    display: block;
+  }
+}
+
+#mobile-menu {
+
+  float: right;
+
+  .left-nav-toggle {
+    padding-right: 25px;
+  }
+}
+
+#navbar h2 {
+  color: $form-control-light-color;
+  font-size: 24px;
+  line-height: 38px;
+  position: absolute;
+  left: 200px;
+  top: 0;
+}

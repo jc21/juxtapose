@@ -1,0 +1,106 @@
+<% if (service_type === 'slack' ) { %>
+    <div class="template-slack-preview">
+        <div class="message_gutter">
+            <div class="message_icon">
+                <% if (typeof preview.icon_url !== 'undefined') { %>
+                    <img src="<%- preview.icon_url %>">
+                <% } else { %>
+                    <img src="https://public.jc21.com/jira-notify/apple-icon.png">
+                <% } %>
+            </div>
+        </div>
+        <div class="message_content">
+            <div class="message_content_header">
+                <div class="message_content_header_left">
+                    <span class="message_sender color_bot_Your_App">
+                        <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
+                        <span class="bot_label">APP</span>
+                    </span>
+                    <span class="time_star_and_extra_metadata">
+                        <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
+                    </span>
+                </div>
+            </div>
+
+            <% if (typeof preview.text !== 'undefined' ) { %>
+                <div class="text">
+                    <%= preview.text.replace(/(?:^| )```((.|\n)*)```/gim, "<pre>$1</pre>") %>
+                </div>
+            <% } %>
+
+            <%
+            if (typeof preview.attachments !== 'undefined' && preview.attachments.length ) {
+                for (var i = 0; i < preview.attachments.length; i++) {
+                    %>
+                    <div class="attachment" style="<%- typeof preview.attachments[i].color !== 'undefined' ? 'border-left-color:' + preview.attachments[i].color : (typeof default_options.panel_color !== 'undefined' ? 'border-left-color:' + default_options.panel_color : '') %>">
+                        <% if (typeof preview.attachments[i].author_name !== 'undefined') { %>
+                            <div class="author">
+                                <%- preview.attachments[i].author_name %>
+                            </div>
+                        <% } %>
+
+                        <% if (typeof preview.attachments[i].title !== 'undefined') { %>
+                            <div class="attachment_title">
+                                <%= preview.attachments[i].title %>
+                            </div>
+                        <% } %>
+
+                        <% if (typeof preview.attachments[i].text !== 'undefined') { %>
+                            <div class="attachment_text">
+                                <%= preview.attachments[i].text %>
+                            </div>
+                        <% } %>
+
+                        <% if (typeof preview.attachments[i].fields !== 'undefined' && preview.attachments[i].fields.length) {
+                            var cell_number = 0;
+                            %>
+                            <table border="0" width="100%">
+                                <%
+                                for (var j = 0; j < preview.attachments[i].fields.length; j++) {
+                                    if (typeof preview.attachments[i].fields[j].short === 'undefined' || preview.attachments[i].fields[j].short) {
+                                        if (cell_number > 1) {
+                                            cell_number = 0;
+                                            %>
+                                            </tr>
+                                            <%
+                                        }
+                                    }
+
+                                    if (cell_number === 2) {
+                                        cell_number = 0;
+                                        %>
+                                        </tr>
+                                        <%
+                                    }
+
+                                    if (cell_number === 0) {
+                                        %>
+                                        <tr>
+                                        <%
+                                    }
+
+                                    cell_number++;
+
+                                    %>
+                                    <td<%- typeof preview.attachments[i].fields[j].short !== 'undefined' && preview.attachments[i].fields[j].short ? ' width="50%"' : '' %>>
+                                        <% if (typeof preview.attachments[i].fields[j].title !== 'undefined') { %>
+                                            <div class="attachment_title"><%= preview.attachments[i].fields[j].title %></div>
+                                        <% } %>
+                                        <% if (typeof preview.attachments[i].fields[j].value !== 'undefined') { %>
+                                            <%= preview.attachments[i].fields[j].value %>
+                                        <% } %>
+                                    </td>
+                                    <%
+                                }
+                                %>
+                                </tr></table>
+                            <%
+                        } %>
+                    </div>
+                    <%
+                }
+            }
+            %>
+        </div>
+    </div>
+<% } %>

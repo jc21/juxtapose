@@ -1,0 +1,24 @@
+<h4>
+    <img src="images/services/<%- rule.in_service.type %>.png" alt="<%- rule.in_service.name %>" title="<%- rule.in_service.name %>" border="0" width="20" height="20">
+    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+    <img src="images/services/<%- service.type %>.png" alt="<%- service.name %>" title="<%- service.name %>" border="0" width="20" height="20">
+    &nbsp;&nbsp;
+    <%- getTriggerName() %>
+</h4>
+<div class="panel panel-filled sortable-handle" rel="<%- id %>">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-7 col-sm-6 col-xs-12">
+                <p>Created: <%- shortDate(created_on) %></p>
+                <p>Status: <%- status %></p>
+            </div>
+            <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="panel panel-white">
+                    <div class="panel-body">
+                        <%= getPreview() %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

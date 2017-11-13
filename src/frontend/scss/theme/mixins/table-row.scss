@@ -1,0 +1,31 @@
+@mixin row-active-background($color) {
+  background-color: rgba(red($color), green($color), blue($color), 0.2);
+}
+
+@mixin table-row-variant($state, $background) {
+  .table > thead > tr,
+  .table > tbody > tr,
+  .table > tfoot > tr {
+    /*
+    > td#{$state},
+    > th.$state,
+    &.$state > td,
+    &.$state > th {
+      @include row-active-background($background);
+      border: none;
+    }
+    */
+  }
+
+  .table-hover > tbody > tr {
+    /*
+    > td.$state:hover,
+    > th.$state:hover,
+    &.$state:hover > td,
+    &:hover > .$state,
+    &.$state:hover > th {
+      background-color: darken($background, 5%);
+    }
+    */
+  }
+}

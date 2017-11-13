@@ -1,0 +1,40 @@
+<div class="links">
+    <a href="#" class="delete" title="Delete Rule"><i class="fa fa-times" aria-hidden="true"></i></a>
+</div>
+<h4>
+    <img src="images/services/<%- in_service.type %>.png" alt="<%- in_service.name %>" title="<%- in_service.name %>" border="0" width="20" height="20">
+    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+    <img src="images/services/<%- out_service.type %>.png" alt="<%- out_service.name %>" title="<%- out_service.name %>" border="0" width="20" height="20">
+    &nbsp;&nbsp;
+    <%- getTriggerName() %>
+</h4>
+<div class="panel panel-filled sortable-handle" rel="<%- id %>">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-7 col-sm-6 col-xs-12">
+                <% if (!isUserSetup()) { %>
+                    <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> You must set your <a href="#" class="service-settings">Service Settings</a> for this rule to be enabled!</div>
+                <% } %>
+
+                <p>Created <%- shortDate(created_on) %></p>
+                <p>Fired <%- niceNumber(fired_count) %> times</p>
+
+                <div class="conditions">
+                    <% _.map(extra_conditions, function (val, key) {
+                        %>
+                        <span class="label label-success"><%- niceVarName(key) %>: <%- val %></span>
+                        <%
+                    }) %>
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="panel panel-white">
+                    <div class="template-preview-title">Preview</div>
+                    <div class="panel-body">
+                        <%= getPreview() %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

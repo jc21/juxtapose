@@ -1,0 +1,73 @@
+<div class="modal-dialog" style="width: 1000px;">
+    <div class="modal-content">
+        <form class="form">
+            <div class="modal-header text-left">
+                <h4 class="modal-title"><% if (typeof id !== 'undefined') { %>Edit<% } else { %>New<% } %> Slack Message Template</h4>
+            </div>
+            <div class="modal-body has-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Message Template</a></li>
+                    <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Default Options</a></li>
+                    <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Example Data</a></li>
+                    <li role="presentation"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">Compatible Events</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="tab1">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" placeholder="" name="name" value="<%- name %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Message Content</label>
+                            <textarea name="content" class="form-control text-code" rows="16" required><%- JSON.stringify(content, null, 2) %></textarea>
+                            <!--<small><i class="fa fa-tags" aria-hidden="true"></i> jira_summary, jira_description</small><br>-->
+                            <small>Tip: Use the <a href="https://api.slack.com/docs/messages/builder" target="_blank">Slack Message Builder</a></small>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="tab2">
+                        <div class="form-group">
+                            <label>Default Options</label>
+                            <textarea name="default_options" class="form-control text-code" rows="20" required><%- JSON.stringify(default_options, null, 2) %></textarea>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="tab3">
+                        <div class="form-group">
+                            <label>Example Data</label>
+                            <textarea name="example_data" class="form-control text-code" rows="20" required><%- JSON.stringify(example_data, null, 2) %></textarea>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="tab4">
+                        <%
+                        var triggers = getTriggers();
+                        for (var i = 0; i < triggers.length; i++) {
+                            %>
+                            <h5><%- triggers[i].name %></h5>
+                            <ul class="clean">
+                                <%
+                                for (var j = 0; j < triggers[i].events.length; j++) {
+                                    %>
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="event_types[]" value="<%- triggers[i].events[j].type %>"<%- event_types.indexOf(triggers[i].events[j].type) !== -1 ? ' checked' : '' %>>
+                                            <%- triggers[i].events[j].name %>
+                                        </label>
+                                    </li>
+                                    <%
+                                }
+                                %>
+                            </ul>
+                            <%
+                        }
+                        %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <% if (typeof id !== 'undefined') { %><button type="button" class="btn btn-danger delete pull-left">Delete</button><% } %>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-accent save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

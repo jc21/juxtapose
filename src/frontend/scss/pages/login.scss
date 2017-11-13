@@ -1,0 +1,24 @@
+#login {
+  overflow: hidden;
+
+  #wrap {
+    position: absolute;
+    z-index: 5;
+    width: 100%;
+  }
+
+  .header-icon {
+    width: 48px;
+  }
+
+  .error {
+    text-align: center;
+    padding: 5px 0;
+    color: darken($color-danger, 20%);
+  }
+
+  .dictionary {
+    opacity: 0.4;
+    margin-top: 40px;
+  }
+}

@@ -1,0 +1,56 @@
+.modal-content {
+
+  background-color: darken($background-color, 6%);
+
+  .modal-title {
+    font-size: 22px;
+  }
+
+  .modal-header {
+    border-color: $border-color;
+    background-color: $color-accent;
+    padding: 15px 20px;
+    color: $form-control-light-color;
+
+    h4 {
+      color: $form-control-light-color;
+    }
+  }
+
+  .modal-body {
+    padding: 40px;
+
+    &.no-padding {
+      padding: 0;
+    }
+
+    &.has-tabs {
+      padding: 0;
+
+      .nav-tabs {
+        background-color: #d2d2d2;
+        border-bottom: 1px solid #fff;
+
+        & > li > a {
+          border-radius: 0;
+        }
+      }
+
+      .tab-content {
+        padding: 10px 20px;
+      }
+    }
+  }
+
+  .modal-footer {
+    border-color: $border-color;
+    background-color: darken($background-color, 15%);
+    padding: 20px;
+  }
+
+}
+
+.modal-backdrop.in {
+  filter: alpha(opacity=25);
+  opacity: .25;
+}

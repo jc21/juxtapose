@@ -1,0 +1,10 @@
+{
+  "database": {
+    "engine": "mysql",
+    "host": "db",
+    "name": "juxtapose",
+    "user": "juxtapose",
+    "password": "juxtapose",
+    "port": 3306
+  }
+}

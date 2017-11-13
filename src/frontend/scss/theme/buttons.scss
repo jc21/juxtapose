@@ -1,0 +1,78 @@
+.btn {
+  color: inherit;
+  background-color: transparent;
+}
+
+.buttons-margin .btn {
+  margin-bottom: 5px;
+}
+
+.btn-default {
+  border-color: lighten($background-color, 18%);
+}
+
+.btn {
+
+  &.btn-w-sm {
+    min-width: 80px;
+  }
+
+  &.btn-w-md {
+    min-width: 120px;
+  }
+
+  &.btn-w-lg {
+    min-width: 160px;
+  }
+
+  &.btn-rounded {
+    border-radius: 50px;
+  }
+
+  &.btn-squared {
+    border-radius: 0;
+  }
+
+}
+
+.btn-accent {
+  @include button-variant($color-font, transparent, $color-accent);
+}
+
+.btn-default {
+  @include button-variant($color-font, transparent, lighten($background-light-color, 55%));
+}
+
+.btn-primary {
+  @include button-variant($color-font, transparent, $color-primary);
+}
+
+.btn-success {
+  @include button-variant($color-font, transparent, $color-success);
+}
+
+.btn-info {
+  @include button-variant($color-font, transparent, $color-info);
+}
+
+.btn-warning {
+  @include button-variant($color-font, transparent, $color-warning);
+}
+
+.btn-danger {
+  @include button-variant($color-font, transparent, $color-danger);
+}
+
+.btn-default:hover, .btn-default:active,.btn-default:active:focus, .btn-default:focus, .btn-default.active {
+  //background-color: lighten($background-color, 6%);
+  background-color: lighten($background-light-color, 55%)
+}
+
+.btn-link:hover, .btn-link:active,.btn-link:active:focus, .btn-link:focus, .btn-link.active {
+  color: $color-accent;
+  text-decoration: none;
+}
+
+.btn-light-text {
+  color: $form-control-light-color;
+}

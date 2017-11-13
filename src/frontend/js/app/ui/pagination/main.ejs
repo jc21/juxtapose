@@ -1,0 +1,53 @@
+<% var pages = Math.ceil(getTotal() / getLimit()); %>
+
+<% if (pages > 1) { %>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default" data-offset="<%- (getOffset() - getLimit()) %>"<% if (!getOffset()) { %> disabled<% } %>><i class="fa fa-chevron-left"></i></button>
+
+        <% if (pages > 15) { %>
+        <% var current_page = (getOffset() ? getOffset() / getLimit() : 0) + 1; %>
+
+        <!-- print first 5 -->
+        <% for (var i = 0; i < 5; i++) { %>
+        <button class="btn btn-default<% if (getOffset() === (i * getLimit())) { %> active<% } %>" data-offset="<%- (i * getLimit()) %>"<% if (getOffset() === (i * getLimit())) { %> disabled<% } %>><%- (i + 1) %></button>
+        <% } %>
+
+        <!-- ... -->
+        <% if (current_page < 6 || current_page > 8) { %>
+        <button class="btn btn-default" disabled>...</button>
+        <% } %>
+
+        <!-- print middle -->
+        <% if (current_page > 5 && current_page < (pages - 4)) { %>
+        <% var start = current_page - 3; %>
+        <% start = (start < 5 ? 5 : start); %>
+
+        <% var end = current_page + 2; %>
+        <% end = (end > pages - 5 ? pages - 5 : end); %>
+
+        <% for (var j = start; j < end; j++) { %>
+        <button class="btn btn-default<% if (getOffset() === (j * getLimit())) { %> active<% } %>" data-offset="<%- (j * getLimit()) %>"<% if (getOffset() === (j * getLimit())) { %> disabled<% } %>><%- (j + 1) %></button>
+        <% } %>
+
+        <!-- ... -->
+        <% if (current_page < pages - 7) { %>
+        <button class="btn btn-default" disabled>...</button>
+        <% } %>
+        <% } %>
+
+        <!-- print last 5 -->
+        <% for (var k = pages - 5; k < pages; k++) { %>
+        <button class="btn btn-default<% if (getOffset() === (k * getLimit())) { %> active<% } %>" data-offset="<%- (k * getLimit()) %>"<% if (getOffset() === (k * getLimit())) { %> disabled<% } %>><%- (k + 1) %></button>
+        <% } %>
+
+        <% } else { %>
+        <% var counter = 1; %>
+        <% for (var m = 0; m < getTotal(); m += getLimit()) { %>
+        <button class="btn btn-default<% if (getOffset() === m) { %> active<% } %>" data-offset="<%- m %>"<% if (getOffset() === m) { %> disabled<% } %>><%- counter %></button>
+        <% counter++; %>
+        <% } %>
+        <% } %>
+
+        <button type="button" class="btn btn-default" data-offset="<%- (getOffset() + getLimit()) %>"<% if (getOffset() + getLimit() >= getTotal()) { %> disabled<% } %>><i class="fa fa-chevron-right"></i></button>
+    </div>
+<% } %>

@@ -1,0 +1,39 @@
+.text-muted {
+  color: darken($color-font, 5%);
+}
+
+.text-accent {
+  color: $color-accent;
+}
+
+.text-primary {
+  color: $color-primary;
+}
+
+.text-success {
+  color: $color-success;
+}
+
+.text-info {
+  color: $color-info;
+}
+
+.text-warning {
+  color: $color-warning;
+}
+
+.text-danger {
+  color: $color-danger;
+}
+
+.text-faded {
+  opacity: 0.4;
+}
+
+.text-strikethrough {
+  text-decoration-line: line-through;
+}
+
+.text-code {
+  font-family: "Fira Code", "Courier New", monospace;
+}
