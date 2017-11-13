@@ -1,4 +1,4 @@
-![Juxtapose](https://public.jc21.com/juxtapose/icons/default.jpg "Juxtapose")
+![Juxtapose](https://public.jc21.com/juxtapose/icons/default.png "Juxtapose")
 
 # Juxtapose
 
