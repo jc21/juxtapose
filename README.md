@@ -1,3 +1,5 @@
+![Juxtapose](https://public.jc21.com/juxtapose/icons/default.jpg "Juxtapose")
+
 # Juxtapose
 
 > **[juhk-stuh-pohz, juhk-stuh-pohz]**
@@ -199,3 +201,13 @@ It's as easy as adding this to your config file:
 }
 ```
 
+## Screenshots
+
+[![Login](https://public.jc21.com/juxtapose/screenshots/small/login.jpg "Login")](https://public.jc21.com/juxtapose/screenshots/login.jpg)
+[![Rules](https://public.jc21.com/juxtapose/screenshots/small/rules.jpg "Rules")](https://public.jc21.com/juxtapose/screenshots/rules.jpg)
+[![Edit Template](https://public.jc21.com/juxtapose/screenshots/small/edit_template.jpg "Edit Template")](https://public.jc21.com/juxtapose/screenshots/edit_template.jpg)
+[![Bitbucket Template Example](https://public.jc21.com/juxtapose/screenshots/small/new_rule_template_bitbucket.jpg "Bitbucket Template Example")](https://public.jc21.com/juxtapose/screenshots/new_rule_template_bitbucket.jpg)
+[![Jira Templates Example](https://public.jc21.com/juxtapose/screenshots/small/new_rule_template_jira.jpg "Jira Templates Example")](https://public.jc21.com/juxtapose/screenshots/new_rule_template_jira.jpg)
+[![Bitbucket Triggers](https://public.jc21.com/juxtapose/screenshots/small/new_rule_trigger_bitbucket.jpg "Bitbucket Triggers")](https://public.jc21.com/juxtapose/screenshots/new_rule_trigger_bitbucket.jpg)
+[![Jira Triggers](https://public.jc21.com/juxtapose/screenshots/small/new_rule_trigger_jira.jpg "Jira Triggers")](https://public.jc21.com/juxtapose/screenshots/new_rule_trigger_jira.jpg)
+[![Services](https://public.jc21.com/juxtapose/screenshots/small/services.jpg "Services")](https://public.jc21.com/juxtapose/screenshots/services.jpg)
