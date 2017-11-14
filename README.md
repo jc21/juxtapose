@@ -1,4 +1,4 @@
-![Juxtapose](https://public.jc21.com/juxtapose/icons/default.png "Juxtapose")
+![Juxtapose](https://public.jc21.com/juxtapose/icons/github.png "Juxtapose")
 
 ![Build Status](http://bamboo.jc21.com/plugins/servlet/wittified/build-status/AB-JUX)
 
