@@ -281,6 +281,20 @@ const internalService = {
     },
 
     /**
+     *
+     * @param {Access}  access
+     * @param {Integer} service_id
+     */
+    getUsers: (access, service_id) => {
+        const internalServiceWorker = require('./service_worker');
+
+        return access.can('services:users')
+            .then(() => {
+                return internalServiceWorker.getUsers(service_id);
+            });
+    },
+
+    /**
      * @param {Access} access
      */
     getAvailable: (access) => {

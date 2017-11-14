@@ -158,6 +158,37 @@
       "targetSchema": {
         "type": "boolean"
       }
+    },
+    {
+      "title": "User List",
+      "description": "Get User List of a Service",
+      "href": "/services/{definitions.identity.example}/users",
+      "access": "private",
+      "method": "GET",
+      "rel": "users",
+      "http_header": {
+        "$ref": "../examples.json#/definitions/auth_header"
+      },
+      "schema": {
+        "type": "object",
+        "required": [
+          "username",
+          "message"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "targetSchema": {
+        "type": "boolean"
+      }
     }
   ],
   "properties": {

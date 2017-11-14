@@ -293,6 +293,53 @@ const internalServiceWorker = {
                 reject(new Error('Could not find Service for #' + service_id));
             }
         });
+    },
+
+    /**
+     * @param   {Integer}  service_id
+     * @returns {Promise}
+     */
+    getUsers: (service_id) => {
+        return new Promise((resolve, reject) => {
+            let service = internalServiceWorker.getService(service_id);
+            if (service) {
+                switch (service.type) {
+                    case 'slack':
+                        service.handler.getUsers()
+                            .fail(function (data) {
+                                reject(new Error(data.error));
+                            })
+                            .then(function (data) {
+                                if (typeof data.members !== 'undefined') {
+                                    let real_users = _.filter(data.members, function (m) {
+                                        return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT';
+                                    });
+
+                                    let users = [];
+                                    _.map(real_users, real_user => {
+                                        users.push({
+                                            id:           real_user.id,
+                                            name:         real_user.name,
+                                            real_name:    real_user.profile.real_name,
+                                            display_name: real_user.profile.display_name,
+                                            avatar:       real_user.profile.image_24
+                                        });
+                                    });
+
+                                    resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
+                                } else {
+                                    reject(new Error('Invalid response from service'));
+                                }
+                            });
+                        break;
+                    default:
+                        reject(new Error('Service type "' + service.type + '" is not yet supported'));
+                        break;
+                }
+            } else {
+                reject(new Error('Could not find Service for #' + service_id));
+            }
+        });
     }
 
 };

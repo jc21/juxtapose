@@ -283,6 +283,14 @@ module.exports = {
          */
         restart: function () {
             return fetch('post', 'services/restart');
+        },
+
+        /**
+         * @param   {Integer}  id
+         * @returns {Promise}
+         */
+        getUsers: function (id) {
+            return fetch('get', 'services/' + id + '/users');
         }
     },
 

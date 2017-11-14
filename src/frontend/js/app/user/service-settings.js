@@ -50,25 +50,68 @@ module.exports = Mn.View.extend({
             },
 
             getServiceSetting: function (service_id, option) {
-                let settings = _.filter(view.model.get('services'), function (item) {
-                    return item.id === service_id;
-                });
-
-                if (settings && settings.length) {
-                    let that = settings.shift();
-
-                    if (option === 'username') {
-                        return that.service_username;
-                    } else {
-                        if (typeof that.data !== 'undefined' && typeof that.data[option] !== 'undefined') {
-                            return that.data[option];
-                        }
-                    }
-                }
-
-                return '';
+                return view.getServiceSetting(service_id, option);
             }
         };
+    },
+
+    getServiceSetting: function (service_id, option) {
+        let view = this;
+
+        let settings = _.filter(view.model.get('services'), function (item) {
+            return item.id === service_id;
+        });
+
+        if (settings && settings.length) {
+            let that = settings.shift();
+
+            if (option === 'username') {
+                return that.service_username;
+            } else {
+                if (typeof that.data !== 'undefined' && typeof that.data[option] !== 'undefined') {
+                    return that.data[option];
+                }
+            }
+        }
+
+        return '';
+    },
+
+    onRender: function () {
+        let view = this;
+
+        _.each(this.getOption('services'), function (service) {
+            if (service.type === 'slack') {
+                let $select = view.$el.find('select[name="settings[' + service.id + '][username]"]');
+
+                if ($select.length) {
+                    Api.Services.getUsers(service.id)
+                        .then(users => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Select...')
+                                .appendTo($select);
+
+                            let selected_username = view.getServiceSetting(service.id, 'username');
+
+                            _.map(users, user => {
+                                $('<option>')
+                                    .val(user.name)
+                                    .text(user.real_name || user.display_name)
+                                    .prop('selected', selected_username === user.name)
+                                    .appendTo($select);
+                            });
+                        })
+                        .catch(err => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Error loading users! Try again')
+                                .prop('selected', true)
+                                .appendTo($select);
+                        });
+                }
+            }
+        });
     },
 
     initialize: function (options) {

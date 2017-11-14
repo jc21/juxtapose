@@ -225,7 +225,7 @@ router
     .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
 
     /**
-     * PUT /api/services/123
+     * POST /api/services/123
      *
      * Update and existing service
      */
@@ -235,6 +235,34 @@ router
                 payload.id = parseInt(req.params.service_id, 10);
                 return internalService.test(res.locals.access, payload);
             })
+            .then((result) => {
+                res.status(200)
+                    .send(result);
+            })
+            .catch(next);
+    });
+
+/**
+ * Specific service User List
+ *
+ * /api/services/123/users
+ */
+router
+    .route('/:service_id/users')
+    .options((req, res) => {
+        res.sendStatus(204);
+    })
+    .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
+
+    /**
+     * GET /api/services/123
+     *
+     * Update and existing service
+     */
+    .get((req, res, next) => {
+        let service_id = parseInt(req.params.service_id, 10);
+
+        internalService.getUsers(res.locals.access, service_id)
             .then((result) => {
                 res.status(200)
                     .send(result);

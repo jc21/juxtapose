@@ -43,8 +43,8 @@ module.exports = {
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 unsafe:        true,
-                drop_console:  config.util.getEnv('NODE_ENV') === 'development',
-                drop_debugger: config.util.getEnv('NODE_ENV') === 'development',
+                drop_console:  config.util.getEnv('NODE_ENV') !== 'development',
+                drop_debugger: config.util.getEnv('NODE_ENV') !== 'development',
                 screw_ie8:     true,
                 warnings:      false
             }
