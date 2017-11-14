@@ -1,5 +1,7 @@
 ![Juxtapose](https://public.jc21.com/juxtapose/icons/default.png "Juxtapose")
 
+![Build Status](http://bamboo.jc21.com/plugins/servlet/wittified/build-status/AB-JUX)
+
 # Juxtapose
 
 > **[juhk-stuh-pohz, juhk-stuh-pohz]**
