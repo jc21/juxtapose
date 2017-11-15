@@ -4,7 +4,6 @@ ENV NODE_ENV=production
 
 ADD config/default.json /srv/app/config/default.json
 ADD dist                /srv/app/dist
-ADD migrations          /srv/app/migrations
 ADD node_modules        /srv/app/node_modules
 ADD views               /srv/app/views
 ADD knexfile.js         /srv/app/knexfile.js
