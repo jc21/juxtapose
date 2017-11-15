@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name = 'initial-schema';
-const logger       = require('../src/backend/logger');
+const logger       = require('../logger');
 
 /**
  * Migrate
@@ -12,7 +12,7 @@ const logger       = require('../src/backend/logger');
  * @param   {Promise} Promise
  * @returns {Promise}
  */
-exports.up = function (knex, Promise) {
+exports.up = function (knex/*, Promise*/) {
     logger.migrate('[' + migrate_name + '] Migrating Up...');
 
     return knex.schema.createTable('auth', (table) => {

@@ -98,7 +98,8 @@
           "name",
           "content",
           "default_options",
-          "example_data"
+          "example_data",
+          "event_types"
         ],
         "properties": {
           "service_type": {

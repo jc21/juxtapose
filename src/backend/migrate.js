@@ -8,7 +8,10 @@ module.exports = {
         return db.migrate.currentVersion()
             .then((version) => {
                 logger.migrate('Current database version:', version);
-                return db.migrate.latest();
+                return db.migrate.latest({
+                    tableName: 'migrations',
+                    directory: 'src/backend/migrations'
+                });
             });
     }
 };

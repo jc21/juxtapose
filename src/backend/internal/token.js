@@ -20,7 +20,7 @@ module.exports = {
      */
     getTokenFromEmail: (data, issuer) => {
         let Token = new TokenModel();
-console.log('--> getTokenFromEmail');
+
         data.scope  = data.scope || 'user';
         data.expiry = data.expiry || '30d';
 

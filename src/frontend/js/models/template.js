@@ -17,7 +17,7 @@ const model = Backbone.Model.extend({
                 unfurl_media: false
             },
             default_options: {
-                icon_url:    'https://public.jc21.com/jira-notify/apple-icon.png',
+                icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
                 panel_color: '#0090ff'
             },
             example_data:    {},
@@ -43,17 +43,17 @@ const model = Backbone.Model.extend({
                     unfurl_media: false
                 },
                 example_data: {
-                    summary:     'VPN Planning and Configuration',
-                    issuekey:    'SYS-10839',
+                    summary:     'Enable Feature x for Customer y',
+                    issuekey:    'FEAT-1234',
                     issueurl:    'http://example.com',
                     issuetype:   'Task',
                     issuestatus: 'In Progress',
                     priority:    'Neutral',
-                    reporter:    'Talal Khattak',
-                    user:        'John Phillips',
-                    project:     'Systems Engineering',
+                    reporter:    'Joe Citizen',
+                    user:        'Billy Bob',
+                    project:     'Web Application',
                     resolution:  'Unresolved',
-                    assignee:    'Talal Khattak'
+                    assignee:    'Joe Citizen'
                 }
             });
 
@@ -73,17 +73,17 @@ const model = Backbone.Model.extend({
                     unfurl_media: false
                 },
                 example_data: {
-                    user:        'Jamie Curnow',
+                    user:        'Billy Bob',
                     prurl:       'http://example.com',
-                    title:       'PROJ-123 - Added fixme file',
-                    description: 'This example fixes and issue I have with testing.',
-                    project: 'V6',
-                    repo:    'businessbuilder',
-                    branch:  'develop',
-                    from: {
-                        project: 'jcurnow',
-                        repo:    'businessbuilder',
-                        branch:  'feature/abc123'
+                    title:       'FEAT-1234 - Enable Feature x for Customer y',
+                    description: 'Customer y now has this feature.',
+                    project:     'PROD',
+                    repo:        'application',
+                    branch:      'master',
+                    from:        {
+                        project: 'billybob',
+                        repo:    'application',
+                        branch:  'feature/1234'
                     }
                 }
             });

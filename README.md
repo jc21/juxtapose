@@ -203,6 +203,21 @@ It's as easy as adding this to your config file:
 }
 ```
 
+### Create a verbose Template for debugging
+
+It's actually pretty easy. Create a new Template and use this code for the content:
+
+```json
+{
+  "text": "```<%= prettyPrint(arguments[0]) %>```",
+  "unfurl_links": false,
+  "unfurl_media": false
+}
+```
+
+You'll see what kind of output to expect after you've saved the template.
+
+
 ## Screenshots
 
 [![Login](https://public.jc21.com/juxtapose/screenshots/small/login.jpg "Login")](https://public.jc21.com/juxtapose/screenshots/login.jpg)

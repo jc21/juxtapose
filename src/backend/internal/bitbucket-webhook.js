@@ -136,11 +136,6 @@ const internalBitbucketWebhook = {
                 case 'pr:opened':
                     process_promises.push(internalBitbucketWebhook.processPrOpened);
                     break;
-                /*
-                                case 'jira:issue_updated':
-                                    process_promises.push(internalBitbucketWebhook.processIssueUpdated);
-                                    break;
-                */
             }
 
             if (process_promises.length) {
