@@ -21,9 +21,11 @@
 
                 <div class="conditions">
                     <% _.map(extra_conditions, function (val, key) {
-                        %>
-                        <span class="label label-success"><%- niceVarName(key) %>: <%- val %></span>
-                        <%
+                        if (typeof val !== 'string' || (typeof val === 'string' && val)) {
+                            %>
+                            <span class="label label-success"><%- niceVarName(key) %>: <%- val %></span>
+                            <%
+                        }
                     }) %>
                 </div>
             </div>

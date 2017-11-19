@@ -935,12 +935,12 @@ const templates = [
     },
 
     /**
-     * Bitbucket 1: PR Opened For You
+     * Bitbucket 1: PR Opened
      */
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
-        name:            'PR Opened For You',
+        name:            'PR Opened',
         content:         {
             icon_url:    '<%= icon_url %>',
             text:        '<%= user %> has opened a PR',
@@ -970,7 +970,241 @@ const templates = [
                 branch:  'feature/1234'
             }
         },
-        event_types:     ['pr_review_requested']
+        event_types:     ['pr_review_requested', 'pr_opened']
+    },
+
+    /**
+     * Bitbucket 2: Your PR was Approved
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Your PR was Approved',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has approved your PR',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_approved']
+    },
+
+    /**
+     * Bitbucket 3: Your PR Needs Work
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Your PR Needs Work',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has reviewed your PR as Needs Work',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_needs_work']
+    },
+
+    /**
+     * Bitbucket 4: PR Merged
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'PR Merged',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has merged a PR',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_merged', 'pr_merged']
+    },
+
+    /**
+     * Bitbucket 4: Your PR was Declined
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Your PR was Declined',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has declined your PR',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_declined']
+    },
+
+    /**
+     * Bitbucket 4: Your PR was Deleted
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Your PR was Deleted',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has deleted your PR',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_deleted']
+    },
+
+    /**
+     * Bitbucket 5: Commented on your PR
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Commented on your PR',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        '<%= user %> has commented on your PR',
+            attachments: [
+                {
+                    title: '<<%= prurl %>|<%= title %>>',
+                    text:  '<%- description %>',
+                    color: '<%= panel_color %>'
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            }
+        },
+        event_types:     ['my_pr_comment']
     }
 ];
 
@@ -1007,8 +1241,8 @@ exports.up = function (knex, Promise) {
                     .end(results => {
                         resolve(true);
                     });
+            });
         });
-    });
 };
 
 /**

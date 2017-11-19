@@ -97,6 +97,7 @@ const internalBitbucketWebhook = {
                             if (err.name === 'TokenExpiredError') {
                                 reject(new error.AuthError('Token has expired', err));
                             } else {
+                                console.log('------------->');
                                 reject(err);
                             }
                         } else {
@@ -130,21 +131,40 @@ const internalBitbucketWebhook = {
             logger.bitbucket_webhook('  ❯ PR State:                       ', internalBitbucketWebhook.getPrField(webhook_data, 'state'));
             logger.bitbucket_webhook('  ❯ PR Owner:                       ', internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'));
 
-            let process_promises = [];
+            let event_types = [];
 
             switch (webhook_data.eventKey) {
                 case 'pr:opened':
-                    process_promises.push(internalBitbucketWebhook.processPrOpened);
+                    event_types.push(['pr_review_requested', 'pr_opened']);
+                    break;
+                case 'pr:merged':
+                    event_types.push(['my_pr_merged', 'pr_merged']);
+                    break;
+                case 'pr:reviewer:approved':
+                    event_types.push(['my_pr_approved']);
+                    break;
+                case 'pr:declined':
+                case 'pr:reviewer:declined':
+                    event_types.push(['my_pr_declined']);
+                    break;
+                case 'pr:deleted':
+                    event_types.push(['my_pr_deleted']);
+                    break;
+                case 'pr:reviewer:needs_work':
+                    event_types.push(['my_pr_needs_work']);
+                    break;
+                case 'pr:comment:added':
+                    event_types.push(['my_pr_comment']);
                     break;
             }
 
-            if (process_promises.length) {
+            if (event_types.length) {
                 return new Promise((resolve, reject) => {
                     let already_notified_user_ids = [];
 
-                    batchflow(process_promises).sequential()
-                        .each((i, process_promise, next) => {
-                            process_promise(service_id, webhook_data, already_notified_user_ids)
+                    batchflow(event_types).sequential()
+                        .each((i, event_type, next) => {
+                            internalBitbucketWebhook.processTheseEventTypes(event_type, service_id, webhook_data, already_notified_user_ids)
                                 .then(notified_user_ids => {
                                     if (notified_user_ids && notified_user_ids.length) {
                                         already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
@@ -183,27 +203,16 @@ const internalBitbucketWebhook = {
     },
 
     /**
-     * pr:opened
-     *
-     * Valid event types are:
-     *
-     * pr_review_requested
-     * pr_opened
-     *
+     * @param   {Array}   event_types
      * @param   {Integer} service_id
      * @param   {Object}  webhook_data
      * @param   {String}  webhook_data.eventKey
      * @param   {Object}  webhook_data.actor
      * @param   {Object}  webhook_data.pullRequest
      * @param   {Array}   already_notified_user_ids
-     * @returns {Promise|Boolean}
+     * @returns {Promise}
      */
-    processPrOpened: (service_id, webhook_data, already_notified_user_ids) => {
-        let event_types = [];
-
-        event_types.push('pr_review_requested');
-        event_types.push('pr_opened');
-
+    processTheseEventTypes: (event_types, service_id, webhook_data, already_notified_user_ids) => {
         let template_data = _.assign({service_id: service_id}, internalBitbucketWebhook.getCommonTemplateData(webhook_data));
 
         return new Promise((resolve, reject) => {
@@ -223,10 +232,10 @@ const internalBitbucketWebhook = {
                             next();
                         });
                 })
-                .error((err) => {
+                .error(err => {
                     reject(err);
                 })
-                .end((results) => {
+                .end(results => {
                     resolve(already_notified_user_ids);
                 });
         });
@@ -373,18 +382,20 @@ const internalBitbucketWebhook = {
     /**
      * @param   {Object}  webhook_data
      * @param   {Object}  webhook_data.pullRequest
+     * @param   {Object}  webhook_data.actor
      * @returns {Object}
      */
     getCommonTemplateData: (webhook_data) => {
         return {
-            user:        internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'),
-            prurl:       'http://TODO',
-            title:       internalBitbucketWebhook.getPrField(webhook_data, 'title'),
-            description: internalBitbucketWebhook.getPrField(webhook_data, 'description'),
-            project:     internalBitbucketWebhook.getToProjectField(webhook_data, 'key'),
-            repo:        internalBitbucketWebhook.getToRepoField(webhook_data, 'slug'),
-            branch:      internalBitbucketWebhook.getToRefField(webhook_data, 'displayId'),
-            from:        {
+            user:           internalBitbucketWebhook.getEventUser(webhook_data, 'displayName'),
+            owner:          internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'),
+            title:          internalBitbucketWebhook.getPrField(webhook_data, 'title'),
+            description:    internalBitbucketWebhook.getPrField(webhook_data, 'description'),
+            project:        internalBitbucketWebhook.getToProjectField(webhook_data, 'key'),
+            repo:           internalBitbucketWebhook.getToRepoField(webhook_data, 'slug'),
+            branch:         internalBitbucketWebhook.getToRefField(webhook_data, 'displayId'),
+            approval_count: internalBitbucketWebhook.getApprovalCount(webhook_data),
+            from:           {
                 project: internalBitbucketWebhook.getFromProjectField(webhook_data, 'key'),
                 repo:    internalBitbucketWebhook.getFromRepoField(webhook_data, 'slug'),
                 branch:  internalBitbucketWebhook.getFromRefField(webhook_data, 'displayId')
@@ -428,6 +439,25 @@ const internalBitbucketWebhook = {
         }
 
         return _.uniq(reviewers);
+    },
+
+    /**
+     *
+     * @param   {Object}  webhook_data
+     * @param   {Object}  webhook_data.pullRequest
+     * @returns {Integer}
+     */
+    getApprovalCount: (webhook_data) => {
+        let reviewers      = internalBitbucketWebhook.getReviewers(webhook_data);
+        let approved_count = 0;
+
+        _.map(reviewers, (reviewer) => {
+            if (reviewer.approved) {
+                approved_count++;
+            }
+        });
+
+        return approved_count;
     },
 
     /**
@@ -486,6 +516,13 @@ const internalBitbucketWebhook = {
                         let repo = internalBitbucketWebhook.getToRepoField(webhook_data, 'slug');
                         if (repo && repo !== value) {
                             // Repo doesn't match
+                            is_ok = false;
+                        }
+                        break;
+                    case 'minimum_approval_count':
+                        let approval_count = internalBitbucketWebhook.getApprovalCount(webhook_data);
+                        if (approval_count < parseInt(value, 10)) {
+                            // not enough approvals
                             is_ok = false;
                         }
                         break;
@@ -588,14 +625,14 @@ const internalBitbucketWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.bitbucket_webhook('    ❯ Processing Rule #', rule.id);
+                            logger.bitbucket_webhook('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.bitbucket_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id, 'bailing on this rule');
+                                logger.bitbucket_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalBitbucketWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.bitbucket_webhook('      ❯ Extra conditions do not match, bailing on this rule');
+                                logger.bitbucket_webhook('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
 

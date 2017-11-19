@@ -73,14 +73,15 @@ const model = Backbone.Model.extend({
                     unfurl_media: false
                 },
                 example_data: {
-                    user:        'Billy Bob',
-                    prurl:       'http://example.com',
-                    title:       'FEAT-1234 - Enable Feature x for Customer y',
-                    description: 'Customer y now has this feature.',
-                    project:     'PROD',
-                    repo:        'application',
-                    branch:      'master',
-                    from:        {
+                    user:           'Billy Bob',
+                    prurl:          'http://example.com',
+                    title:          'FEAT-1234 - Enable Feature x for Customer y',
+                    description:    'Customer y now has this feature.',
+                    project:        'PROD',
+                    repo:           'application',
+                    branch:         'master',
+                    approval_count: 1,
+                    from:           {
                         project: 'billybob',
                         repo:    'application',
                         branch:  'feature/1234'

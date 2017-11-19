@@ -837,14 +837,14 @@ const internalJiraWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.jira_webhook('    ❯ Processing Rule #', rule.id);
+                            logger.jira_webhook('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.jira_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id, 'bailing on this rule');
+                                logger.jira_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalJiraWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.jira_webhook('      ❯ Extra conditions do not match, bailing on this rule');
+                                logger.jira_webhook('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
 
