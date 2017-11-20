@@ -1,5 +1,7 @@
 FROM node:alpine
 
+RUN apk update && apk add --no-cache curl && rm -rf /var/cache/apk/*
+
 ENV NODE_ENV=production
 
 ADD config/default.json /srv/app/config/default.json
