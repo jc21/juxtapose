@@ -29,21 +29,26 @@ router
     .post((req, res, next) => {
         validator({
             additionalProperties: false,
-            required:             ['token', 'webhook'],
+            required:             ['key', 'service_id', 'webhook'],
             properties:           {
-                token:   {
+                key:        {
                     $ref: 'definitions#/definitions/token'
                 },
-                webhook: {
+                service_id: {
+                    type:    'integer',
+                    minumum: 1
+                },
+                webhook:    {
                     $ref: 'definitions#/definitions/dockerhub_webhook_data'
                 }
             }
         }, {
-            token:   typeof req.query.t !== 'undefined' ? req.query.t : null,
-            webhook: req.body
+            key:        typeof req.query.k !== 'undefined' ? req.query.k : null,
+            service_id: typeof req.query.s !== 'undefined' ? parseInt(req.query.s, 10) : null,
+            webhook:    req.body
         })
             .then((data) => {
-                return internalDockerhubWebhook.processIncoming(data.token, data.webhook);
+                return internalDockerhubWebhook.processIncoming(data.service_id, data.key, data.webhook);
             })
             .then((result) => {
                 res.status(200)

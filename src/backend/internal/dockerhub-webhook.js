@@ -4,110 +4,70 @@ const _                         = require('lodash');
 const config                    = require('config');
 const batchflow                 = require('batchflow');
 const logger                    = require('../logger');
-const error                     = require('../lib/error');
 const serviceModel              = require('../models/service');
-const jwt                       = require('jsonwebtoken');
 const ruleModel                 = require('../models/rule');
 const templateRender            = require('../lib/template_render');
 const notificationQueueModel    = require('../models/notification_queue');
 const dockerhubIncomingLogModel = require('../models/dockerhub_incoming_log');
-const ALGO                      = 'RS256';
-
-let public_key = null;
 
 const internalDockerhubWebhook = {
 
     /**
      * Router use
      *
-     * @param   {String}  token
+     * @param   {Integer} service_id
+     * @param   {String}  key
      * @param   {Object}  webhook_data
      * @param   {String}  webhook_data.eventKey
      * @param   {Object}  webhook_data.actor
      * @param   {Object}  webhook_data.pullRequest
      * @returns {Promise}
      */
-    processIncoming: (token, webhook_data) => {
-        public_key = config.get('jwt.pub');
-
-        // 1. Verify Token
-        return internalDockerhubWebhook.verifyToken(token)
-            .then(token_data => {
-                // 2. Make sure service still exists
-                return serviceModel
-                    .query()
-                    .where('is_deleted', 0)
-                    .andWhere('id', token_data.s)
-                    .andWhere('type', 'dockerhub-webhook')
-                    .first()
-                    .then(service => {
-                        // 3. Validate service with token validation key
-                        if (service && service.data && service.data.validation_key === token_data.k) {
-                            return service;
-                        } else {
-                            throw new Error('Invalid Service');
-                        }
-                    })
-                    // 4. Save data for debugging
-                    .then(service => {
-                        logger.dockerhub_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
-                        return dockerhubIncomingLogModel
-                            .query()
-                            .insert({
-                                service_id: service.id,
-                                data:       webhook_data
-                            })
-                            .then(log_row => {
-                                logger.dockerhub_webhook('  ❯ Saved in log table as ID #' + log_row.id);
-                                return service;
-                            });
-                    })
-                    // 5. Prune log table
-                    .then(service => {
-                        return dockerhubIncomingLogModel
-                            .query()
-                            .delete()
-                            .where(dockerhubIncomingLogModel.raw('`created_on` < DATE_SUB(DATE(NOW()), INTERVAL 2 DAY)'))
-                            .then(() => {
-                                return service;
-                            });
-                    })
-                    // 6. Process webhook
-                    .then(service => {
-                        return internalDockerhubWebhook.process(service.id, webhook_data);
-                    });
-            });
-    },
-
-    /**
-     * Internal use
-     * Verifies the incoming endpoint token
-     *
-     * @param   {String}  token
-     * @returns {Promise}
-     */
-    verifyToken: (token) => {
-        return new Promise((resolve, reject) => {
-            try {
-                if (!token || token === null || token === 'null') {
-                    reject(new Error('Empty token'));
+    processIncoming: (service_id, key, webhook_data) => {
+        // 1. Verify Key
+        // 2. Make sure service still exists
+        return serviceModel
+            .query()
+            .where('is_deleted', 0)
+            .andWhere('id', service_id)
+            .andWhere('type', 'dockerhub-webhook')
+            .first()
+            .then(service => {
+                // 3. Validate service with token validation key
+                if (service && service.data && service.data.validation_key === key) {
+                    return service;
                 } else {
-                    jwt.verify(token, public_key, {ignoreExpiration: true, algorithms: [ALGO]}, (err, token_data) => {
-                        if (err) {
-                            if (err.name === 'TokenExpiredError') {
-                                reject(new error.AuthError('Token has expired', err));
-                            } else {
-                                reject(err);
-                            }
-                        } else {
-                            resolve(token_data);
-                        }
-                    });
+                    throw new Error('Invalid Service');
                 }
-            } catch (err) {
-                reject(err);
-            }
-        });
+            })
+            // 4. Save data for debugging
+            .then(service => {
+                logger.dockerhub_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
+                return dockerhubIncomingLogModel
+                    .query()
+                    .insert({
+                        service_id: service.id,
+                        data:       webhook_data
+                    })
+                    .then(log_row => {
+                        logger.dockerhub_webhook('  ❯ Saved in log table as ID #' + log_row.id);
+                        return service;
+                    });
+            })
+            // 5. Prune log table
+            .then(service => {
+                return dockerhubIncomingLogModel
+                    .query()
+                    .delete()
+                    .where(dockerhubIncomingLogModel.raw('`created_on` < DATE_SUB(DATE(NOW()), INTERVAL 2 DAY)'))
+                    .then(() => {
+                        return service;
+                    });
+            })
+            // 6. Process webhook
+            .then(service => {
+                return internalDockerhubWebhook.process(service.id, webhook_data);
+            });
     },
 
     /**

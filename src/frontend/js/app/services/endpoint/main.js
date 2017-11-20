@@ -12,7 +12,14 @@ module.exports = Mn.View.extend({
 
         return {
             getEndpoint: function () {
-                return window.location.protocol + '//' + window.location.host + window.location.pathname + 'incoming/' + view.model.get('type') + '?t=' + view.model.get('data').token;
+                let base_url = window.location.protocol + '//' + window.location.host + window.location.pathname + 'incoming/' + view.model.get('type');
+
+                // Dockerhub has a 254 character limit so we can't use JWT's
+                if (view.model.get('type') === 'dockerhub-webhook') {
+                    return base_url + '?s=' + view.model.get('id') + '&k=' + view.model.get('data').validation_key;
+                }
+
+                return base_url + '?t=' + view.model.get('data').token;
             }
         }
     }
