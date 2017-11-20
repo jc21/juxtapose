@@ -2,14 +2,14 @@
 
 import Mn from 'backbone.marionette';
 
-const Api            = require('../api');
-const Cache          = require('../cache');
-const Controller     = require('../controller');
-const ListView       = require('./list');
-const EmptyView      = require('./empty');
-const PaginationView = require('../ui/pagination/main');
-const RuleModel      = require('../../models/rule');
-const template       = require('./main.ejs');
+const VirtualCollection = require('backbone-virtual-collection');
+const Api               = require('../api');
+const Cache             = require('../cache');
+const Controller        = require('../controller');
+const ListView          = require('./list');
+const EmptyView         = require('./empty');
+const RuleModel         = require('../../models/rule');
+const template          = require('./main.ejs');
 
 module.exports = Mn.View.extend({
     template: template,
@@ -22,14 +22,16 @@ module.exports = Mn.View.extend({
     },
 
     ui: {
-        list_region:       'div.list-region',
-        pagination_region: 'div.pagination',
-        add_rule:          '.add-rule'
+        jira_region:      'div.jira-region',
+        bitbucket_region: 'div.bitbucket-region',
+        dockerhub_region: 'div.dockerhub-region',
+        add_rule:         '.add-rule'
     },
 
     regions: {
-        list_region:       '@ui.list_region',
-        pagination_region: '@ui.pagination_region'
+        jira_region:      '@ui.jira_region',
+        bitbucket_region: '@ui.bitbucket_region',
+        dockerhub_region: '@ui.dockerhub_region'
     },
 
     events: {
@@ -47,28 +49,40 @@ module.exports = Mn.View.extend({
         Api.Rules.getAll(view.options.offset, view.options.limit, view.options.sort, ['in_service', 'out_service', 'template'])
             .then((response) => {
                 if (!view.isDestroyed()) {
-                    Cache.Session.Rules.sort   = view.options.sort;
-                    Cache.Session.Rules.offset = view.options.offset;
-                    Cache.Session.Rules.limit  = view.options.limit;
-
                     if (response && response.data && response.data.length) {
-                        view.showChildView('list_region', new ListView({
-                            collection: new RuleModel.Collection(response.data),
-                            pagination: response.pagination,
-                            sort:       view.options.sort
+
+                        let rule_collection = new RuleModel.Collection(response.data);
+
+                        let jira_rules = new VirtualCollection(rule_collection, {
+                            filter: rule => {
+                                return rule.get('in_service').type === 'jira-webhook';
+                            }
+                        });
+
+                        let bitbucket_rules = new VirtualCollection(rule_collection, {
+                            filter: rule => {
+                                return rule.get('in_service').type === 'bitbucket-webhook';
+                            }
+                        });
+
+                        let dockerhub_rules = new VirtualCollection(rule_collection, {
+                            filter: rule => {
+                                return rule.get('in_service').type === 'dockerhub-webhook';
+                            }
+                        });
+
+                        view.showChildView('jira_region', new ListView({
+                            collection: jira_rules
                         }));
 
-                        let paginationView = new PaginationView({
-                            total:  response.pagination.total,
-                            limit:  response.pagination.limit,
-                            offset: response.pagination.offset
-                        });
+                        view.showChildView('bitbucket_region', new ListView({
+                            collection: bitbucket_rules
+                        }));
 
-                        paginationView.on('page', (offset, limit) => {
-                            Controller.showRules(offset, limit, view.options.sort);
-                        });
+                        view.showChildView('dockerhub_region', new ListView({
+                            collection: dockerhub_rules
+                        }));
 
-                        view.showChildView('pagination_region', paginationView);
                     } else {
                         view.showChildView('list_region', new EmptyView());
                     }

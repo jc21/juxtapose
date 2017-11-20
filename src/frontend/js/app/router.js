@@ -10,8 +10,7 @@ module.exports = Mn.AppRouter.extend({
         rules:         'showRules',
         services:      'showServices',
         templates:     'showTemplates',
-        notifications: 'showNotifications',
-        '*default':    'showRules'
+        '*default':    'showDashboard'
     },
 
     initialize: function () {

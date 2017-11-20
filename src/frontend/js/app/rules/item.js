@@ -14,8 +14,8 @@ module.exports = Mn.View.extend({
     className: 'col-lg-12 col-md-12 col-sm-12 col-xs-12 rule',
 
     ui: {
-        del:      'a.delete',
-        settings: 'a.service-settings'
+        del:      'a.delete-link',
+        settings: '.warning-bubble'
     },
 
     events: {
@@ -79,6 +79,19 @@ module.exports = Mn.View.extend({
                 }
 
                 return true;
+            },
+
+            hasConditions: function () {
+                let conditions = view.model.get('extra_conditions');
+                let count = 0;
+
+                _.map(conditions, function (val, key) {
+                    if (typeof val !== 'string' || (typeof val === 'string' && val)) {
+                        count++;
+                    }
+                });
+
+                return count > 0;
             }
         };
     },

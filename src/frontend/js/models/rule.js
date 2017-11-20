@@ -5,8 +5,8 @@ import Backbone from 'backbone';
 
 const trigger_groups = {
     'jira-webhook': {
-        my_issues: {
-            name: 'My Issues'
+        your_issues: {
+            name: 'Your Issues'
         },
         support:   {
             name: 'Support'
@@ -16,8 +16,8 @@ const trigger_groups = {
         }
     },
     'bitbucket-webhook': {
-        for_me: {
-            name: 'For Me'
+        for_you: {
+            name: 'For You'
         },
         noisy: {
             name: 'Noisy Notifications'
@@ -34,27 +34,27 @@ const trigger_types = {
     'jira-webhook': {
         assigned:             {
             name:  'An issue is assigned to you',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         updated:              {
             name:  'An issue assigned to you is updated',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         reopened:             {
             name:  'An issue assigned to you is re-opened',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         comment:              {
             name:  'A comment is made on an issue that is assigned to you',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         resolved:             {
             name:  'An issue assigned to you is resolved',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         reassigned:           {
             name:  'An issue is re-assigned away from you',
-            group: 'my_issues'
+            group: 'your_issues'
         },
         updated_reported:     {
             name:  'An issue that you reported was updated',
@@ -97,31 +97,31 @@ const trigger_types = {
     'bitbucket-webhook': {
         pr_review_requested:  {
             name:  'You have been asked to review a Pull Request',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_approved:  {
             name:  'Your PR has been approved',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_needs_work:  {
             name:  'Your PR needs work',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_merged:  {
             name:  'Your PR was merged',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_declined:  {
             name:  'Your PR was declined',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_deleted:  {
             name:  'Your PR was deleted',
-            group: 'for_me'
+            group: 'for_you'
         },
         my_pr_comment:  {
             name:  'Someone commented on your PR',
-            group: 'for_me'
+            group: 'for_you'
         },
         pr_opened:  {
             name:  'A PR was opened',

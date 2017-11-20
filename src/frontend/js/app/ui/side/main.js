@@ -20,6 +20,10 @@ module.exports = Mn.View.extend({
             let href = e.target.href.replace(/[^#]*#/g, '');
 
             switch (href) {
+                case 'dashboard':
+                    Controller.showDashboard();
+                    break;
+
                 case 'rules':
                     Controller.showRules();
                     break;

@@ -375,31 +375,6 @@ module.exports = {
     },
 
     /**
-     * Notifications
-     *
-     * @param {Number}  [offset]
-     * @param {Number}  [limit]
-     * @param {String}  [sort]
-     */
-    showNotifications: function (offset, limit, sort) {
-        require(['./main', './notifications/main'], (App, View) => {
-            this.navigate('/notifications');
-            App.UI.showMainLoading();
-            let view = new View({
-                sort:   (typeof sort !== 'undefined' && sort ? sort : Cache.Session.Notifications.sort),
-                offset: (typeof offset !== 'undefined' ? offset : Cache.Session.Notifications.offset),
-                limit:  (typeof limit !== 'undefined' && limit ? limit : Cache.Session.Notifications.limit)
-            });
-
-            view.on('loaded', function () {
-                App.UI.hideMainLoading();
-            });
-
-            App.UI.showChildView('main_region', view);
-        });
-    },
-
-    /**
      * Error
      *
      * @param {Error}   err
@@ -411,6 +386,24 @@ module.exports = {
                 err:      err,
                 nice_msg: nice_msg
             }));
+        });
+    },
+
+    /**
+     * Dashboard
+     */
+    showDashboard: function () {
+        require(['./main', './dashboard/main'], (App, View) => {
+            this.navigate('/');
+            App.UI.showMainLoading();
+
+            let view = new View();
+
+            view.on('loaded', function () {
+                App.UI.hideMainLoading();
+            });
+
+            App.UI.showChildView('main_region', view);
         });
     },
 
