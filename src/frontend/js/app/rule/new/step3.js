@@ -31,6 +31,10 @@ module.exports = Mn.View.extend({
                 delete data.repo;
             }
 
+            if (!data.tag) {
+                delete data.tag;
+            }
+
             this.model.set('extra_conditions', data);
             Controller.showNewRule4(this.model);
         }

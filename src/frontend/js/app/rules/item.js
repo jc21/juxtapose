@@ -63,18 +63,22 @@ module.exports = Mn.View.extend({
             },
 
             isUserSetup: function () {
-                // Checks if the user has the services listed in this rule set up correctly
-                let services = Cache.User.get('services');
+                if (view.model.get('in_service').type !== 'dockerhub-webhook') {
+                    // Checks if the user has the services listed in this rule set up correctly
+                    let services = Cache.User.get('services');
 
-                let in_service_config = _.find(services, function (o) {
-                    return o.id === view.model.get('in_service_id');
-                });
+                    let in_service_config = _.find(services, function (o) {
+                        return o.id === view.model.get('in_service_id');
+                    });
 
-                let out_service_config = _.find(services, function (o) {
-                    return o.id === view.model.get('out_service_id');
-                });
+                    let out_service_config = _.find(services, function (o) {
+                        return o.id === view.model.get('out_service_id');
+                    });
 
-                return in_service_config && out_service_config && in_service_config.service_username && out_service_config.service_username;
+                    return in_service_config && out_service_config && in_service_config.service_username && out_service_config.service_username;
+                }
+
+                return true;
             }
         };
     },

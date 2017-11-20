@@ -183,13 +183,29 @@
         }
       }
     },
+    "dockerhub_webhook_data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "push_data",
+        "repository"
+      ],
+      "properties": {
+        "push_data": {
+          "type": "object"
+        },
+        "repository": {
+          "type": "object"
+        }
+      }
+    },
     "service_type": {
       "description": "Service Type",
       "example": "slack",
       "type": "string",
       "minLength": 2,
       "maxLength": 30,
-      "pattern": "^(slack|jira-webhook|bitbucket-webhook)$"
+      "pattern": "^(slack|jira-webhook|bitbucket-webhook|dockerhub-webhook)$"
     }
   }
 }

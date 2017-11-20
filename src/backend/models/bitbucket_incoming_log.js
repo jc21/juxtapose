@@ -3,7 +3,6 @@
 
 'use strict';
 
-const _     = require('lodash');
 const db    = require('../db');
 const Model = require('objection').Model;
 

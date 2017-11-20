@@ -22,6 +22,11 @@ const trigger_groups = {
         noisy: {
             name: 'Noisy Notifications'
         }
+    },
+    'dockerhub-webhook': {
+        all: {
+            name: 'All Events'
+        }
     }
 };
 
@@ -125,6 +130,13 @@ const trigger_types = {
         pr_merged:  {
             name:  'A PR was merged',
             group: 'noisy'
+        }
+    },
+
+    'dockerhub-webhook': {
+        repo_updated: {
+            name:  'Repository was updated',
+            group: 'all'
         }
     }
 };

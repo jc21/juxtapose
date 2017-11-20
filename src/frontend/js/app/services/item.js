@@ -31,6 +31,10 @@ module.exports = Mn.View.extend({
                 case 'bitbucket-webhook':
                     Controller.showBitbucketWebhookConfig(this.model);
                     break;
+
+                case 'dockerhub-webhook':
+                    Controller.showDockerhubWebhookConfig(this.model);
+                    break;
             }
         },
 
@@ -43,7 +47,7 @@ module.exports = Mn.View.extend({
 
         'click @ui.endpoint': function (e) {
             e.preventDefault();
-            if (this.model.get('type') === 'jira-webhook' || this.model.get('type') === 'bitbucket-webhook') {
+            if (this.model.get('type').match(/(.|\n)*-webhook$/im)) {
                 Controller.showServiceEndpoint(this.model);
             }
         }

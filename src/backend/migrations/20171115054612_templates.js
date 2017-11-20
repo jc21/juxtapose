@@ -9,6 +9,7 @@ const internalTemplate = require('../internal/template');
 const common_values = {
     icon_url_default:       'https://public.jc21.com/juxtapose/icons/default.png',
     icon_url_orange:        'https://public.jc21.com/juxtapose/icons/orange.png',
+    icon_url_red:           'https://public.jc21.com/juxtapose/icons/red.png',
     service_type_slack:     'slack',
     service_type_jira:      'jira-webhook',
     service_type_bitbucket: 'bitbucket-webhook'
@@ -1205,6 +1206,53 @@ const templates = [
             }
         },
         event_types:     ['my_pr_comment']
+    },
+
+    /**
+     * DockerHub 1: Repo Updated
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jira,
+        name:            'Repo Updated',
+        content:         {
+            icon_url:    '<%= icon_url %>',
+            text:        'Docker Repository <<%= url %>|<%= repo %>> updated by <%= pusher %>',
+            attachments: [
+                {
+                    color:  '<%= panel_color %>',
+                    fields: [
+                        {
+                            title: 'Tag',
+                            value: '<%- tag %>',
+                            short: true
+                        },
+                        {
+                            title: 'Star Count',
+                            value: '<%- star_count %>',
+                            short: true
+                        }
+                    ]
+                }
+            ]
+        },
+        default_options: {
+            icon_url:    common_values.icon_url_red,
+            panel_color: '#114c6d'
+        },
+        example_data:    {
+            pusher:        'jc21',
+            owner:         'jc21',
+            repo:          'jc21/juxtapose',
+            name:          'juxtapose',
+            tag:           'latest',
+            namespace:     'jc21',
+            description:   'Juxtapose is a self-hosted web app to send notifications from incoming services.',
+            url:           'https://hub.docker.com/r/jc21/juxtapose',
+            star_count:    1234,
+            comment_count: 2
+        },
+        event_types:     ['repo_updated']
     }
 ];
 

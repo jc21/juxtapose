@@ -30,6 +30,10 @@ module.exports = Mn.View.extend({
                 case 'bitbucket-webhook':
                     Controller.showBitbucketWebhookConfig();
                     break;
+
+                case 'dockerhub-webhook':
+                    Controller.showDockerhubWebhookConfig();
+                    break;
             }
         }
     }

@@ -27,7 +27,7 @@ const internalService = {
 
         return access.can('services', data)
             .then(() => {
-                if (data.type === 'jira-webhook' || data.type === 'bitbucket-webhook') {
+                if (data.type.match(/(.|\n)*-webhook$/im)) {
                     return internalService.generateEndpointToken(data)
                         .then(token => {
                             data.data.token = token;
@@ -65,7 +65,7 @@ const internalService = {
 
         return access.can('services', data.id)
             .then(() => {
-                if (data.type === 'jira-webhook' || data.type === 'bitbucket-webhook') {
+                if (data.type.match(/(.|\n)*-webhook$/im)) {
                     return internalService.generateEndpointToken(data)
                         .then(token => {
                             data.data.token = token;
@@ -247,7 +247,7 @@ const internalService = {
 
                     batchflow(services).parallel()
                         .each((i, service, done) => {
-                            if (service.type === 'jira-webhook' || service.type === 'bitbucket-webhook') {
+                            if (service.type.match(/(.|\n)*-webhook$/im)) {
                                 service.online = true;
                             } else {
                                 service.online = internalServiceWorker.isOnline(service.id);

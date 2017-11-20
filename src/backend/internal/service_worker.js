@@ -70,7 +70,7 @@ const internalServiceWorker = {
                                         logger.service_worker('Service #' + service.id + ' ERROR: ' + err.message);
                                         next(err);
                                     });
-                            } else if (service.type === 'jira-webhook' || service.type === 'bitbucket-webhook') {
+                            } else if (service.type.match(/(.|\n)*-webhook$/im)) {
                                 // can be ignored
                                 next();
                             } else {

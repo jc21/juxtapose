@@ -97,7 +97,6 @@ const internalBitbucketWebhook = {
                             if (err.name === 'TokenExpiredError') {
                                 reject(new error.AuthError('Token has expired', err));
                             } else {
-                                console.log('------------->');
                                 reject(err);
                             }
                         } else {

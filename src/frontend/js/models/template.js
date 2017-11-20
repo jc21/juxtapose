@@ -11,10 +11,8 @@ const model = Backbone.Model.extend({
             in_service_type: '',
             name:            '',
             content:         {
-                icon_url:     '<%= icon_url %>',
-                text:         'Enter Message Here',
-                unfurl_links: false,
-                unfurl_media: false
+                icon_url: '<%= icon_url %>',
+                text:     'Enter Message Here'
             },
             default_options: {
                 icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
@@ -31,16 +29,14 @@ const model = Backbone.Model.extend({
         if (this.get('in_service_type') === 'jira-webhook') {
             this.set({
                 content:      {
-                    icon_url:     '<%= icon_url %>',
-                    text:         '<%= user %> has assigned an issue to you',
-                    attachments:  [
+                    icon_url:    '<%= icon_url %>',
+                    text:        '<%= user %> has assigned an issue to you',
+                    attachments: [
                         {
                             title: '<<%= issueurl %>|<%= issuekey %> - <%= summary %>>',
                             color: '<%= panel_color %>'
                         }
-                    ],
-                    unfurl_links: false,
-                    unfurl_media: false
+                    ]
                 },
                 example_data: {
                     summary:     'Enable Feature x for Customer y',
@@ -60,19 +56,21 @@ const model = Backbone.Model.extend({
             // Bitbucket Default Data
         } else if (this.get('in_service_type') === 'bitbucket-webhook') {
             this.set({
-                content:      {
-                    icon_url:     '<%= icon_url %>',
-                    text:         '<%= user %> has opened a PR',
-                    attachments:  [
+                content:         {
+                    icon_url:    '<%= icon_url %>',
+                    text:        '<%= user %> has opened a PR',
+                    attachments: [
                         {
                             title: '<<%= prurl %>|<%= title %>>',
                             color: '<%= panel_color %>'
                         }
-                    ],
-                    unfurl_links: false,
-                    unfurl_media: false
+                    ]
                 },
-                example_data: {
+                default_options: {
+                    icon_url:    'https://public.jc21.com/juxtapose/icons/orange.png',
+                    panel_color: '#ffbf00'
+                },
+                example_data:    {
                     user:           'Billy Bob',
                     prurl:          'http://example.com',
                     title:          'FEAT-1234 - Enable Feature x for Customer y',
@@ -86,6 +84,48 @@ const model = Backbone.Model.extend({
                         repo:    'application',
                         branch:  'feature/1234'
                     }
+                }
+            });
+
+            // Docker Hub Default Data
+        } else if (this.get('in_service_type') === 'dockerhub-webhook') {
+            this.set({
+                content:         {
+                    icon_url:    '<%= icon_url %>',
+                    text:        'Docker Repository <<%= url %>|<%= repo %>> updated by <%= pusher %>',
+                    attachments: [
+                        {
+                            color:  '<%= panel_color %>',
+                            fields: [
+                                {
+                                    title: 'Tag',
+                                    value: '<%- tag %>',
+                                    short: true
+                                },
+                                {
+                                    title: 'Star Count',
+                                    value: '<%- star_count %>',
+                                    short: true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                default_options: {
+                    icon_url:    'https://public.jc21.com/juxtapose/icons/red.png',
+                    panel_color: '#114c6d'
+                },
+                example_data:    {
+                    pusher:        'jc21',
+                    owner:         'jc21',
+                    repo:          'jc21\/juxtapose',
+                    name:          'juxtapose',
+                    tag:           'latest',
+                    namespace:     'jc21',
+                    description:   'Juxtapose is a self-hosted web app to send notifications from incoming services.',
+                    url:           'https:\/\/hub.docker.com\/r\/jc21\/juxtapose',
+                    star_count:    1234,
+                    comment_count: 0
                 }
             });
         }

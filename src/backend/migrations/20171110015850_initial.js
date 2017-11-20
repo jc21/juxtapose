@@ -167,6 +167,17 @@ exports.up = function (knex/*, Promise*/) {
         })
         .then(() => {
             logger.migrate('[' + migrate_name + '] bitbucket_incoming_log Table created');
+
+            return knex.schema.createTable('dockerhub_incoming_log', (table) => {
+                table.increments().primary();
+                table.dateTime('created_on').notNull();
+                table.dateTime('modified_on').notNull();
+                table.integer('service_id').notNull().unsigned();
+                table.json('data').notNull();
+            });
+        })
+        .then(() => {
+            logger.migrate('[' + migrate_name + '] dockerhub_incoming_log Table created');
         });
 
 };

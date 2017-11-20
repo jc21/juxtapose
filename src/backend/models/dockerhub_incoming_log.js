@@ -8,7 +8,7 @@ const Model = require('objection').Model;
 
 Model.knex(db);
 
-class JiraIncomingLog extends Model {
+class DockerhubIncomingLog extends Model {
     $beforeInsert () {
         this.created_on  = Model.raw('NOW()');
         this.modified_on = Model.raw('NOW()');
@@ -19,11 +19,11 @@ class JiraIncomingLog extends Model {
     }
 
     static get name () {
-        return 'JiraIncomingLog';
+        return 'DockerhubIncomingLog';
     }
 
     static get tableName () {
-        return 'jira_incoming_log';
+        return 'dockerhub_incoming_log';
     }
 
     static get jsonAttributes () {
@@ -32,4 +32,4 @@ class JiraIncomingLog extends Model {
 
 }
 
-module.exports = JiraIncomingLog;
+module.exports = DockerhubIncomingLog;

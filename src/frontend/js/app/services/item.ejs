@@ -8,7 +8,7 @@
             <% if (type === 'slack') { %>
                 &mdash;
                 <a href="#" class="test">Test</a>
-            <% } else if (type === 'jira-webhook' || type === 'bitbucket-webhook') { %>
+            <% } else if (type.match(/(.|\n)*-webhook$/im)) { %>
                 &mdash;
                 <a href="#" class="endpoint">View Endpoint</a>
             <% } %>
