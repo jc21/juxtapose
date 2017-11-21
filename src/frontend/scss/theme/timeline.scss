@@ -65,7 +65,7 @@
   color: $timeline-icon;
 
   &.has-title {
-    margin-top: 20px;
+    //margin-top: 20px;
   }
 
   i {
@@ -96,7 +96,7 @@
   }
 
   &.has-conditions {
-    margin-bottom: 18px;
+    margin-bottom: 54px;
     border-radius: 0 0 0.25em 0.25em;
   }
 
@@ -160,7 +160,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    .delete-link {
+    .delete-link, .edit-link {
       position: absolute;
       right: 5px;
       top: 0;

@@ -8,10 +8,10 @@ const Controller       = require('../controller');
 
 module.exports = Mn.View.extend({
     template:  template,
-    className: 'col-lg-12 col-md-12 col-sm-12 col-xs-12 template',
+    className: 'template',
 
     ui: {
-        edit: 'a.edit'
+        edit: 'a.edit-link'
     },
 
     events: {

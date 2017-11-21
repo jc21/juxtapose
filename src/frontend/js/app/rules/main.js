@@ -84,7 +84,7 @@ module.exports = Mn.View.extend({
                         }));
 
                     } else {
-                        view.showChildView('list_region', new EmptyView());
+                        view.showChildView('jira_region', new EmptyView());
                     }
 
                     view.trigger('loaded');

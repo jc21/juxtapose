@@ -370,7 +370,7 @@ module.exports = {
          * @returns {Promise}
          */
         getAll: function (offset, limit, sort, expand, query, service_type, event_type) {
-            return fetch('get', 'templates?offset=' + (offset ? offset : 0) + '&limit=' + (limit ? limit : 200) + (sort ? '&sort=' + sort : '') +
+            return fetch('get', 'templates?offset=' + (offset ? offset : 0) + '&limit=' + (limit ? limit : 300) + (sort ? '&sort=' + sort : '') +
                 (typeof expand === 'object' && expand !== null && expand.length ? '&expand=' + makeExpansionString(expand) : '') +
                 (typeof query === 'string' ? '&query=' + query : '') +
                 (typeof service_type === 'string' ? '&service_type=' + service_type : '') +

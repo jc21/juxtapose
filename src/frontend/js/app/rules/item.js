@@ -11,7 +11,7 @@ const preview_template = require('../template/preview/main.ejs');
 
 module.exports = Mn.View.extend({
     template:  template,
-    className: 'col-lg-12 col-md-12 col-sm-12 col-xs-12 rule',
+    className: 'rule',
 
     ui: {
         del:      'a.delete-link',

@@ -2,26 +2,29 @@
 
 import Mn from 'backbone.marionette';
 
-const Controller     = require('../controller');
-const Api            = require('../api');
-const TemplateModel  = require('../../models/template');
-const EmptyView      = require('./empty');
-const ListView       = require('./list');
-const template       = require('./main.ejs');
+const VirtualCollection = require('backbone-virtual-collection');
+const Controller        = require('../controller');
+const Api               = require('../api');
+const TemplateModel     = require('../../models/template');
+const EmptyView         = require('./empty');
+const ListView          = require('./list');
+const template          = require('./main.ejs');
 
 module.exports = Mn.View.extend({
     template: template,
     id:       'templates',
 
     ui: {
-        list_region:       'div.list-region',
-        pagination_region: 'div.pagination',
-        add_template:      'a.add-template'
+        jira_region:      'div.jira-region',
+        bitbucket_region: 'div.bitbucket-region',
+        dockerhub_region: 'div.dockerhub-region',
+        add_template:     'a.add-template'
     },
 
     regions: {
-        list_region:       '@ui.list_region',
-        pagination_region: '@ui.pagination_region'
+        jira_region:      '@ui.jira_region',
+        bitbucket_region: '@ui.bitbucket_region',
+        dockerhub_region: '@ui.dockerhub_region'
     },
 
     events: {
@@ -38,11 +41,41 @@ module.exports = Mn.View.extend({
             .then((response) => {
                 if (!view.isDestroyed()) {
                     if (response && response.data && response.data.length) {
-                        view.showChildView('list_region', new ListView({
-                            collection: new TemplateModel.Collection(response.data)
+
+                        let collection = new TemplateModel.Collection(response.data);
+
+                        let jira_templates = new VirtualCollection(collection, {
+                            filter: {
+                                in_service_type: 'jira-webhook'
+                            }
+                        });
+
+                        let bitbucket_templates = new VirtualCollection(collection, {
+                            filter: {
+                                in_service_type: 'bitbucket-webhook'
+                            }
+                        });
+
+                        let dockerhub_templates = new VirtualCollection(collection, {
+                            filter: {
+                                in_service_type: 'dockerhub-webhook'
+                            }
+                        });
+
+                        view.showChildView('jira_region', new ListView({
+                            collection: jira_templates
                         }));
+
+                        view.showChildView('bitbucket_region', new ListView({
+                            collection: bitbucket_templates
+                        }));
+
+                        view.showChildView('dockerhub_region', new ListView({
+                            collection: dockerhub_templates
+                        }));
+
                     } else {
-                        view.showChildView('list_region', new EmptyView());
+                        view.showChildView('jira_region', new EmptyView());
                     }
 
                     view.trigger('loaded');
