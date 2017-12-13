@@ -75,17 +75,7 @@ module.exports = {
         this.message = message;
         this.public = false;
         this.status = 400;
-    },
-
-    QuietTimeError: function (previous) {
-        Error.captureStackTrace(this, this.constructor);
-        this.name = this.constructor.name;
-        this.previous = previous;
-        this.message = 'Cannot autoplay songs during quiet time';
-        this.public = true;
-        this.status = 400;
     }
-
 };
 
 _.forEach(module.exports, function (error) {

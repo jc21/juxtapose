@@ -158,7 +158,7 @@ router
     /**
      * PUT /api/rules/123
      *
-     * Update and existing Rule
+     * Update an existing Rule
      */
     .put((req, res, next) => {
         apiValidator({$ref: 'endpoints/rules#/links/2/schema'}, req.body)
@@ -176,7 +176,7 @@ router
     /**
      * DELETE /api/rules/123
      *
-     * Delete and existing Rule
+     * Delete an existing Rule
      */
     .delete((req, res, next) => {
         internalRule.delete(res.locals.access, {id: req.params.rule_id})

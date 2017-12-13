@@ -59,7 +59,6 @@ app.use('/css', express.static('dist/css'));
 app.use('/fonts', express.static('dist/fonts'));
 app.use('/images', express.static('dist/images'));
 app.use('/js', express.static('dist/js'));
-app.use('/videos', express.static('dist/videos'));
 app.use('/api', require('./routes/api/main'));
 app.use('/incoming', require('./routes/incoming/main'));
 app.use('/', require('./routes/main'));

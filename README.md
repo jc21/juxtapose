@@ -19,6 +19,7 @@ swamped in noise, thus improving productivity.
 
 - Jira (via Webhooks)
 - Bitbucket (via Webhooks)
+- Docker Hub (via Webhooks)
 
 **Outgoing services**
 

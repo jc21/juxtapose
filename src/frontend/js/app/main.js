@@ -36,7 +36,7 @@ const App = Mn.Application.extend({
 
         // Check if we are still logged in by refreshing the token
         Api.status()
-            .then((result) => {
+            .then(result => {
                 this.version = [result.version.major, result.version.minor, result.version.revision].join('.');
             })
             .then(Api.Tokens.refresh)
@@ -137,7 +137,7 @@ const App = Mn.Application.extend({
     bootstrapTimer: function () {
         setTimeout(() => {
             Api.status()
-                .then((result) => {
+                .then(result => {
                     let version = [result.version.major, result.version.minor, result.version.revision].join('.');
                     if (version !== this.version) {
                         document.location.reload();
@@ -160,9 +160,6 @@ const App = Mn.Application.extend({
         }, 30 * 1000); // 30 seconds
     },
 
-    /**
-     * Forces the spotify token to refresh from the server side
-     */
     refreshTokenTimer: function () {
         setTimeout(() => {
             return Api.Tokens.refresh()
@@ -170,7 +167,7 @@ const App = Mn.Application.extend({
                 .then(() => {
                     this.refreshTokenTimer();
                 })
-                .catch((err) => {
+                .catch(err => {
                     if (err.message !== 'timeout' && err.code && err.code !== 400) {
                         console.log(err);
                         console.error(err.message);
@@ -180,7 +177,7 @@ const App = Mn.Application.extend({
                         this.refreshTokenTimer();
                     }
                 });
-        }, 10 * 60 * 1000); // 10 mins
+        }, 10 * 60 * 1000);
     }
 });
 
