@@ -2,6 +2,10 @@
 
 # Juxtapose
 
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg)
+![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg)
+
 ![Build Status](http://bamboo.jc21.com/plugins/servlet/wittified/build-status/AB-JUX)
 
 > **[juhk-stuh-pohz, juhk-stuh-pohz]**
