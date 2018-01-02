@@ -12,7 +12,8 @@ const common_values = {
     icon_url_red:           'https://public.jc21.com/juxtapose/icons/red.png',
     service_type_slack:     'slack',
     service_type_jira:      'jira-webhook',
-    service_type_bitbucket: 'bitbucket-webhook'
+    service_type_bitbucket: 'bitbucket-webhook',
+    service_type_dockerhub: 'dockerhub-webhook'
 };
 
 /**
@@ -297,7 +298,7 @@ const templates = [
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
-        name:            '',
+        name:            'Re-opened Unassigned',
         content:         {
             icon_url:    '<%= icon_url %>',
             text:        '<%= user %> has re-opened an Unassigned issue',
@@ -940,7 +941,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'PR Opened',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -979,7 +980,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Approved',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1018,7 +1019,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR Needs Work',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1057,7 +1058,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'PR Merged',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1096,7 +1097,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Declined',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1135,7 +1136,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Deleted',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1174,7 +1175,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Commented on your PR',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1213,7 +1214,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_dockerhub,
         name:            'Repo Updated',
         content:         {
             icon_url:    '<%= icon_url %>',
