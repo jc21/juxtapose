@@ -28,7 +28,7 @@
     "node-rsa": "^0.4.2",
     "objection": "^0.8.9",
     "path": "^0.12.7",
-    "slackbots": "^1.1.0",
+    "slackbots": "git://github.com/jc21/slack-bot-api.git#proxy-support",
     "winston": "^2.3.1"
   },
   "devDependencies": {
