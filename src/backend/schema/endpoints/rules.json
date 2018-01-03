@@ -227,6 +227,36 @@
       "targetSchema": {
         "type": "boolean"
       }
+    },
+    {
+      "title": "Copy",
+      "description": "Copies rules from one user to another",
+      "href": "/rules/copy",
+      "access": "private",
+      "method": "POST",
+      "http_header": {
+        "$ref": "../examples.json#/definitions/auth_header"
+      },
+      "schema": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "to": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "targetSchema": {
+        "type": "boolean"
+      }
     }
   ],
   "properties": {

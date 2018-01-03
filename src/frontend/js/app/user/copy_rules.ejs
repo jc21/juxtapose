@@ -1,0 +1,36 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form class="form-horizontal">
+            <div class="modal-header text-left">
+                <h4 class="modal-title">Copy Rules to <%- name %></h4>
+            </div>
+            <div class="modal-body">
+                <p>This procedure will copy <strong>ALL</strong> of the defined rules from the selected user below in to <%- name %>'s account.</p>
+                <p>This will NOT overwrite or remove any existing rules for the user, who currently has <strong><%- rule_count %></strong> rules.</p>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Copy rules from</label>
+                    <div class="col-sm-9">
+                        <select name="from_user_id" class="form-control" required>
+                            <option value="">Select...</option>
+                            <%
+                            var users = getUsers();
+                            _.each(users, function (user) {
+                                if (user.id !== id && user.rule_count > 0) {
+                                    %>
+                                    <option value="<%- user.id %>"><%- user.name %> (<%- user.rule_count %> rules)</option>
+                                    <%
+                                }
+                            });
+                            %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-accent save">Copy</button>
+            </div>
+        </form>
+    </div>
+</div>

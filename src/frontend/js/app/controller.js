@@ -361,6 +361,20 @@ module.exports = {
     },
 
     /**
+     * User Copy Rules Form
+     *
+     * @param {Object}  model
+     * @param {Array}   users
+     */
+    showUserCopyRules: function (model, users) {
+        if (Cache.User.isAdmin() || model.get('id') === Cache.User.get('id')) {
+            require(['./main', './user/copy_rules'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model, users: users}));
+            });
+        }
+    },
+
+    /**
      * User Service Settings Form
      *
      * @param {Object}  model           User Model

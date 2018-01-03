@@ -14,7 +14,8 @@ module.exports = Mn.View.extend({
         user:             'a.user-link',
         edit:             '.btn-edit',
         password:         '.btn-password',
-        service_settings: '.btn-service-settings'
+        service_settings: '.btn-service-settings',
+        copy_rules:       '.btn-copy-rules'
     },
 
     events: {
@@ -40,17 +41,36 @@ module.exports = Mn.View.extend({
             this.ui.service_settings.prop('disabled', true).addClass('btn-disabled');
 
             Api.Services.getAvailable()
-                .then((services) => {
+                .then(services => {
                     if (!view.isDestroyed()) {
                         Controller.showUserServiceSettingsForm(this.model, services);
                         this.ui.service_settings.prop('disabled', false).removeClass('btn-disabled');
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     Controller.showError(err, 'Could not fetch available services');
                     this.ui.service_settings.prop('disabled', false).removeClass('btn-disabled');
                 });
-        }
+        },
+
+        'click @ui.copy_rules': function (e) {
+            e.preventDefault();
+            let view = this;
+
+            this.ui.copy_rules.prop('disabled', true).addClass('btn-disabled');
+
+            Api.Users.getAll()
+                .then(users => {
+                    if (!view.isDestroyed()) {
+                        Controller.showUserCopyRules(this.model, users.data);
+                        this.ui.copy_rules.prop('disabled', false).removeClass('btn-disabled');
+                    }
+                })
+                .catch(err => {
+                    Controller.showError(err, 'Could not fetch Users');
+                    this.ui.copy_rules.prop('disabled', false).removeClass('btn-disabled');
+                });
+        },
     },
 
     templateContext: function () {

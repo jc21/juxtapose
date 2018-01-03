@@ -1,7 +1,6 @@
 'use strict';
 
 const _         = require('lodash');
-const debug     = require('debug')('juxtapose:internal:rule');
 const error     = require('../lib/error');
 const ruleModel = require('../models/rule');
 const batchflow = require('batchflow');
@@ -18,10 +17,6 @@ const internalRule = {
      * @returns {Promise}
      */
     create: (access, data) => {
-        if (typeof data.is_disabled !== 'undefined') {
-            data.is_disabled = data.is_disabled ? 1 : 0;
-        }
-
         // Define some defaults if they were not set
         if (typeof data.user_id === 'undefined' || !data.user_id) {
             data.user_id = access.token.get('attrs').id;
@@ -112,8 +107,6 @@ const internalRule = {
      * @return {Promise}
      */
     get: (access, data) => {
-        //debug('Getting rule record', data);
-
         return access.can('rules:get', data.id)
             .then(() => {
                 let query = ruleModel
@@ -206,7 +199,7 @@ const internalRule = {
     },
 
     /**
-     * Set Rule Order
+     * Set Rule Order - not currently in use
      *
      * @param {Access}  access
      * @param {Array}   orders
@@ -226,16 +219,66 @@ const internalRule = {
                                     next(_.assign({}, obj, {updated: res}));
                                 });
                         })
-                        .error((err) => {
+                        .error(err => {
                             reject(err);
                         })
-                        .end((results) => {
+                        .end(results => {
                             resolve(results);
                         });
                 });
             })
             .then(() => {
                 return true;
+            });
+    },
+
+    /**
+     * Copy rules from one account to another
+     *
+     * @param {Access}   access
+     * @param {Object}   data
+     * @param {Integer}  data.from
+     * @param {Integer}  data.to
+     */
+    copy: (access, data) => {
+        return access.can('rules:copy')
+            .then(() => {
+                if (data.from === data.to) {
+                    throw new error.ValidationError('Cannot copy rules to the same person');
+                }
+
+                // 1. Select rules from user
+                return ruleModel
+                    .query()
+                    .where('is_deleted', 0)
+                    .andWhere('user_id', data.from);
+            })
+            .then(rules => {
+                // 2. Insert modified rules for a user
+                return new Promise((resolve, reject) => {
+                    batchflow(rules).sequential()
+                        .each((i, rule, next) => {
+                            let new_rule = _.omit(rule, ['fired_count', 'user_id', 'id']);
+                            new_rule.user_id = data.to;
+
+                            ruleModel
+                                .query()
+                                .insert(new_rule)
+                                .then(() => {
+                                    next();
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    next(err);
+                                });
+                        })
+                        .error(err => {
+                            reject(err);
+                        })
+                        .end((/*results*/) => {
+                            resolve(true);
+                        });
+                });
             });
     }
 };
