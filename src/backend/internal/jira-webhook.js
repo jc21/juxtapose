@@ -911,10 +911,13 @@ const internalJiraWebhook = {
                 switch (name) {
                     case 'project':
                         let project = internalJiraWebhook.getIssueField(webhook_data, 'project');
-                        if (project !== null && typeof project.key !== 'undefined' && project.key !== value) {
-                            // Project key doesn't match
-                            is_ok = false;
+
+                        if (project !== null && typeof project.key !== 'undefined' && value) {
+                            // Support comma separated values for project key
+                            let valid_keys = value.split(',');
+                            is_ok = valid_keys.indexOf(project.key) !== -1;
                         }
+
                         break;
                 }
             });
