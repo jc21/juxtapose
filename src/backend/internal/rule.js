@@ -81,7 +81,7 @@ const internalRule = {
             .then(() => {
                 return internalRule.get(access, {id: data.id});
             })
-            .then((rule) => {
+            .then(rule => {
                 if (!rule) {
                     throw new error.ItemNotFoundError(data.id);
                 }

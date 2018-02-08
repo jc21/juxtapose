@@ -21,6 +21,20 @@ const internalTemplate = {
         if (typeof data.is_disabled !== 'undefined') {
             data.is_disabled = data.is_disabled ? 1 : 0;
         }
+        return access.can('templates:create', data)
+            .then(() => {
+                return internalTemplate.createRaw(data);
+            });
+    },
+
+    /**
+     * @param   {Object}  data
+     * @returns {Promise}
+     */
+    createRaw: data => {
+        if (typeof data.is_disabled !== 'undefined') {
+            data.is_disabled = data.is_disabled ? 1 : 0;
+        }
 
         let event_types = null;
 
@@ -29,20 +43,20 @@ const internalTemplate = {
             delete data.event_types;
         }
 
-        return access.can('templates:create', data)
-            .then(() => {
-                // This should fail if it can't compile
-                try {
-                    templateRender(data.content, _.assign({}, data.example_data, data.default_options));
-                } catch (err) {
-                    throw new Error('Template failed to compile. Check all wildcards are correct.');
-                }
+        return new Promise((resolve, reject) => {
+            // This should fail if it can't compile
+            try {
+                templateRender(data.content, _.assign({}, data.example_data, data.default_options));
+            } catch (err) {
+                reject(new Error('Template failed to compile. Check all wildcards are correct.'));
+                return;
+            }
 
-                return templateModel
-                    .query()
-                    .omit(omissions())
-                    .insertAndFetch(data);
-            })
+            return templateModel
+                .query()
+                .omit(omissions())
+                .insertAndFetch(data);
+        })
             .then(template => {
                 if (event_types !== null) {
                     return internalTemplate.saveEventTypes(template.id, event_types)

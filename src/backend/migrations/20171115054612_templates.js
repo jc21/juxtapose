@@ -1,7 +1,6 @@
 'use strict';
 
 const migrate_name     = 'templates';
-const Access           = require('../lib/access');
 const logger           = require('../logger');
 const batchflow        = require('batchflow');
 const internalTemplate = require('../internal/template');
@@ -1268,30 +1267,26 @@ const templates = [
  */
 exports.up = function (knex, Promise) {
     logger.migrate('[' + migrate_name + '] Migrating Up...');
-    let access = new Access(null);
 
-    return access.load(true)
-        .then(() => {
-            return new Promise((resolve, reject) => {
-                batchflow(templates).sequential()
-                    .each((i, template_data, next) => {
-                        logger.migrate('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
+    return new Promise((resolve, reject) => {
+        batchflow(templates).sequential()
+            .each((i, template_data, next) => {
+                logger.migrate('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
 
-                        internalTemplate.create(access, template_data)
-                            .then(next)
-                            .catch(err => {
-                                logger.error('[' + migrate_name + '] ' + err.message);
-                                throw err;
-                            });
-                    })
-                    .error(err => {
-                        reject(err);
-                    })
-                    .end(results => {
-                        resolve(true);
+                internalTemplate.createRaw(template_data)
+                    .then(next)
+                    .catch(err => {
+                        logger.error('[' + migrate_name + '] ' + err.message);
+                        throw err;
                     });
+            })
+            .error(err => {
+                reject(err);
+            })
+            .end((/*results*/) => {
+                resolve(true);
             });
-        });
+    });
 };
 
 /**
