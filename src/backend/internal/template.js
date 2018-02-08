@@ -24,6 +24,9 @@ const internalTemplate = {
         return access.can('templates:create', data)
             .then(() => {
                 return internalTemplate.createRaw(data);
+            })
+            .then(template => {
+                return internalTemplate.get(access, {id: template.id});
             });
     },
 
@@ -52,10 +55,10 @@ const internalTemplate = {
                 return;
             }
 
-            return templateModel
+            resolve(templateModel
                 .query()
                 .omit(omissions())
-                .insertAndFetch(data);
+                .insertAndFetch(data));
         })
             .then(template => {
                 if (event_types !== null) {
@@ -66,9 +69,6 @@ const internalTemplate = {
                 } else {
                     return template;
                 }
-            })
-            .then(template => {
-                return internalTemplate.get(access, {id: template.id});
             });
     },
 
@@ -131,26 +131,31 @@ const internalTemplate = {
     get: (access, data) => {
         return access.can('templates:get', data.id)
             .then(() => {
-                let query = templateModel
-                    .query()
-                    .where('id', data.id)
-                    .allowEager('[types]')
-                    .eager('[types]')
-                    .first();
+                return internalTemplate.getRaw(data);
+            });
+    },
 
-                // Custom omissions
-                if (typeof data.omit !== 'undefined' && data.omit !== null) {
-                    query.omit(data.omit);
-                }
+    /**
+     * @param  {Object}   data
+     * @param  {Integer}  data.id
+     * @param  {Array}    [data.expand]
+     * @param  {Array}    [data.omit]
+     * @return {Promise}
+     */
+    getRaw: data => {
+        let query = templateModel
+            .query()
+            .where('id', data.id)
+            .allowEager('[types]')
+            .eager('[types]')
+            .first();
 
-                //if (typeof data.expand !== 'undefined' && data.expand !== null) {
-                //    //debug('Template Eager Loading', '[' + data.expand.join(', ') + ']');
-                //    query.eager('[' + data.expand.join(', ') + ']');
-                //}
+        if (typeof data.omit !== 'undefined' && data.omit !== null) {
+            query.omit(data.omit);
+        }
 
-                return query;
-            })
-            .then((template) => {
+        return query
+            .then(template => {
                 if (template) {
                     return _.omit(template, omissions());
                 } else {
