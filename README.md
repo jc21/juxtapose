@@ -48,6 +48,11 @@ When first run, the app will generate private and public gpg keys for use with J
 in the database and are instead saved in a config file in the `/config` directory.
 
 
+## Using [Rancher](https://rancher.com)?
+
+Easily start an Juxtapose Stack by adding [my template catalog](https://github.com/jc21/rancher-templates).
+
+
 ### Method 1: Pre-built Docker Image with docker-compose and local mariadb
 
 By far the easiest way to get up and running. Create this `docker-compose.yml`
