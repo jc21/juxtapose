@@ -21,6 +21,23 @@ const internalTemplate = {
         if (typeof data.is_disabled !== 'undefined') {
             data.is_disabled = data.is_disabled ? 1 : 0;
         }
+        return access.can('templates:create', data)
+            .then(() => {
+                return internalTemplate.createRaw(data);
+            })
+            .then(template => {
+                return internalTemplate.get(access, {id: template.id});
+            });
+    },
+
+    /**
+     * @param   {Object}  data
+     * @returns {Promise}
+     */
+    createRaw: data => {
+        if (typeof data.is_disabled !== 'undefined') {
+            data.is_disabled = data.is_disabled ? 1 : 0;
+        }
 
         let event_types = null;
 
@@ -29,20 +46,20 @@ const internalTemplate = {
             delete data.event_types;
         }
 
-        return access.can('templates:create', data)
-            .then(() => {
-                // This should fail if it can't compile
-                try {
-                    templateRender(data.content, _.assign({}, data.example_data, data.default_options));
-                } catch (err) {
-                    throw new Error('Template failed to compile. Check all wildcards are correct.');
-                }
+        return new Promise((resolve, reject) => {
+            // This should fail if it can't compile
+            try {
+                templateRender(data.content, _.assign({}, data.example_data, data.default_options));
+            } catch (err) {
+                reject(new Error('Template failed to compile. Check all wildcards are correct.'));
+                return;
+            }
 
-                return templateModel
-                    .query()
-                    .omit(omissions())
-                    .insertAndFetch(data);
-            })
+            resolve(templateModel
+                .query()
+                .omit(omissions())
+                .insertAndFetch(data));
+        })
             .then(template => {
                 if (event_types !== null) {
                     return internalTemplate.saveEventTypes(template.id, event_types)
@@ -52,9 +69,6 @@ const internalTemplate = {
                 } else {
                     return template;
                 }
-            })
-            .then(template => {
-                return internalTemplate.get(access, {id: template.id});
             });
     },
 
@@ -117,26 +131,31 @@ const internalTemplate = {
     get: (access, data) => {
         return access.can('templates:get', data.id)
             .then(() => {
-                let query = templateModel
-                    .query()
-                    .where('id', data.id)
-                    .allowEager('[types]')
-                    .eager('[types]')
-                    .first();
+                return internalTemplate.getRaw(data);
+            });
+    },
 
-                // Custom omissions
-                if (typeof data.omit !== 'undefined' && data.omit !== null) {
-                    query.omit(data.omit);
-                }
+    /**
+     * @param  {Object}   data
+     * @param  {Integer}  data.id
+     * @param  {Array}    [data.expand]
+     * @param  {Array}    [data.omit]
+     * @return {Promise}
+     */
+    getRaw: data => {
+        let query = templateModel
+            .query()
+            .where('id', data.id)
+            .allowEager('[types]')
+            .eager('[types]')
+            .first();
 
-                //if (typeof data.expand !== 'undefined' && data.expand !== null) {
-                //    //debug('Template Eager Loading', '[' + data.expand.join(', ') + ']');
-                //    query.eager('[' + data.expand.join(', ') + ']');
-                //}
+        if (typeof data.omit !== 'undefined' && data.omit !== null) {
+            query.omit(data.omit);
+        }
 
-                return query;
-            })
-            .then((template) => {
+        return query
+            .then(template => {
                 if (template) {
                     return _.omit(template, omissions());
                 } else {

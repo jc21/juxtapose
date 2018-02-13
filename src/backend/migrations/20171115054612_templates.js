@@ -1,7 +1,6 @@
 'use strict';
 
 const migrate_name     = 'templates';
-const Access           = require('../lib/access');
 const logger           = require('../logger');
 const batchflow        = require('batchflow');
 const internalTemplate = require('../internal/template');
@@ -12,7 +11,8 @@ const common_values = {
     icon_url_red:           'https://public.jc21.com/juxtapose/icons/red.png',
     service_type_slack:     'slack',
     service_type_jira:      'jira-webhook',
-    service_type_bitbucket: 'bitbucket-webhook'
+    service_type_bitbucket: 'bitbucket-webhook',
+    service_type_dockerhub: 'dockerhub-webhook'
 };
 
 /**
@@ -297,7 +297,7 @@ const templates = [
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
-        name:            '',
+        name:            'Re-opened Unassigned',
         content:         {
             icon_url:    '<%= icon_url %>',
             text:        '<%= user %> has re-opened an Unassigned issue',
@@ -940,7 +940,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'PR Opened',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -979,7 +979,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Approved',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1018,7 +1018,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR Needs Work',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1057,7 +1057,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'PR Merged',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1096,7 +1096,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Declined',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1135,7 +1135,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Deleted',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1174,7 +1174,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_bitbucket,
         name:            'Commented on your PR',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1213,7 +1213,7 @@ const templates = [
      */
     {
         service_type:    common_values.service_type_slack,
-        in_service_type: common_values.service_type_jira,
+        in_service_type: common_values.service_type_dockerhub,
         name:            'Repo Updated',
         content:         {
             icon_url:    '<%= icon_url %>',
@@ -1267,30 +1267,26 @@ const templates = [
  */
 exports.up = function (knex, Promise) {
     logger.migrate('[' + migrate_name + '] Migrating Up...');
-    let access = new Access(null);
 
-    return access.load(true)
-        .then(() => {
-            return new Promise((resolve, reject) => {
-                batchflow(templates).sequential()
-                    .each((i, template_data, next) => {
-                        logger.migrate('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
+    return new Promise((resolve, reject) => {
+        batchflow(templates).sequential()
+            .each((i, template_data, next) => {
+                logger.migrate('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
 
-                        internalTemplate.create(access, template_data)
-                            .then(next)
-                            .catch(err => {
-                                logger.error('[' + migrate_name + '] ' + err.message);
-                                throw err;
-                            });
-                    })
-                    .error(err => {
-                        reject(err);
-                    })
-                    .end(results => {
-                        resolve(true);
+                internalTemplate.createRaw(template_data)
+                    .then(next)
+                    .catch(err => {
+                        logger.error('[' + migrate_name + '] ' + err.message);
+                        throw err;
                     });
+            })
+            .error(err => {
+                reject(err);
+            })
+            .end((/*results*/) => {
+                resolve(true);
             });
-        });
+    });
 };
 
 /**

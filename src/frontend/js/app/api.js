@@ -339,6 +339,19 @@ module.exports = {
          */
         setOrder: function (order) {
             return fetch('post', 'rules/order', order);
+        },
+
+        /**
+         *
+         * @param   {Integer}  from_user_id
+         * @param   {Integer}  to_user_id
+         * @returns {Promise}
+         */
+        copy: function (from_user_id, to_user_id) {
+            return fetch('post', 'rules/copy', {
+                from: from_user_id,
+                to:   to_user_id
+            });
         }
     },
 

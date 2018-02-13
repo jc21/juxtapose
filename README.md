@@ -2,7 +2,7 @@
 
 # Juxtapose
 
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.2-green.svg)
 ![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg)
 ![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg)
 
@@ -138,7 +138,7 @@ docker-compose up
 And observe the output.
 
 
-### Method 2: Pre-built Docker Image with your own database
+### Method 3: Pre-built Docker Image with your own database
 
 Run this:
 
@@ -151,12 +151,12 @@ For this example, your Juxtapose config file should be named `default.json` and 
 Make sure your config database settings are correct! Juxtapose only needs a new, empty database to get started.
 
 
-### Method 3: Run pre-built package using Node
+### Method 4: Run pre-built package using Node
 
 For when you don't know Docker and don't want to know. You'll need node version 6+ and a database ready to go.
 
 
-### Method 4: Run for development, yes using Docker
+### Method 5: Run for development, yes using Docker
 
 If you intend on developing and extending this app, this is how you'll want to get started. You'll need docker-compose installed.
 
@@ -226,6 +226,45 @@ It's actually pretty easy. Create a new Template and use this code for the conte
 ```
 
 You'll see what kind of output to expect after you've saved the template.
+
+### Proxy
+
+Should you be running behind a HTTP Proxy, just specify the `HTTP_PROXY` environment variable. Note: Proxy support was added in v1.0.1
+
+```bash
+version: "2"
+services:
+  app:
+    image: jc21/juxtapose
+    ports:
+      - 80:80
+    environment:
+      - NODE_ENV=production
+      - HTTP_PROXY=http://10.60.10.1:3128
+    volumes:
+      - ./default.json:/srv/app/config/default.json
+    depends_on:
+      - db
+    links:
+      - db
+    restart: on-failure
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "juxtapose"
+      MYSQL_DATABASE: "juxtapose"
+      MYSQL_USER: "juxtapose"
+      MYSQL_PASSWORD: "juxtapose"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: on-failure
+```
+
+or
+
+```bash
+docker run --name juxtapose -p 80:80 -e NODE_ENV=production -e HTTP_PROXY=http://10.60.10.1:3128 -v "./default.json:/srv/app/config/default.json" jc21/juxtapose
+```
 
 
 ## Screenshots

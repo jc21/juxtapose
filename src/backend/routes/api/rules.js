@@ -44,19 +44,19 @@ router
             sort:   req.query.sort,
             expand: (typeof req.query.expand === 'string' ? req.query.expand.split(',') : null)
         })
-            .then((data) => {
+            .then(data => {
                 return Promise.all([
                     internalRule.getCount(res.locals.access),
                     internalRule.getAll(res.locals.access, req.query.offset, req.query.limit, data.sort, data.expand)
                 ]);
             })
-            .then((data) => {
+            .then(data => {
                 res.setHeader('X-Dataset-Total', data.shift());
                 res.setHeader('X-Dataset-Offset', req.query.offset);
                 res.setHeader('X-Dataset-Limit', req.query.limit);
                 return data.shift();
             })
-            .then((rules) => {
+            .then(rules => {
                 res.status(200)
                     .send(rules);
             })
@@ -70,10 +70,10 @@ router
      */
     .post((req, res, next) => {
         apiValidator({$ref: 'endpoints/rules#/links/1/schema'}, req.body)
-            .then((payload) => {
+            .then(payload => {
                 return internalRule.create(res.locals.access, payload);
             })
-            .then((result) => {
+            .then(result => {
                 res.status(201)
                     .send(result);
             })
@@ -99,10 +99,37 @@ router
      */
     .post((req, res, next) => {
         apiValidator({$ref: 'endpoints/rules#/links/4/schema'}, req.body)
-            .then((payload) => {
+            .then(payload => {
                 return internalRule.setOrder(res.locals.access, payload);
             })
-            .then((result) => {
+            .then(result => {
+                res.status(200)
+                    .send(result);
+            })
+            .catch(next);
+    });
+
+/**
+ * Copy rules from one user to another
+ *
+ * /api/rules/copy
+ */
+router
+    .route('/copy')
+    .options((req, res) => {
+        res.sendStatus(204);
+    })
+    .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
+
+    /**
+     * POST /api/rules/copy
+     */
+    .post((req, res, next) => {
+        apiValidator({$ref: 'endpoints/rules#/links/5/schema'}, req.body)
+            .then(payload => {
+                return internalRule.copy(res.locals.access, payload);
+            })
+            .then(result => {
                 res.status(200)
                     .send(result);
             })
@@ -142,13 +169,13 @@ router
             rule_id: req.params.rule_id,
             expand:  (typeof req.query.expand === 'string' ? req.query.expand.split(',') : null)
         })
-            .then((data) => {
+            .then(data => {
                 return internalRule.get(res.locals.access, {
                     id:     data.rule_id,
                     expand: data.expand
                 });
             })
-            .then((rule) => {
+            .then(rule => {
                 res.status(200)
                     .send(rule);
             })
@@ -162,11 +189,11 @@ router
      */
     .put((req, res, next) => {
         apiValidator({$ref: 'endpoints/rules#/links/2/schema'}, req.body)
-            .then((payload) => {
+            .then(payload => {
                 payload.id = parseInt(req.params.rule_id, 10);
                 return internalRule.update(res.locals.access, payload);
             })
-            .then((result) => {
+            .then(result => {
                 res.status(200)
                     .send(result);
             })
@@ -180,7 +207,7 @@ router
      */
     .delete((req, res, next) => {
         internalRule.delete(res.locals.access, {id: req.params.rule_id})
-            .then((result) => {
+            .then(result => {
                 res.status(200)
                     .send(result);
             })
