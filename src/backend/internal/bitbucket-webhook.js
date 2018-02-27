@@ -174,15 +174,15 @@ const internalBitbucketWebhook = {
 
                                     next(notified_user_ids.length);
                                 })
-                                .catch((err) => {
+                                .catch(err => {
                                     console.error(err.message);
                                     next(err);
                                 });
                         })
-                        .error((err) => {
+                        .error(err => {
                             reject(err);
                         })
-                        .end((results) => {
+                        .end(results => {
                             let total = 0;
 
                             _.map(results, (this_count) => {
@@ -226,7 +226,7 @@ const internalBitbucketWebhook = {
 
                             next();
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.error(err);
                             next();
                         });
@@ -234,7 +234,7 @@ const internalBitbucketWebhook = {
                 .error(err => {
                     reject(err);
                 })
-                .end(results => {
+                .end(() => {
                     resolve(already_notified_user_ids);
                 });
         });
@@ -539,7 +539,6 @@ const internalBitbucketWebhook = {
      * @returns {String}
      */
     getPrUrl: (webhook_data, base_url) => {
-        // https://stash.vision6.com.au/projects/V6/repos/businessbuilder/pull-requests/7540
         return base_url + '/projects/' +
             internalBitbucketWebhook.getToProjectField(webhook_data, 'key') +
             '/repos/' +
@@ -620,7 +619,7 @@ const internalBitbucketWebhook = {
         let this_already_notified_user_ids = [];
 
         return query
-            .then((rules) => {
+            .then(rules => {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
@@ -644,17 +643,21 @@ const internalBitbucketWebhook = {
                                     _template_id: rule.out_template_id
                                 };
 
-                                let notification_data = {
-                                    user_id:    rule.user_id,
-                                    rule_id:    rule.id,
-                                    service_id: rule.out_service_id,
-                                    content:    templateRender(rule.template.content, _.assign({}, rule.template.default_options, rule.out_template_options, data, debug_data)),
-                                    status:     'ready'
-                                };
-
-                                notificationQueueModel
-                                    .query()
-                                    .insert(notification_data)
+                                templateRender(rule.template.content, _.assign({}, rule.template.default_options, rule.out_template_options, data, debug_data), rule.template.render_engine)
+                                    .then(content => {
+                                        return {
+                                            user_id:    rule.user_id,
+                                            rule_id:    rule.id,
+                                            service_id: rule.out_service_id,
+                                            content:    content,
+                                            status:     'ready'
+                                        };
+                                    })
+                                    .then(notification_data => {
+                                        return notificationQueueModel
+                                            .query()
+                                            .insert(notification_data);
+                                    })
                                     .then(() => {
                                         logger.bitbucket_webhook('      ❯ Notification queue item added');
                                         this_already_notified_user_ids.push(rule.user_id);
@@ -672,10 +675,10 @@ const internalBitbucketWebhook = {
                                     });
                             }
                         })
-                        .error((err) => {
+                        .error(err => {
                             reject(err);
                         })
-                        .end((/*results*/) => {
+                        .end(() => {
                             logger.bitbucket_webhook('    ❯ Done processing Rules for:    ', event_type);
                             resolve(this_already_notified_user_ids);
                         });
