@@ -15,7 +15,7 @@ const logger       = require('../logger');
 exports.up = function (knex/*, Promise*/) {
     logger.migrate('[' + migrate_name + '] Migrating Up...');
 
-    return knex.schema.createTable('auth', (table) => {
+    return knex.schema.createTable('auth', table => {
         table.increments().primary();
         table.dateTime('created_on').notNull();
         table.dateTime('modified_on').notNull();
@@ -28,7 +28,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] auth Table created');
 
-            return knex.schema.createTable('user', (table) => {
+            return knex.schema.createTable('user', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -44,7 +44,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] user Table created');
 
-            return knex.schema.createTable('service', (table) => {
+            return knex.schema.createTable('service', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -57,7 +57,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] service Table created');
 
-            return knex.schema.createTable('user_has_service_data', (table) => {
+            return knex.schema.createTable('user_has_service_data', table => {
                 table.integer('user_id').notNull().unsigned();
                 table.integer('service_id').notNull().unsigned();
                 table.dateTime('created_on').notNull();
@@ -70,7 +70,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] user_has_service_data Table created');
 
-            return knex.schema.createTable('template', (table) => {
+            return knex.schema.createTable('template', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -78,15 +78,16 @@ exports.up = function (knex/*, Promise*/) {
                 table.string('service_type', 30).notNull();
                 table.string('in_service_type', 30).notNull();
                 table.string('name').notNull();
-                table.json('content').notNull();
+                table.text('content', 'mediumtext').notNull();
                 table.json('default_options').notNull();
                 table.json('example_data').notNull();
+                table.string('render_engine', '15').notNull().defaultTo('');
             });
         })
         .then(() => {
             logger.migrate('[' + migrate_name + '] template Table created');
 
-            return knex.schema.createTable('template_has_event', (table) => {
+            return knex.schema.createTable('template_has_event', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -97,7 +98,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] template_has_event Table created');
 
-            return knex.schema.createTable('rule', (table) => {
+            return knex.schema.createTable('rule', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -116,7 +117,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] rule Table created');
 
-            return knex.schema.createTable('notification_queue', (table) => {
+            return knex.schema.createTable('notification_queue', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -131,7 +132,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] notification_queue Table created');
 
-            return knex.schema.createTable('jira_issue_status', (table) => {
+            return knex.schema.createTable('jira_issue_status', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -146,7 +147,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] jira_issue_status Table created');
 
-            return knex.schema.createTable('jira_incoming_log', (table) => {
+            return knex.schema.createTable('jira_incoming_log', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -157,7 +158,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] jira_incoming_log Table created');
 
-            return knex.schema.createTable('bitbucket_incoming_log', (table) => {
+            return knex.schema.createTable('bitbucket_incoming_log', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();
@@ -168,7 +169,7 @@ exports.up = function (knex/*, Promise*/) {
         .then(() => {
             logger.migrate('[' + migrate_name + '] bitbucket_incoming_log Table created');
 
-            return knex.schema.createTable('dockerhub_incoming_log', (table) => {
+            return knex.schema.createTable('dockerhub_incoming_log', table => {
                 table.increments().primary();
                 table.dateTime('created_on').notNull();
                 table.dateTime('modified_on').notNull();

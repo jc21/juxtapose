@@ -2,17 +2,21 @@
 
 import Mn from 'backbone.marionette';
 
-const template      = require('./main.ejs');
-const Controller    = require('../../controller');
-const Api           = require('../../api');
-const App           = require('../../main');
-const TemplateModel = require('../../../models/template');
-const RuleModel     = require('../../../models/rule');
+const _          = require('lodash');
+const template   = require('./main.ejs');
+const Controller = require('../../controller');
+const Api        = require('../../api');
+const App        = require('../../main');
+const RuleModel  = require('../../../models/rule');
+const CodeMirror = require('codemirror');
 
+require('codemirror/mode/javascript/javascript');
 require('jquery-serializejson');
 
 module.exports = Mn.View.extend({
     template: template,
+
+    codemirrors: [],
 
     ui: {
         form:      'form',
@@ -24,10 +28,19 @@ module.exports = Mn.View.extend({
         tab1:      '.nav-tabs a:eq(0)',
         tab2:      '.nav-tabs a:eq(1)',
         tab3:      '.nav-tabs a:eq(2)',
-        tab4:      '.nav-tabs a:eq(3)'
+        tab4:      '.nav-tabs a:eq(3)',
+        textareas: 'textarea',
+        tabs:      '.nav-tabs a'
     },
 
     events: {
+        'click @ui.tabs': function () {
+            let view = this;
+            setTimeout(function () {
+                view.refreshCode.bind(view)();
+            }, 10);
+        },
+
         'click @ui.delete': function (e) {
             e.preventDefault();
 
@@ -36,7 +49,7 @@ module.exports = Mn.View.extend({
                     App.UI.closeModal();
                     Controller.showTemplates();
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });
@@ -46,14 +59,6 @@ module.exports = Mn.View.extend({
             e.preventDefault();
             let view      = this;
             let form_data = this.ui.form.serializeJSON();
-
-            try {
-                form_data.content = JSON.parse(form_data.content);
-            } catch (err) {
-                view.ui.tab1.tab('show');
-                alert('Content has invalid JSON');
-                return;
-            }
 
             try {
                 form_data.default_options = JSON.parse(form_data.default_options);
@@ -89,10 +94,11 @@ module.exports = Mn.View.extend({
             } else {
                 form_data.service_type    = this.model.get('service_type');
                 form_data.in_service_type = this.model.get('in_service_type');
+                form_data.render_engine   = 'liquid';
             }
 
             method(form_data)
-                .then((result) => {
+                .then(result => {
                     view.model.set(result);
                     App.UI.closeModal();
 
@@ -100,7 +106,7 @@ module.exports = Mn.View.extend({
                         Controller.showTemplates();
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });
@@ -115,5 +121,30 @@ module.exports = Mn.View.extend({
                 return RuleModel.Model.prototype.getTriggerHierarchy(view.model.get('in_service_type'));
             }
         };
+    },
+
+    refreshCode: function () {
+        _.map(this.codemirrors, cm => {
+            console.log('REFRESHING ... ');
+            cm.refresh();
+        });
+    },
+
+    onRender: function () {
+        let view = this;
+
+        this.ui.textareas.each(function (idx, ta) {
+            view.codemirrors.push(CodeMirror.fromTextArea(ta, {
+                lineNumbers:     false,
+                styleActiveLine: true,
+                matchBrackets:   true,
+                theme:           'dracula',
+                mode:            {name: 'javascript', json: true}
+            }));
+        });
+
+        setTimeout(function () {
+            view.refreshCode.bind(view)();
+        }, 400);
     }
 });

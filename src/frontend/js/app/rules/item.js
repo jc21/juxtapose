@@ -55,10 +55,9 @@ module.exports = Mn.View.extend({
             },
 
             getPreview: function () {
-                let template     = view.model.get('template');
-                template.preview = view.model.get('preview');
+                let template      = view.model.get('template');
+                template.preview  = view.model.get('preview');
                 template.bot_name = view.model.get('out_service').name;
-
                 return preview_template(template);
             },
 
@@ -83,7 +82,7 @@ module.exports = Mn.View.extend({
 
             hasConditions: function () {
                 let conditions = view.model.get('extra_conditions');
-                let count = 0;
+                let count      = 0;
 
                 _.map(conditions, function (val) {
                     if (typeof val !== 'string' || (typeof val === 'string' && val)) {

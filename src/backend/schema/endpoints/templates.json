@@ -30,10 +30,8 @@
     },
     "content": {
       "description": "Content",
-      "example": {
-        "text": "Hello World"
-      },
-      "type": "object"
+      "example": "{\"text\": \"Hello World\"}",
+      "type": "string"
     },
     "default_options": {
       "description": "Default Options",
@@ -60,6 +58,12 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "render_engine": {
+      "description": "Render Engine",
+      "example": "liquid",
+      "type": "string",
+      "pattern": "^(ejs|liquid)$"
     }
   },
   "links": [

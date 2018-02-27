@@ -20,8 +20,6 @@
             <% _.map(extra_conditions, function (val, key) {
                 if (typeof val !== 'string' || (typeof val === 'string' && val)) {
                     items.push(niceVarName(key) + ': ' + val);
-
-
                 }
             }); %>
             <%- items.join(', ') %>

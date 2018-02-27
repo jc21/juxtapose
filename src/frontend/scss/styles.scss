@@ -10,6 +10,8 @@ $bottom-height: 70px;
 @import 'fontawesome/font-awesome';
 @import '../../../node_modules/normalize-css/normalize';
 @import '../../../node_modules/bootstrap/dist/css/bootstrap';
+@import '../../../node_modules/codemirror/lib/codemirror';
+@import '../../../node_modules/codemirror/theme/dracula';
 
 // Styles
 @import 'theme';

@@ -10,16 +10,17 @@ const model = Backbone.Model.extend({
             service_type:    '',
             in_service_type: '',
             name:            '',
-            content:         {
-                icon_url: '<%= icon_url %>',
+            content:         JSON.stringify({
+                icon_url: '{{ icon_url }}',
                 text:     'Enter Message Here'
-            },
+            }, null, 2),
             default_options: {
                 icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
                 panel_color: '#0090ff'
             },
             example_data:    {},
-            event_types:     []
+            event_types:     [],
+            render_engine:   'liquid'
         };
     },
 
@@ -28,16 +29,16 @@ const model = Backbone.Model.extend({
         // Jira Default Data
         if (this.get('in_service_type') === 'jira-webhook') {
             this.set({
-                content:      {
-                    icon_url:    '<%= icon_url %>',
-                    text:        '<%= user %> has assigned an issue to you',
+                content:      JSON.stringify({
+                    icon_url:    '{{ icon_url }}',
+                    text:        '{{ user }} has assigned an issue to you',
                     attachments: [
                         {
-                            title: '<<%= issueurl %>|<%= issuekey %> - <%= summary %>>',
-                            color: '<%= panel_color %>'
+                            title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
+                            color: '{{ panel_color }}'
                         }
                     ]
-                },
+                }, null, 2),
                 example_data: {
                     summary:     'Enable Feature x for Customer y',
                     issuekey:    'FEAT-1234',
@@ -56,16 +57,16 @@ const model = Backbone.Model.extend({
             // Bitbucket Default Data
         } else if (this.get('in_service_type') === 'bitbucket-webhook') {
             this.set({
-                content:         {
-                    icon_url:    '<%= icon_url %>',
-                    text:        '<%= user %> has opened a PR',
+                content:         JSON.stringify({
+                    icon_url:    '{{ icon_url }}',
+                    text:        '{{ user }} has opened a PR',
                     attachments: [
                         {
-                            title: '<<%= prurl %>|<%= title %>>',
-                            color: '<%= panel_color %>'
+                            title: '<{{ prurl }}|{{ title }}>',
+                            color: '{{ panel_color }}'
                         }
                     ]
-                },
+                }, null, 2),
                 default_options: {
                     icon_url:    'https://public.jc21.com/juxtapose/icons/orange.png',
                     panel_color: '#ffbf00'
@@ -90,27 +91,27 @@ const model = Backbone.Model.extend({
             // Docker Hub Default Data
         } else if (this.get('in_service_type') === 'dockerhub-webhook') {
             this.set({
-                content:         {
-                    icon_url:    '<%= icon_url %>',
-                    text:        'Docker Repository <<%= url %>|<%= repo %>> updated by <%= pusher %>',
+                content:         JSON.stringify({
+                    icon_url:    '{{ icon_url }}',
+                    text:        'Docker Repository <{{ url }}|{{ repo }}> updated by {{ pusher }}',
                     attachments: [
                         {
-                            color:  '<%= panel_color %>',
+                            color:  '{{ panel_color }}',
                             fields: [
                                 {
                                     title: 'Tag',
-                                    value: '<%- tag %>',
+                                    value: '{{ tag }}',
                                     short: true
                                 },
                                 {
                                     title: 'Star Count',
-                                    value: '<%- star_count %>',
+                                    value: '{{ star_count }}',
                                     short: true
                                 }
                             ]
                         }
                     ]
-                },
+                }, null, 2),
                 default_options: {
                     icon_url:    'https://public.jc21.com/juxtapose/icons/red.png',
                     panel_color: '#114c6d'
@@ -132,31 +133,31 @@ const model = Backbone.Model.extend({
             // Zendesk Webhook
         } else if (this.get('in_service_type') === 'zendesk-webhook') {
             this.set({
-                content:         {
-                    icon_url:    '<%= icon_url %>',
-                    text:        'Ticket <<%= ticket.link %>|#<%= ticket.id %>> has been assigned to you by <%= current_user.name %>',
+                content:         JSON.stringify({
+                    icon_url:    '{{ icon_url }}',
+                    text:        'Ticket <{{ ticket.link }}|#{{ ticket.id }}> has been assigned to you by {{ current_user.name }}',
                     attachments: [
                         {
-                            color:  '<%= panel_color %>',
+                            color:  '{{ panel_color }}',
                             fields: [
                                 {
-                                    title: '<<%= ticket.link %>|<%= ticket.title %>>',
-                                    value: '<%= ticket.requester.name %> (<%= ticket.requester.email %>)'
+                                    title: '<{{ ticket.link }}|{{ ticket.title }}>',
+                                    value: '{{ ticket.requester.name }} ({{ ticket.requester.email }})'
                                 },
                                 {
                                     title: 'Status',
-                                    value: '<%- ticket.status %>',
+                                    value: '{{ ticket.status }}',
                                     short: true
                                 },
                                 {
                                     title: 'Via',
-                                    value: '<%- ticket.via %>',
+                                    value: '{{ ticket.via }}',
                                     short: true
                                 }
                             ]
                         }
                     ]
-                },
+                }, null, 2),
                 default_options: {
                     icon_url:    'https://public.jc21.com/juxtapose/icons/green.png',
                     panel_color: '#18ce00'

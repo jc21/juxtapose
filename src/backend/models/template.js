@@ -39,8 +39,6 @@ class Template extends Model {
 
     $afterGet () {
         if (this.id) {
-            this.preview = this.renderPreview();
-
             if (typeof this.types !== 'undefined') {
                 let compact = [];
                 _.map(this.types, function (item) {
@@ -48,18 +46,29 @@ class Template extends Model {
                 });
                 this.event_types = compact;
             }
+
+            return this.renderPreview()
+                .then(content => {
+                    this.preview = content;
+                });
         }
     }
 
     $afterInsert () {
         if (this.id) {
-            this.preview = this.renderPreview();
+            return this.renderPreview()
+                .then(content => {
+                    this.preview = content;
+                });
         }
     }
 
     $afterUpdate () {
         if (this.id) {
-            this.preview = this.renderPreview();
+            return this.renderPreview()
+                .then(content => {
+                    this.preview = content;
+                });
         }
     }
 
@@ -72,7 +81,7 @@ class Template extends Model {
     }
 
     static get jsonAttributes () {
-        return ['content', 'default_options', 'example_data'];
+        return ['default_options', 'example_data'];
     }
 
     static get relationMappings () {
@@ -92,21 +101,17 @@ class Template extends Model {
     }
 
     /**
-     * @returns {String|Object}
+     * @returns {Promise}
      */
     renderPreview () {
-        let return_as = 'string';
-        let data      = _.assign({}, this.default_options, this.example_data || {});
-        let content   = this.content;
+        let data    = _.assign({}, this.default_options, this.example_data || {});
+        let content = this.content;
 
         if (typeof content === 'object') {
-            content   = JSON.stringify(content, null, 2);
-            return_as = 'object';
+            content = JSON.stringify(content, null, 2);
         }
 
-        content = templateRender(content, data, true);
-
-        return return_as === 'object' ? JSON.parse(content) : content;
+        return templateRender(content, data, this.render_engine, true);
     }
 
 }

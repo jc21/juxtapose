@@ -19,8 +19,8 @@
                         </div>
                         <div class="form-group">
                             <label>Message Content</label>
-                            <textarea name="content" class="form-control text-code" rows="16" required><%- JSON.stringify(content, null, 2) %></textarea>
-                            <!--<small><i class="fa fa-tags" aria-hidden="true"></i> jira_summary, jira_description</small><br>-->
+                            <textarea name="content" class="form-control text-code" rows="16" required><%- content %></textarea>
+                            <small class="pull-right">Content uses <a href="http://shopify.github.io/liquid/basics/introduction/" target="_blank">Liquid Templating</a></small>
                             <small>Tip: Use the <a href="https://api.slack.com/docs/messages/builder" target="_blank">Slack Message Builder</a></small>
                         </div>
                     </div>

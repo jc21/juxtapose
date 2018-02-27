@@ -25,8 +25,11 @@ class Rule extends Model {
 
     $afterGet (context) {
         if (typeof this.template !== 'undefined') {
-            let data     = _.assign({}, this.template.default_options, this.template.example_data, this.out_template_options);
-            this.preview = templateRender(this.template.content, data, true);
+            let data = _.assign({}, this.template.default_options, this.template.example_data, this.out_template_options);
+            return templateRender(this.template.content, data, this.template.render_engine, true)
+                .then(content => {
+                    this.preview = content;
+                });
         }
     }
 
@@ -44,7 +47,7 @@ class Rule extends Model {
 
     static get relationMappings () {
         return {
-            user:        {
+            user:            {
                 relation:   Model.HasOneRelation,
                 modelClass: User,
                 join:       {
@@ -58,7 +61,7 @@ class Rule extends Model {
                     qb.omit(['is_deleted']);
                 }
             },
-            in_service:  {
+            in_service:      {
                 relation:   Model.HasOneRelation,
                 modelClass: Service,
                 join:       {
@@ -72,7 +75,7 @@ class Rule extends Model {
                     qb.omit(['is_deleted', 'data']);
                 }
             },
-            in_service_data:  {
+            in_service_data: {
                 relation:   Model.HasOneRelation,
                 modelClass: Service,
                 join:       {
@@ -86,7 +89,7 @@ class Rule extends Model {
                     qb.omit(['is_deleted']);
                 }
             },
-            out_service: {
+            out_service:     {
                 relation:   Model.HasOneRelation,
                 modelClass: Service,
                 join:       {
@@ -100,7 +103,7 @@ class Rule extends Model {
                     qb.omit(['is_deleted', 'data']);
                 }
             },
-            template:    {
+            template:        {
                 relation:   Model.HasOneRelation,
                 modelClass: Template,
                 join:       {

@@ -1,6 +1,7 @@
 'use strict';
 
-const ejs = require('ejs');
+const ejs    = require('ejs');
+const liquid = require('liquidjs')();
 
 /**
  * @param   {String}  content
@@ -13,36 +14,31 @@ const replacePreviewLinks = function (content) {
 /**
  * @param   {Object|String} content
  * @param   {Object}        data
+ * @param   {String}        engine    'ejs' or 'liquid'
  * @param   {Boolean}       [for_preview]
- * @returns {String|Object}
+ * @returns {Promise}
  */
-module.exports = function (content, data, for_preview) {
-    let return_as = 'string';
-
+module.exports = async function (content, data, engine, for_preview) {
     if (typeof content === 'object') {
-        content   = JSON.stringify(content, null, 2);
-        return_as = 'object';
+        content = JSON.stringify(content, null, 2);
     }
 
     data.prettyPrint = function (val) {
         return JSON.stringify(val, null, 2).replace(/\r/gim, '\\r').replace(/\n/gim, '\\n');
     };
 
-    content = ejs.render(content, data, {});
+    if (engine === 'ejs') {
+        content = ejs.render(content, data, {});
+    } else {
+        // Liquid is now the default
+        content = await liquid.parseAndRender(content, data);
+    }
 
     if (for_preview) {
         content = replacePreviewLinks(content);
     } else {
         // decode html entities while respecting json
         content = content.replace(/&#34;/gim, '\\"');
-    }
-
-    if (return_as === 'object') {
-        content = JSON.parse(content);
-
-        if (!content) {
-            throw new Error('Content contains invalid JSON');
-        }
     }
 
     return content;
