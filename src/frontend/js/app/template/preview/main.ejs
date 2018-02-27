@@ -5,7 +5,7 @@
                 <% if (typeof preview.icon_url !== 'undefined') { %>
                     <img src="<%- preview.icon_url %>">
                 <% } else { %>
-                    <img src="https://public.jc21.com/jira-notify/apple-icon.png">
+                    <img src="https://public.jc21.com/juxtapose/icons/default.png">
                 <% } %>
             </div>
         </div>
@@ -57,32 +57,25 @@
                             <table border="0" width="100%">
                                 <%
                                 for (var j = 0; j < preview.attachments[i].fields.length; j++) {
-                                    if (typeof preview.attachments[i].fields[j].short === 'undefined' || preview.attachments[i].fields[j].short) {
-                                        if (cell_number > 1) {
-                                            cell_number = 0;
-                                            %>
-                                            </tr>
-                                            <%
-                                        }
-                                    }
+                                    var short = typeof preview.attachments[i].fields[j].short !== 'undefined' && preview.attachments[i].fields[j].short;
 
-                                    if (cell_number === 2) {
+                                    if ((!short && cell_number > 0) || cell_number > 1) {
                                         cell_number = 0;
                                         %>
                                         </tr>
                                         <%
                                     }
 
-                                    if (cell_number === 0) {
+                                    if (!cell_number) {
                                         %>
                                         <tr>
                                         <%
                                     }
 
-                                    cell_number++;
+                                    cell_number += short ? 1 : 2;
 
                                     %>
-                                    <td<%- typeof preview.attachments[i].fields[j].short !== 'undefined' && preview.attachments[i].fields[j].short ? ' width="50%"' : '' %>>
+                                    <td<%- short ? ' width="50%"' : '' %>>
                                         <% if (typeof preview.attachments[i].fields[j].title !== 'undefined') { %>
                                             <div class="attachment_title"><%= preview.attachments[i].fields[j].title %></div>
                                         <% } %>
@@ -103,4 +96,6 @@
             %>
         </div>
     </div>
+<% } else { %>
+    <div>Error: Rendering template for service type "<%- service_type %>" is not yet implemented</div>
 <% } %>
