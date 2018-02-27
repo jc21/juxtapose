@@ -27,28 +27,28 @@ const internalService = {
 
         return access.can('services', data)
             .then(() => {
-                if (data.type.match(/(.|\n)*-webhook$/im)) {
-                    return internalService.generateEndpointToken(data)
-                        .then(token => {
-                            data.data.token = token;
-                            return data;
-                        });
-                } else {
-                    return data;
-                }
-            })
-            .then(row_data => {
                 return serviceModel
                     .query()
                     .omit(omissions())
-                    .insertAndFetch(row_data);
+                    .insertAndFetch(data);
             })
             .then(service => {
                 if (service.type === 'slack') {
                     const internalServiceWorker = require('./service_worker');
                     internalServiceWorker.restart();
+                } else if (service.type.match(/(.|\n)*-webhook$/im)) {
+                    return internalService.generateEndpointToken(service)
+                        .then(token => {
+                            service.data.token = token;
+                            return serviceModel
+                                .query()
+                                .patchAndFetchById(service.id, {data: service.data});
+                        });
+                } else {
+                    return data;
                 }
-
+            })
+            .then(service => {
                 return _.omit(service, omissions());
             });
     },
@@ -75,7 +75,7 @@ const internalService = {
                     return data;
                 }
             })
-            .then((row_data) => {
+            .then(row_data => {
                 return serviceModel
                     .query()
                     .omit(omissions())

@@ -34,7 +34,7 @@ const internalJiraWebhook = {
 
         // 1. Verify Token
         return internalJiraWebhook.verifyToken(token)
-            .then((token_data) => {
+            .then(token_data => {
                 // 2. Make sure service still exists
                 return serviceModel
                     .query()
