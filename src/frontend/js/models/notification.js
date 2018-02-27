@@ -6,9 +6,7 @@ const model = Backbone.Model.extend({
     idAttribute: 'id',
 
     defaults: function () {
-        return {
-
-        };
+        return {};
     }
 });
 

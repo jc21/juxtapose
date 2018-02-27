@@ -39,7 +39,6 @@ module.exports = Mn.View.extend({
 
             Api.Notifications.getAll(0, 6, 'created_on.desc', ['rule.[template, in_service]', 'service'])
                 .then(response => {
-                    console.log(response);
                     Cache.Session.Stats.notifications.reset(response.data);
                     Cache.Session.Stats.last_updated = moment().unix();
                     view.renderStats();

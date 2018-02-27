@@ -2,7 +2,7 @@
 
 # Juxtapose
 
-![Version](https://img.shields.io/badge/version-1.0.2-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.3-green.svg)
 ![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg)
 ![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg)
 
@@ -19,11 +19,12 @@ swamped in noise, thus improving productivity.
 
 ## Supported Services
 
-**Incoming services:**
+**Incoming services via Webhooks:**
 
-- Jira (via Webhooks)
-- Bitbucket (via Webhooks)
-- Docker Hub (via Webhooks)
+- Jira
+- Bitbucket
+- Docker Hub
+- Zendesk
 
 **Outgoing services**
 

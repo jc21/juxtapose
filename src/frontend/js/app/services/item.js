@@ -35,6 +35,10 @@ module.exports = Mn.View.extend({
                 case 'dockerhub-webhook':
                     Controller.showDockerhubWebhookConfig(this.model);
                     break;
+
+                case 'zendesk-webhook':
+                    Controller.showZendeskWebhookConfig(this.model);
+                    break;
             }
         },
 

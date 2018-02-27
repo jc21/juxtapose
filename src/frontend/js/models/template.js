@@ -128,6 +128,56 @@ const model = Backbone.Model.extend({
                     comment_count: 0
                 }
             });
+
+            // Zendesk Webhook
+        } else if (this.get('in_service_type') === 'zendesk-webhook') {
+            this.set({
+                content:         {
+                    icon_url:    '<%= icon_url %>',
+                    text:        'Ticket <<%= ticket.link %>|#<%= ticket.id %>> has been assigned to you by <%= current_user.name %>',
+                    attachments: [
+                        {
+                            color:  '<%= panel_color %>',
+                            fields: [
+                                {
+                                    title: '<<%= ticket.link %>|<%= ticket.title %>>',
+                                    value: '<%= ticket.requester.name %> (<%= ticket.requester.email %>)'
+                                },
+                                {
+                                    title: 'Status',
+                                    value: '<%- ticket.status %>',
+                                    short: true
+                                },
+                                {
+                                    title: 'Via',
+                                    value: '<%- ticket.via %>',
+                                    short: true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                default_options: {
+                    icon_url:    'https://public.jc21.com/juxtapose/icons/green.png',
+                    panel_color: '#18ce00'
+                },
+                example_data:    {
+                    ticket:       {
+                        id:        57506,
+                        title:     'Billy Box has submitted a website enquiry',
+                        link:      'https://example.zendesk.com/agent/tickets/57506',
+                        via:       'Mail',
+                        status:    'Pending',
+                        requester: {
+                            email: 'billybob@example.com',
+                            name:  'Billy Bob'
+                        }
+                    },
+                    current_user: {
+                        name: 'Joe Citizen'
+                    }
+                }
+            });
         }
     }
 });

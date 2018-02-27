@@ -94,13 +94,26 @@ module.exports = {
     },
 
     /**
-     * Bitbucket Webhook Config
+     * DockerHub Webhook Config
      *
      * @param model
      */
     showDockerhubWebhookConfig: function (model) {
         if (Cache.User.isAdmin()) {
             require(['./main', './services/dockerhub-webhook/main'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model}));
+            });
+        }
+    },
+
+    /**
+     * Zendesk Webhook Config
+     *
+     * @param model
+     */
+    showZendeskWebhookConfig: function (model) {
+        if (Cache.User.isAdmin()) {
+            require(['./main', './services/zendesk-webhook/main'], function (App, View) {
                 App.UI.showModalDialog(new View({model: model}));
             });
         }

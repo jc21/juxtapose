@@ -25,13 +25,15 @@ module.exports = Mn.View.extend({
         jira_region:      'div.jira-region',
         bitbucket_region: 'div.bitbucket-region',
         dockerhub_region: 'div.dockerhub-region',
+        zendesk_region:   'div.zendesk-region',
         add_rule:         '.add-rule'
     },
 
     regions: {
         jira_region:      '@ui.jira_region',
         bitbucket_region: '@ui.bitbucket_region',
-        dockerhub_region: '@ui.dockerhub_region'
+        dockerhub_region: '@ui.dockerhub_region',
+        zendesk_region:   '@ui.zendesk_region'
     },
 
     events: {
@@ -71,6 +73,12 @@ module.exports = Mn.View.extend({
                             }
                         });
 
+                        let zendesk_rules = new VirtualCollection(rule_collection, {
+                            filter: rule => {
+                                return rule.get('in_service').type === 'zendesk-webhook';
+                            }
+                        });
+
                         view.showChildView('jira_region', new ListView({
                             collection: jira_rules
                         }));
@@ -81,6 +89,10 @@ module.exports = Mn.View.extend({
 
                         view.showChildView('dockerhub_region', new ListView({
                             collection: dockerhub_rules
+                        }));
+
+                        view.showChildView('zendesk_region', new ListView({
+                            collection: zendesk_rules
                         }));
 
                     } else {

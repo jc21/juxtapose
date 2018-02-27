@@ -4,14 +4,14 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 
 const trigger_groups = {
-    'jira-webhook': {
+    'jira-webhook':      {
         your_issues: {
             name: 'Your Issues'
         },
-        support:   {
+        support:     {
             name: 'Support'
         },
-        triage:    {
+        triage:      {
             name: 'Triage'
         }
     },
@@ -19,13 +19,21 @@ const trigger_groups = {
         for_you: {
             name: 'For You'
         },
-        noisy: {
+        noisy:   {
             name: 'Noisy Notifications'
         }
     },
     'dockerhub-webhook': {
         all: {
             name: 'All Events'
+        }
+    },
+    'zendesk-webhook':   {
+        your_tickets: {
+            name: 'Your Tickets'
+        },
+        global:       {
+            name: 'Global'
         }
     }
 };
@@ -95,39 +103,39 @@ const trigger_types = {
     },
 
     'bitbucket-webhook': {
-        pr_review_requested:  {
+        pr_review_requested: {
             name:  'You have been asked to review a Pull Request',
             group: 'for_you'
         },
-        my_pr_approved:  {
+        my_pr_approved:      {
             name:  'Your PR has been approved',
             group: 'for_you'
         },
-        my_pr_needs_work:  {
+        my_pr_needs_work:    {
             name:  'Your PR needs work',
             group: 'for_you'
         },
-        my_pr_merged:  {
+        my_pr_merged:        {
             name:  'Your PR was merged',
             group: 'for_you'
         },
-        my_pr_declined:  {
+        my_pr_declined:      {
             name:  'Your PR was declined',
             group: 'for_you'
         },
-        my_pr_deleted:  {
+        my_pr_deleted:       {
             name:  'Your PR was deleted',
             group: 'for_you'
         },
-        my_pr_comment:  {
+        my_pr_comment:       {
             name:  'Someone commented on your PR',
             group: 'for_you'
         },
-        pr_opened:  {
+        pr_opened:           {
             name:  'A PR was opened',
             group: 'noisy'
         },
-        pr_merged:  {
+        pr_merged:           {
             name:  'A PR was merged',
             group: 'noisy'
         }
@@ -137,6 +145,37 @@ const trigger_types = {
         repo_updated: {
             name:  'Repository was updated',
             group: 'all'
+        }
+    },
+
+    'zendesk-webhook': {
+        my_ticket_assigned:   {
+            name:  'A Ticket is assigned to you',
+            group: 'your_tickets'
+        },
+        my_ticket_updated:    {
+            name:  'A Ticket assigned to you is updated',
+            group: 'your_tickets'
+        },
+        my_ticket_reassigned: {
+            name:  'A Ticket assigned to you is re-assigned',
+            group: 'your_tickets'
+        },
+        my_ticket_commented:  {
+            name:  'A comments is made on on your Ticket',
+            group: 'your_tickets'
+        },
+        my_ticket_rated:      {
+            name:  'A rating is made on your Ticket',
+            group: 'your_tickets'
+        },
+        ticket_logged:        {
+            name:  'Any Ticket is logged without an Assignee',
+            group: 'global'
+        },
+        ticket_rated:         {
+            name:  'Any Ticket is rated',
+            group: 'global'
         }
     }
 };

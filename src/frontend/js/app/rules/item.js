@@ -85,7 +85,7 @@ module.exports = Mn.View.extend({
                 let conditions = view.model.get('extra_conditions');
                 let count = 0;
 
-                _.map(conditions, function (val, key) {
+                _.map(conditions, function (val) {
                     if (typeof val !== 'string' || (typeof val === 'string' && val)) {
                         count++;
                     }

@@ -43,6 +43,13 @@ var services = getServices();
                                         <div class="col-md-8">
                                             <input type="text" class="form-control" name="settings[<%- service.id %>][username]" value="<%- getServiceSetting(service.id, 'username') %>">
                                         </div>
+                                    <% } else if (service.type === 'zendesk-webhook') { %>
+                                        <div class="col-md-4 text-right field-label">
+                                            Zendesk Account Email:
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" name="settings[<%- service.id %>][username]" value="<%- getServiceSetting(service.id, 'username') %>">
+                                        </div>
                                     <% } %>
                                 </div>
                                 <%
