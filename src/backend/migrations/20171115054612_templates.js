@@ -859,7 +859,7 @@ const templates = [
             issuekey: 'FEAT-1234',
             issueurl: 'http://example.com'
         },
-        event_types:     ['updates']
+        event_types:     ['updated']
     },
 
     /**
