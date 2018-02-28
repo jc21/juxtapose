@@ -1,6 +1,11 @@
 #rules {
+  .view-header .pull-right {
+    margin-left: 5px;
+  }
+
   .rule {
-    position: relative;
-    margin-bottom: 32px;
+    padding: 0 5px 10px 5px;
   }
 }
+
+

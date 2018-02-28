@@ -129,60 +129,7 @@
       font-weight: 400;
     }
   }
-
-  .warning-bubble {
-    border-radius: 50%;
-    background-color: #ff3131;
-    padding: 2px;
-    position: absolute;
-    right: -8px;
-    top: 4px;
-    width: 18px;
-    height: 18px;
-    color: #ffd4ac;
-    text-align: center;
-    cursor: pointer;
-    font-size: 10px;
-  }
-
-  > .title {
-    position: absolute;
-    left: 0;
-    top: -18px;
-    color: darken(#D9D9DA, 30%);
-    background-color: lighten(#D9D9DA, 3%);
-    border-radius: 0.25em 0.25em 0 0;
-    width: 100%;
-    padding: 0 25px 0 4px;
-    font-size: 12px;
-    line-height: 18px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    .delete-link, .edit-link {
-      position: absolute;
-      right: 5px;
-      top: 0;
-    }
-  }
-
-  > .conditions {
-    position: absolute;
-    left: 0;
-    bottom: -18px;
-    color: darken(#D9D9DA, 15%);
-    background-color: lighten(#D9D9DA, 3%);
-    border-radius: 0 0 0.25em 0.25em;
-    width: 100%;
-    padding: 0 25px 0 4px;
-    font-size: 12px;
-    line-height: 18px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
- }
+}
 
 .vertical-timeline-content:after, .vertical-timeline-content:before {
   right: 100%;
@@ -211,8 +158,4 @@
 
 .vertical-timeline-content h2 {
   font-size: 16px;
-}
-
-.vertical-timeline-content .template-slack-preview {
-  margin-left: 10px;
 }

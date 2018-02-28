@@ -1,5 +1,9 @@
-#templates .template {
-  position: relative;
-  margin-bottom: 32px;
-}
+#templates {
+  .view-header .pull-right {
+    margin-left: 5px;
+  }
 
+  .template {
+    padding: 0 5px 10px 5px;
+  }
+}

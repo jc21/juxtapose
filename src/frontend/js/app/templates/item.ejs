@@ -1,16 +1,15 @@
-<div class="vertical-timeline-icon has-title">
-    <img src="images/services/<%- in_service_type %>.png" alt="<%- in_service_type %>" title="<%- in_service_type %>" border="0" width="23" height="23">
-</div>
-
-<div class="vertical-timeline-content has-title has-conditions">
-    <%= getPreview() %>
-
-    <div class="title">
-        <%- name %>
-        <a href="#" class="edit-link" title="Edit Template"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+<div class="muuri-item-content message-preview">
+    <div class="message-source">
+        <img src="images/services/<%- in_service_type %>.png" alt="<%- in_service_type %>" title="<%- in_service_type %>" border="0" width="23" height="23">
     </div>
-
-    <div class="conditions">
+    <div class="message-title">
+        <a href="#" class="edit-link pull-right" title="Edit Template"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        <%- name %>
+    </div>
+    <div class="message-content has-conditions">
+        <%= getPreview() %>
+    </div>
+    <div class="message-conditions">
         <span title="<%- event_types.join(', ') %>"><%- event_types.join(', ') %></span>
     </div>
 </div>

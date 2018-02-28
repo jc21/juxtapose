@@ -57,6 +57,7 @@
     "image-size": "^0.6.1",
     "jquery": "^3.2.1",
     "jquery-serializejson": "^2.8.1",
+    "muuri": "^0.5.4",
     "nodemon": "^1.12.1",
     "normalize-css": "^2.3.1",
     "numeral": "^2.0.6",

@@ -1,22 +1,18 @@
-<div class="vertical-timeline-icon has-title">
-    <img src="images/services/<%- in_service.type %>.png" alt="<%- in_service.name %>" title="<%- in_service.name %>" border="0" width="23" height="23">
-</div>
-
-<div class="vertical-timeline-content has-title <%- hasConditions() ? 'has-conditions' : '' %>">
-    <%= getPreview() %>
-    <% if (!isUserSetup()) { %>
-        <div class="warning-bubble" title="You must set your Service Settings for this rule to be enabled!"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
-    <% } %>
-
-    <div class="title">
-        <%- getTriggerName() %>
-        <a href="#" class="delete-link" title="Delete Rule"><i class="fa fa-times" aria-hidden="true"></i></a>
+<div class="muuri-item-content message-preview">
+    <div class="message-source">
+        <img src="images/services/<%- in_service.type %>.png" alt="<%- in_service.name %>" title="<%- in_service.name %>" border="0" width="23" height="23">
     </div>
-
+    <div class="message-title">
+        <a href="#" class="delete-link pull-right" title="Delete Rule"><i class="fa fa-times" aria-hidden="true"></i></a>
+        <%- getTriggerName() %>
+    </div>
+    <div class="message-content<%- hasConditions() ? ' has-conditions' : '' %>">
+        <%= getPreview() %>
+    </div>
     <% if (hasConditions()) {
         var items = [];
         %>
-        <div class="conditions">
+        <div class="message-conditions">
             <% _.map(extra_conditions, function (val, key) {
                 if (typeof val !== 'string' || (typeof val === 'string' && val)) {
                     items.push(niceVarName(key) + ': ' + val);
@@ -25,4 +21,8 @@
             <%- items.join(', ') %>
         </div>
     <% } %>
+    <% if (!isUserSetup()) { %>
+        <div class="warning-bubble" title="You must set your Service Settings for this rule to be enabled!"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+    <% } %>
 </div>
+

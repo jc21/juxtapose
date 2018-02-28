@@ -11,7 +11,7 @@ const preview_template = require('../template/preview/main.ejs');
 
 module.exports = Mn.View.extend({
     template:  template,
-    className: 'rule',
+    className: 'muuri-item rule',
 
     ui: {
         del:      'a.delete-link',
@@ -40,7 +40,7 @@ module.exports = Mn.View.extend({
                 .then(() => {
                     Controller.showRules();
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert('Could not delete rule: ' + err.message);
                 });
         }
@@ -93,6 +93,10 @@ module.exports = Mn.View.extend({
                 return count > 0;
             }
         };
+    },
+
+    onRender: function () {
+        this.$el.addClass('service-' + this.model.get('in_service').type);
     },
 
     initialize: function () {

@@ -35,6 +35,10 @@ module.exports = Mn.View.extend({
         };
     },
 
+    onRender: function () {
+        this.$el.addClass('service-' + this.model.get('in_service_type'));
+    },
+
     initialize: function () {
         this.listenTo(this.model, 'change', this.render);
     }
