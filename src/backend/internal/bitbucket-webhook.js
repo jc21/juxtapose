@@ -248,9 +248,7 @@ const internalBitbucketWebhook = {
      * @returns {*}
      */
     getPrField: (webhook_data, field_name, subfield_name) => {
-        if (typeof webhook_data.pullRequest !== 'undefined' &&
-            typeof webhook_data.pullRequest[field_name] !== 'undefined') {
-
+        if (typeof webhook_data.pullRequest !== 'undefined' && typeof webhook_data.pullRequest[field_name] !== 'undefined') {
             let val = webhook_data.pullRequest[field_name];
 
             if (typeof subfield_name !== 'undefined') {
@@ -384,7 +382,7 @@ const internalBitbucketWebhook = {
      * @param   {Object}  webhook_data.actor
      * @returns {Object}
      */
-    getCommonTemplateData: (webhook_data) => {
+    getCommonTemplateData: webhook_data => {
         return {
             user:           internalBitbucketWebhook.getEventUser(webhook_data, 'displayName'),
             owner:          internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'),
@@ -398,7 +396,8 @@ const internalBitbucketWebhook = {
                 project: internalBitbucketWebhook.getFromProjectField(webhook_data, 'key'),
                 repo:    internalBitbucketWebhook.getFromRepoField(webhook_data, 'slug'),
                 branch:  internalBitbucketWebhook.getFromRefField(webhook_data, 'displayId')
-            }
+            },
+            comment:        internalBitbucketWebhook.getCommentData(webhook_data)
         };
     },
 
@@ -424,7 +423,7 @@ const internalBitbucketWebhook = {
      * @param   {Object}  webhook_data.pullRequest
      * @returns {Array}
      */
-    getReviewers: (webhook_data) => {
+    getReviewers: webhook_data => {
         let reviewers = [];
 
         let data = internalBitbucketWebhook.getPrField(webhook_data, 'reviewers');
@@ -489,6 +488,21 @@ const internalBitbucketWebhook = {
                 return null;
                 break;
         }
+    },
+
+    /**
+     * @param   {Object}  webhook_data
+     * @returns {Object}
+     */
+    getCommentData: webhook_data => {
+        if (typeof webhook_data.comment !== 'undefined' && typeof webhook_data.comment.text !== 'undefined') {
+            return {
+                text:   webhook_data.comment.text,
+                author: webhook_data.comment.author.displayName
+            };
+        }
+
+        return null;
     },
 
     /**
