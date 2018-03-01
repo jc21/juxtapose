@@ -692,7 +692,7 @@ const internalJiraWebhook = {
 
         let description = internalJiraWebhook.getIssueField(webhook_data, 'description');
         if (description !== null) {
-            return Helpers.trimString(Helpers.compactWhitespace(Helpers.stripHtml(description)), char_length);
+            return Helpers.trimString(Helpers.compactWhitespace(Helpers.stripJiraMarkup(Helpers.stripHtml(description))), char_length);
         }
 
         return '';
