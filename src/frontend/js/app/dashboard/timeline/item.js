@@ -21,10 +21,11 @@ module.exports = Mn.View.extend({
             },
 
             getPreview: function () {
-                let template       = rule.template;
-                template.preview   = view.model.get('content');
-                template.bot_name  = view.model.get('service').name;
-                template.shortTime = Helpers.shortTime;
+                let template               = rule.template;
+                template.preview           = view.model.get('content');
+                template.bot_name          = view.model.get('service').name;
+                template.shortTime         = Helpers.shortTime;
+                template.replaceSlackLinks = Helpers.replaceSlackLinks;
 
                 return preview_template(template);
             }

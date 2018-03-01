@@ -27,6 +27,10 @@ module.exports = {
         }
 
         return shorttime;
+    },
+
+    replaceSlackLinks: function (content) {
+        return content.replace(/<(http[^|>]+)\|([^>]+)>/gi, "<a href=\"$1\" target=\"_blank\">$2</a>");
     }
 
 };

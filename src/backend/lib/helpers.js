@@ -98,6 +98,15 @@ module.exports = {
     },
 
     /**
+     *
+     * @param   {String} text
+     * @returns {String}
+     */
+    stripJiraMarkup: function (text) {
+        return text.replace(/(?:^|[^{]{)[^}]+}/gi, "\n");
+    },
+
+    /**
      * @param   {String} content
      * @returns {String}
      */

@@ -1,113 +1,130 @@
 <% if (service_type === 'slack' ) {
+    var _error = false;
     try {
-        var _content = JSON.parse(preview);
+        var _content = preview;
+        if (typeof preview === 'string') {
+            _content = JSON.parse(preview);
+        }
     } catch (ex) {
+        _error = true;
         %>
         <div class="template-slack-preview">
-            Error: Preview content is not valid JSON.
+            <strong>Error:</strong><br>
+            Preview content is not valid JSON.
         </div>
         <%
-        return;
     }
-    %>
 
-    <div class="template-slack-preview">
-        <div class="message_gutter">
-            <div class="message_icon">
-                <% if (typeof _content.icon_url !== 'undefined') { %>
-                    <img src="<%- _content.icon_url %>">
-                <% } else { %>
-                    <img src="https://public.jc21.com/juxtapose/icons/default.png">
-                <% } %>
-            </div>
-        </div>
-        <div class="message_content">
-            <div class="message_content_header">
-                <div class="message_content_header_left">
-                    <span class="message_sender color_bot_Your_App">
-                        <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
-                        <span class="bot_label">APP</span>
-                    </span>
-                    <span class="time_star_and_extra_metadata">
-                        <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
-                    </span>
+    if (!_error) {
+        %>
+        <div class="template-slack-preview">
+            <div class="message_gutter">
+                <div class="message_icon">
+                    <% if (typeof _content.icon_url !== 'undefined') { %>
+                        <img src="<%- _content.icon_url %>">
+                    <% } else { %>
+                        <img src="https://public.jc21.com/juxtapose/icons/default.png">
+                    <% } %>
                 </div>
             </div>
-
-            <% if (typeof _content.text !== 'undefined' ) { %>
-                <div class="text">
-                    <%= _content.text.replace(/(?:^| )```((.|\n)*)```/gim, "<pre>$1</pre>") %>
-                </div>
-            <% } %>
-
-            <%
-            if (typeof _content.attachments !== 'undefined' && _content.attachments.length ) {
-                for (var i = 0; i < _content.attachments.length; i++) {
-                    %>
-                    <div class="attachment" style="<%- typeof _content.attachments[i].color !== 'undefined' ? 'border-left-color:' + _content.attachments[i].color : (typeof default_options.panel_color !== 'undefined' ? 'border-left-color:' + default_options.panel_color : '') %>">
-                        <% if (typeof _content.attachments[i].author_name !== 'undefined') { %>
-                            <div class="author">
-                                <%- _content.attachments[i].author_name %>
-                            </div>
-                        <% } %>
-
-                        <% if (typeof _content.attachments[i].title !== 'undefined') { %>
-                            <div class="attachment_title">
-                                <%= _content.attachments[i].title %>
-                            </div>
-                        <% } %>
-
-                        <% if (typeof _content.attachments[i].text !== 'undefined') { %>
-                            <div class="attachment_text">
-                                <%= _content.attachments[i].text %>
-                            </div>
-                        <% } %>
-
-                        <% if (typeof _content.attachments[i].fields !== 'undefined' && _content.attachments[i].fields.length) {
-                            var cell_number = 0;
-                            %>
-                            <table border="0" width="100%">
-                                <%
-                                for (var j = 0; j < _content.attachments[i].fields.length; j++) {
-                                    var short = typeof _content.attachments[i].fields[j].short !== 'undefined' && _content.attachments[i].fields[j].short;
-
-                                    if ((!short && cell_number > 0) || cell_number > 1) {
-                                        cell_number = 0;
-                                        %>
-                                        </tr>
-                                        <%
-                                    }
-
-                                    if (!cell_number) {
-                                        %>
-                                        <tr>
-                                        <%
-                                    }
-
-                                    cell_number += short ? 1 : 2;
-
-                                    %>
-                                    <td<%- short ? ' width="50%"' : '' %>>
-                                        <% if (typeof _content.attachments[i].fields[j].title !== 'undefined') { %>
-                                            <div class="attachment_title"><%= _content.attachments[i].fields[j].title %></div>
-                                        <% } %>
-                                        <% if (typeof _content.attachments[i].fields[j].value !== 'undefined') { %>
-                                            <%= _content.attachments[i].fields[j].value %>
-                                        <% } %>
-                                    </td>
-                                    <%
-                                }
-                                %>
-                                </tr></table>
-                            <%
-                        } %>
+            <div class="message_content">
+                <div class="message_content_header">
+                    <div class="message_content_header_left">
+                        <span class="message_sender color_bot_Your_App">
+                            <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
+                            <span class="bot_label">APP</span>
+                        </span>
+                        <span class="time_star_and_extra_metadata">
+                            <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
+                        </span>
                     </div>
-                    <%
+                </div>
+
+                <%
+                if (typeof _content.text !== 'undefined' ) { %>
+                    <div class="text">
+                        <%
+                        _content.text = _content.text.replace(/(?:^| )```((.|\n)*)```/gim, "<pre>$1</pre>");
+                        if (typeof replaceSlackLinks === 'function') {
+                            _content.text = replaceSlackLinks(_content.text);
+                        }
+                        %>
+                        <%= _content.text %>
+                    </div>
+                <%
                 }
-            }
-            %>
+
+                if (typeof _content.attachments !== 'undefined' && _content.attachments.length ) {
+                    for (var i = 0; i < _content.attachments.length; i++) {
+                        %>
+                        <div class="attachment" style="<%- typeof _content.attachments[i].color !== 'undefined' ? 'border-left-color:' + _content.attachments[i].color : (typeof default_options.panel_color !== 'undefined' ? 'border-left-color:' + default_options.panel_color : '') %>">
+                            <% if (typeof _content.attachments[i].author_name !== 'undefined') { %>
+                                <div class="author">
+                                    <%- _content.attachments[i].author_name %>
+                                </div>
+                            <% } %>
+
+                            <% if (typeof _content.attachments[i].title !== 'undefined') { %>
+                                <div class="attachment_title">
+                                    <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].title) : _content.attachments[i].title %>
+                                </div>
+                            <% } %>
+
+                            <% if (typeof _content.attachments[i].text !== 'undefined') { %>
+                                <div class="attachment_text">
+                                    <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].text) : _content.attachments[i].text %>
+                                </div>
+                            <% } %>
+
+                            <% if (typeof _content.attachments[i].fields !== 'undefined' && _content.attachments[i].fields.length) {
+                                var cell_number = 0;
+                                %>
+                                <table border="0" width="100%">
+                                    <%
+                                    for (var j = 0; j < _content.attachments[i].fields.length; j++) {
+                                        var short = typeof _content.attachments[i].fields[j].short !== 'undefined' && _content.attachments[i].fields[j].short;
+
+                                        if ((!short && cell_number > 0) || cell_number > 1) {
+                                            cell_number = 0;
+                                            %>
+                                            </tr>
+                                            <%
+                                        }
+
+                                        if (!cell_number) {
+                                            %>
+                                            <tr>
+                                            <%
+                                        }
+
+                                        cell_number += short ? 1 : 2;
+
+                                        %>
+                                        <td<%- short ? ' width="50%"' : '' %>>
+                                            <% if (typeof _content.attachments[i].fields[j].title !== 'undefined') { %>
+                                                <div class="attachment_title">
+                                                    <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].fields[j].title) : _content.attachments[i].fields[j].title %>
+                                                </div>
+                                            <% } %>
+                                            <% if (typeof _content.attachments[i].fields[j].value !== 'undefined') { %>
+                                                <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].fields[j].value) : _content.attachments[i].fields[j].value %>
+                                            <% } %>
+                                        </td>
+                                        <%
+                                    }
+                                    %>
+                                    </tr></table>
+                                <%
+                            } %>
+                        </div>
+                        <%
+                    }
+                }
+                %>
+            </div>
         </div>
-    </div>
-<% } else { %>
+        <%
+    }
+} else { %>
     <div>Error: Rendering template for service type "<%- service_type %>" is not yet implemented</div>
 <% } %>
