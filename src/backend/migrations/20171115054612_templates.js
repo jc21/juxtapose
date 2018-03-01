@@ -28,16 +28,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Assigned Issue To You Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has assigned an issue to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has assigned an issue to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#bdd81d'
@@ -59,17 +59,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Assigned Issue To You w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has assigned {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has assigned {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#bdd81d'
@@ -93,17 +93,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Comment Added #1',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        'New comment added to {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> by {{ comment.name }}',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ comment.content }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "New comment added to {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> by {{ comment.name }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ comment.content }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#22d6d4'
@@ -129,21 +129,21 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Comment Added #2',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ comment.name }} has comment an issue assigned to you',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            value: '{{ comment.content }}'
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ comment.name }} has comment an issue assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "value": "{{ comment.content }}"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#22d6d4'
@@ -168,21 +168,21 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Comment Added on Reported',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ comment.name }} has commented on an issue you reported',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            value: '{{ comment.content }}'
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ comment.name }} has commented on an issue you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "value": "{{ comment.content }}"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#22d6d4'
@@ -207,16 +207,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Logged Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has logged an issue',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has logged an issue",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d81d39'
@@ -238,17 +238,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Logged Issue w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has logged {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has logged {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d81d39'
@@ -272,17 +272,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-assigned Away From You Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-assigned an issue away from you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    text:  'New Asignee: <%- assignee }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-assigned an issue away from you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "text": "New Asignee: {{ assignee }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -300,22 +300,22 @@ const templates = [
     },
 
     /**
-     * Jira 9: Re-opened Unassigned Issue Minimal
+     * Jira 9: Re-opened Unassigned
      */
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-opened Unassigned',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-opened an Unassigned issue',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-opened an Unassigned issue",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#ffae00'
@@ -337,16 +337,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-opened Your Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-opened an issue assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-opened an issue assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#ffae00'
@@ -368,17 +368,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-opened Your Issue w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#ffae00'
@@ -402,16 +402,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-opened Your Reported Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-opened an issue you reported',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-opened an issue you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#ffae00'
@@ -433,17 +433,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Re-opened Your Reported Issue w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#ffae00'
@@ -467,16 +467,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Issue Generic Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved an issue as <%- resolution }}',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved an issue as {{ resolution }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -499,17 +499,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Issue Generic w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> as <%- resolution }}',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> as {{ resolution }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -534,16 +534,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Reported Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved an issue you reported as <%- resolution }}',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved an issue you reported as {{ resolution }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -566,27 +566,29 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Reported Issue w/ Assignee',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    text:   '{{ description }}',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            title: 'Assigned To',
-                            value: '<%- assignee }}'
-                        },
-                        {
-                            title: 'Resolution',
-                            value: '<%- resolution }}'
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Assigned To",\n' +
+                         '          "value": "{{ assignee }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Resolution",\n' +
+                         '          "value": "{{ resolution }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -612,16 +614,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Your Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved an issue assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved an issue assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -643,17 +645,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Resolved Your Issue w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#d62398'
@@ -677,16 +679,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Issue Generic Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated an issue',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated an issue",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -710,17 +712,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Issue Generic w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -744,23 +746,23 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Issue Generic w/ Fields',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ summary }}>',
-                    text:   '{{ description }}',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            title: 'Updated Fields',
-                            value: '<%- fields }}'
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Updated Fields",\n' +
+                         '          "value": "{{ fields }}"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -785,16 +787,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Reported Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated an issue you reported',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated an issue you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -817,28 +819,28 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Reported Issue w/ Fields',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            title: 'Updated Fields',
-                            value: '<%- fields }}',
-                            short: true
-                        },
-                        {
-                            title: 'Assigned To',
-                            value: '<%- assignee }}',
-                            short: true
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Updated Fields",\n' +
+                         '          "value": "{{ fields }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Assigned To",\n' +
+                         '          "value": "{{ assignee }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -863,16 +865,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Your Issue Minimal',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated an issue assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ issuekey }} - {{ summary }}>',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated an issue assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -894,17 +896,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Your Issue w/ Description',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you',
-            attachments: [
-                {
-                    title: '<{{ issueurl }}|{{ summary }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -928,23 +930,23 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_jira,
         name:            'Updated Your Issue w/ Fields',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you',
-            attachments: [
-                {
-                    title:  '<{{ issueurl }}|{{ summary }}>',
-                    text:   '{{ description }}',
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            title: 'Updated Fields',
-                            value: '<%- fields }}'
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
+                         '      "text": "{{ description }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Updated Fields",\n' +
+                         '          "value": "{{ fields }}"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_default,
             panel_color: '#0090ff'
@@ -969,17 +971,31 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'PR Opened',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has opened a PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has opened a PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {% if from and from.repo %}\n' +
+                         '        {\n' +
+                         '          "title": "Source",\n' +
+                         '          "value": "{{ from.project }} / {{ from.repo }} / {{ from.branch }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {% endif %}\n' +
+                         '        {\n' +
+                         '          "title": "Destination",\n' +
+                         '          "value": "{{ project }} / {{ repo }} / {{ branch }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1009,30 +1025,36 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Approved',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has approved your PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has approved your PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Approvals",\n' +
+                         '          "value": "{{ approval_count }}"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
         },
         example_data:    {
-            user:        'Billy Bob',
-            prurl:       'http://example.com',
-            title:       'FEAT-1234 - Added script to enable feature x',
-            description: 'Customer y now has feature x.',
-            project:     'PROD',
-            repo:        'application',
-            branch:      'master',
-            from:        {
+            user:           'Billy Bob',
+            prurl:          'http://example.com',
+            title:          'FEAT-1234 - Added script to enable feature x',
+            description:    'Customer y now has feature x.',
+            project:        'PROD',
+            repo:           'application',
+            branch:         'master',
+            approval_count: 2,
+            from:           {
                 project: 'billybob',
                 repo:    'application',
                 branch:  'feature/1234'
@@ -1049,17 +1071,16 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR Needs Work',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has reviewed your PR as Needs Work',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has reviewed your PR as Needs Work",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1089,17 +1110,17 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'PR Merged',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has merged a PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has merged a PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1123,23 +1144,23 @@ const templates = [
     },
 
     /**
-     * Bitbucket 4: Your PR was Declined
+     * Bitbucket 5: Your PR was Declined
      */
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Declined',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has declined your PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has declined your PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1163,23 +1184,23 @@ const templates = [
     },
 
     /**
-     * Bitbucket 4: Your PR was Deleted
+     * Bitbucket 6: Your PR was Deleted
      */
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'Your PR was Deleted',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has deleted your PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '<%- description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has deleted your PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1203,23 +1224,67 @@ const templates = [
     },
 
     /**
-     * Bitbucket 5: Commented on your PR
+     * Bitbucket 7: Commented on your PR
      */
     {
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_bitbucket,
         name:            'Commented on your PR',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        '{{ user }} has commented on your PR',
-            attachments: [
-                {
-                    title: '<{{ prurl }}|{{ title }}>',
-                    text:  '{{ description }}',
-                    color: '{{ panel_color }}'
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has commented on your PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if comment and comment.text %}"text": "{{ comment.text }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_orange,
+            panel_color: '#ffbf00'
+        },
+        example_data:    {
+            user:        'Billy Bob',
+            prurl:       'http://example.com',
+            title:       'FEAT-1234 - Added script to enable feature x',
+            description: 'Customer y now has feature x.',
+            project:     'PROD',
+            repo:        'application',
+            branch:      'master',
+            from:        {
+                project: 'billybob',
+                repo:    'application',
+                branch:  'feature/1234'
+            },
+            comment:     {
+                text:   'This is a random comment with no purpose.',
+                author: 'Joe Citizen'
+            }
+        },
+        event_types:     ['my_pr_comment'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * Bitbucket 8: Your PR Merged
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_bitbucket,
+        name:            'Your PR was Merged',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "{{ user }} has merged your PR",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      "color": "{{ panel_color }}"\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_orange,
             panel_color: '#ffbf00'
@@ -1238,7 +1303,7 @@ const templates = [
                 branch:  'feature/1234'
             }
         },
-        event_types:     ['my_pr_comment'],
+        event_types:     ['my_pr_merged'],
         render_engine:   'liquid'
     },
 
@@ -1249,27 +1314,27 @@ const templates = [
         service_type:    common_values.service_type_slack,
         in_service_type: common_values.service_type_dockerhub,
         name:            'Repo Updated',
-        content:         JSON.stringify({
-            icon_url:    '{{ icon_url }}',
-            text:        'Docker Repository <{{ url }}|{{ repo }}> updated by {{ pusher }}',
-            attachments: [
-                {
-                    color:  '{{ panel_color }}',
-                    fields: [
-                        {
-                            title: 'Tag',
-                            value: '{{ tag }}',
-                            short: true
-                        },
-                        {
-                            title: 'Star Count',
-                            value: '{{ star_count }}',
-                            short: true
-                        }
-                    ]
-                }
-            ]
-        }, null, 2),
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "text": "Docker Repository <{{ url }}|{{ repo }}> updated by {{ pusher }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Tag",\n' +
+                         '          "value": "{{ tag }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Star Count",\n' +
+                         '          "value": "{{ star_count }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
         default_options: {
             icon_url:    common_values.icon_url_red,
             panel_color: '#114c6d'
