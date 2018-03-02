@@ -11,9 +11,121 @@
                 <p>Put this in your Bitbucket Repository Webhook Settings:</p>
             <% } %>
 
-            <div class="form-group">
-                <input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
-            </div>
+            <% if (type !== 'zendesk-webhook') { %>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
+                </div>
+            <% } else { %>
+
+            <ol style="list-style-type: lower-alpha;">
+                <li>
+                    Follow <a href="https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#ariaid-title2" target="_blank">this guide</a>
+                    to create your Zendesk incoming Webhook
+                    <ol>
+                        <li>
+                            Enter the following in to the <strong>URL</strong> field:
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
+                            </div>
+                        </li>
+                        <li>
+                            Select <strong>POST</strong> for the Method and <stong>JSON</stong> for the Content type
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    Next, <a href="https://support.zendesk.com/hc/en-us/articles/203662136#topic_hvf_eoa_vb" target="_blank">create a Trigger</a> for this Target
+                    <ol>
+                        <li>
+                            Create your conditions for this trigger. If you want all events, create 2 conditions in the <strong>ANY</strong> section, one with
+                            something like "Status is Open" and another with "Status is not Open". It's weird, but it works.
+                        </li>
+                        <li>
+                            In the Actions, select the HTTP Target for Juxtapose you just created
+                        </li>
+                        <li>
+                            Enter the following in the Message:
+                            <div class="form-group">
+                                <textarea rows="10" class="form-control" name="zendesk-content" readonly>{
+  "juxtapose_payload_version": 1,
+  "ticket": {
+    "id": {{ticket.id | default: 0}},
+    "created_at": "{{ticket.created_at}}",
+    "created_at_with_timestamp": "{{ticket.created_at_with_timestamp}}",
+    "title": "{{ticket.title | strip | strip_newlines}}",
+    "description": "{{ticket.description | strip | strip_newlines}}",
+    "url": "{{ticket.url}}",
+    "link": "{{ticket.link}}",
+    "external_id": {% if ticket.external_id %}"{{ticket.external_id}}"{% else %}null{% endif %},
+    "via": {% if ticket.via %}"{{ticket.via}}"{% else %}null{% endif %},
+    "status": {% if ticket.status %}"{{ticket.status}}"{% else %}null{% endif %},
+    "priority": {% if ticket.priority %}"{{ticket.priority}}"{% else %}null{% endif %},
+    "type": {% if ticket.ticket_type %}"{{ticket.ticket_type}}"{% else %}null{% endif %},
+    "group_name": {% if ticket.group.name %}"{{ticket.group.name}}"{% else %}null{% endif %},
+    "brand_name": {% if ticket.brand.name %}"{{ticket.brand.name}}"{% else %}null{% endif %},
+    "due_date": {% if ticket.due_date %}"{{ticket.due_date}}"{% else %}null{% endif %},
+    "due_date_with_timestamp": {% if ticket.due_date_with_timestamp %}"{{ticket.due_date_with_timestamp}}"{% else %}null{% endif %},
+    "account": {% if ticket.account %}"{{ticket.account}}"{% else %}null{% endif %},
+    "ccs": {{ticket.ccs}},
+    "cc_names": "{{ticket.cc_names}}",
+    "email_ccs": {{ticket.email_ccs}},
+    "email_cc_names": "{{ticket.email_cc_names}}",
+    "followers": {{ticket.followers}},
+    "follower_names": "{{ticket.follower_names}}",
+    "tags": "{{ticket.tags}}",
+    "requester_field": {% if ticket.requester_field %}"{{ticket.requester_field}}"{% else %}null{% endif %},
+    "assignee": {% if ticket.assignee.id %}{
+      "id": {{ticket.assignee.id | default: 0}},
+      "email": "{{ticket.assignee.email}}",
+      "name": "{{ticket.assignee.name}}"
+    }{% else %}null{% endif %},
+    "requester": {% if ticket.requester.id %}{
+      "id": {{ticket.requester.id | default: 0}},
+      "email": "{{ticket.requester.email}}",
+      "name": "{{ticket.requester.name}}",
+      "first_name": "{{ticket.requester.first_name}}",
+      "last_name": "{{ticket.requester.last_name}}",
+      "language": "{{ticket.requester.language}}",
+      "phone": "{{ticket.requester.phone}}"
+    }{% else %}null{% endif %},
+    "organization": {% if ticket.organization %}{
+      "name": "{{ticket.organization.name}}",
+      "external_id": "{{ticket.organization.external_id}}",
+      "details": "{{ticket.organization.details}}",
+      "notes": "{{ticket.organization.notes}}"
+    }{% else %}null{% endif %},
+    "latest_comment": {% if ticket.latest_comment %}{
+      "id": {{ticket.latest_comment.id | default: 0}},
+      "author_name": "{{ticket.latest_comment.author.name}}",
+      "created_at": "{{ticket.latest_comment.created_at}}",
+      "created_at_with_timestamp": "{{ticket.latest_comment.created_at_with_timestamp}}",
+      "is_public": {% if ticket.latest_comment.is_public %}{{ticket.latest_comment.is_public | default: null}}{% else %}null{% endif %},
+      "value": "{{ticket.latest_comment.value}}"
+    }{% else %}null{% endif %}
+  },
+  "current_user": {% if current_user.id %}{
+    "id": {{current_user.id | default: 0}},
+    "email": "{{current_user.email}}",
+    "name": "{{current_user.name}}"
+  }{% else %}null{% endif %},
+  "satisfaction": {
+    "current_rating": {% if satisfaction.current_rating %}"{{satisfaction.current_rating}}"{% else %}null{% endif %},
+    "current_comment": {% if satisfaction.current_rating %}"{{satisfaction.current_comment}}"{% else %}null{% endif %}
+  }
+}</textarea>
+                            </div>
+                        </li>
+                        <li>Save</li>
+                    </ol>
+                </li>
+            </ol>
+
+
+
+
+
+
+            <% } %>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
