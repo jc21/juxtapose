@@ -2,7 +2,6 @@
 
 const _            = require('lodash');
 const config       = require('config');
-const debug        = require('debug')('juxtapose:internal:service');
 const error        = require('../lib/error');
 const serviceModel = require('../models/service');
 const batchflow    = require('batchflow');

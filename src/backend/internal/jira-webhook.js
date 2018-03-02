@@ -785,7 +785,7 @@ const internalJiraWebhook = {
             if (typeof incoming_destination_username === 'string' && incoming_destination_username === incoming_trigger_username) {
                 // bail, as the event user and the destination are the same, we don't want to annoy user with their own actions
                 return Promise.resolve([]);
-            } else if (typeof incoming_destination_username === 'object' && incoming_destination_username.length) {
+            } else if (typeof incoming_destination_username === 'object' && incoming_destination_username !== null && incoming_destination_username.length) {
                 // remove trigger user from array if present
                 _.pull(incoming_destination_username, incoming_trigger_username);
 

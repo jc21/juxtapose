@@ -19,7 +19,7 @@ router
     .options((req, res) => {
         res.sendStatus(204);
     })
-    .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
+    .all(jwtdecode())
 
     /**
      * POST /incoming/bitbucket-webhook
@@ -47,10 +47,10 @@ router
             service_id: typeof req.query.s !== 'undefined' ? parseInt(req.query.s, 10) : null,
             webhook:    req.body
         })
-            .then((data) => {
+            .then(data => {
                 return internalDockerhubWebhook.processIncoming(data.service_id, data.key, data.webhook);
             })
-            .then((result) => {
+            .then(result => {
                 res.status(200)
                     .send(result);
             })

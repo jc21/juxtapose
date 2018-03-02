@@ -19,7 +19,7 @@ router
     .options((req, res) => {
         res.sendStatus(204);
     })
-    .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
+    .all(jwtdecode())
 
     /**
      * POST /incoming/jira-webhook
@@ -42,10 +42,10 @@ router
             token:   typeof req.query.t !== 'undefined' ? req.query.t : null,
             webhook: req.body
         })
-            .then((data) => {
+            .then(data => {
                 return internalJiraWebhook.processIncoming(data.token, data.webhook);
             })
-            .then((result) => {
+            .then(result => {
                 res.status(200)
                     .send(result);
             })
