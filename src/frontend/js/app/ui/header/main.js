@@ -14,6 +14,7 @@ module.exports = Mn.View.extend({
         logo:          '.navbar-brand',
         profile_link:  '.profile-link',
         services_link: '.services-link',
+        password_link: '.password-link',
         logout_link:   '.logout-link'
     },
 
@@ -28,18 +29,23 @@ module.exports = Mn.View.extend({
             Controller.showUserForm(Cache.User);
         },
 
+        'click @ui.password_link': function (e) {
+            e.preventDefault();
+            Controller.showUserPasswordForm(Cache.User);
+        },
+
         'click @ui.services_link': function (e) {
             e.preventDefault();
 
             let view = this;
 
             Api.Services.getAvailable()
-                .then((services) => {
+                .then(services => {
                     if (!view.isDestroyed()) {
                         Controller.showUserServiceSettingsForm(Cache.User, services);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert('Could not fetch available services: ' + err.message);
                 });
         },

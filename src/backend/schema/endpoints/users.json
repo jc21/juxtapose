@@ -191,6 +191,11 @@
             "type": "string",
             "pattern": "^password$"
           },
+          "current": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
           "secret": {
             "type": "string",
             "minLength": 8,

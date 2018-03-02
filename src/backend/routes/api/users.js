@@ -186,11 +186,11 @@ router
      */
     .put((req, res, next) => {
         apiValidator({$ref: 'endpoints/users#/links/4/schema'}, req.body)
-            .then((payload) => {
+            .then(payload => {
                 payload.id = req.params.user_id;
                 return internalUser.setPassword(res.locals.access, payload);
             })
-            .then((result) => {
+            .then(result => {
                 res.status(201)
                     .send(result);
             })

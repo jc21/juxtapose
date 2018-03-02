@@ -7,6 +7,7 @@ const authModel               = require('../models/auth');
 const userHasServiceDataModel = require('../models/user_has_service_data');
 const batchflow               = require('batchflow');
 const gravatar                = require('gravatar');
+const internalToken           = require('./token');
 
 function omissions () {
     return ['is_deleted'];
@@ -383,12 +384,30 @@ const internalUser = {
             .then(() => {
                 return internalUser.get(access, {id: data.id});
             })
-            .then((user) => {
+            .then(user => {
                 if (user.id !== data.id) {
                     // Sanity check that something crazy hasn't happened
                     throw new error.InternalValidationError('User could not be updated, IDs do not match: ' + user.id + ' !== ' + data.id);
                 }
 
+                if (user.id === access.token.get('attrs').id) {
+                    // they're setting their own password. Make sure their current password is correct
+                    if (typeof data.current === 'undefined' || !data.current) {
+                        throw new error.ValidationError('Current password was not supplied');
+                    }
+
+                    return internalToken.getTokenFromEmail({
+                        identity: user.email,
+                        secret:   data.current
+                    })
+                        .then(() => {
+                            return user;
+                        });
+                }
+
+                return user;
+            })
+            .then(user => {
                 return authModel
                     .query()
                     .where('user_id', user.id)

@@ -6,6 +6,7 @@ const template   = require('./password.ejs');
 const Controller = require('../controller');
 const Api        = require('../api');
 const App        = require('../main');
+const Cache      = require('../cache');
 
 require('jquery-serializejson');
 
@@ -13,9 +14,9 @@ module.exports = Mn.View.extend({
     template: template,
 
     ui: {
-        form:     'form',
-        buttons:  'form button',
-        cancel:   'button.cancel'
+        form:    'form',
+        buttons: 'form button',
+        cancel:  'button.cancel'
     },
 
     events: {
@@ -23,9 +24,15 @@ module.exports = Mn.View.extend({
             e.preventDefault();
             let form = this.ui.form.serializeJSON();
 
+            if (form.new_password1 !== form.new_password2) {
+                alert('Passwords do not match!');
+                return;
+            }
+
             let data = {
-                type:   'password',
-                secret: form.password
+                type:    'password',
+                current: form.current_password,
+                secret:  form.new_password1
             };
 
             this.ui.buttons.prop('disabled', true).addClass('btn-disabled');
@@ -39,5 +46,15 @@ module.exports = Mn.View.extend({
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });
         }
+    },
+
+    isSelf: function () {
+        return Cache.User.get('id') === this.model.get('id');
+    },
+
+    templateContext: function () {
+        return {
+            isSelf: this.isSelf.bind(this)
+        };
     }
 });
