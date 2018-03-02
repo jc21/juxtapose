@@ -199,6 +199,22 @@
         }
       }
     },
+    "zendesk_webhook_data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "ticket",
+        "current_user"
+      ],
+      "properties": {
+        "ticket": {
+          "type": "object"
+        },
+        "current_user": {
+          "type": "object"
+        }
+      }
+    },
     "service_type": {
       "description": "Service Type",
       "example": "slack",

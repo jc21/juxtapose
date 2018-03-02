@@ -11,5 +11,6 @@ let router = express.Router({
 router.use('/jira-webhook',      require('./jira-webhook'));
 router.use('/bitbucket-webhook', require('./bitbucket-webhook'));
 router.use('/dockerhub-webhook', require('./dockerhub-webhook'));
+router.use('/zendesk-webhook',   require('./zendesk-webhook'));
 
 module.exports = router;

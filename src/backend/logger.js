@@ -19,6 +19,7 @@ winston.setLevels({
     jira_webhook:      2,
     bitbucket_webhook: 2,
     dockerhub_webhook: 2,
+    zendesk_webhook:   2,
     verbose:           3,
     debug:             4
 });
@@ -33,6 +34,7 @@ winston.addColors({
     jira_webhook:      'magenta',
     bitbucket_webhook: 'blue',
     dockerhub_webhook: 'yellow',
+    zendesk_webhook:   'cyan',
     verbose:           'blue',
     debug:             'magenta'
 });

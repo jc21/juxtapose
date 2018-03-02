@@ -162,7 +162,7 @@ const trigger_types = {
             group: 'your_tickets'
         },
         my_ticket_commented:  {
-            name:  'A comments is made on on your Ticket',
+            name:  'A comment is made on on your Ticket',
             group: 'your_tickets'
         },
         my_ticket_rated:      {
