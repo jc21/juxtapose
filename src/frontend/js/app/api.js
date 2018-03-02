@@ -345,13 +345,20 @@ module.exports = {
          *
          * @param   {Integer}  from_user_id
          * @param   {Integer}  to_user_id
+         * @param   {String}   [service_type]
          * @returns {Promise}
          */
-        copy: function (from_user_id, to_user_id) {
-            return fetch('post', 'rules/copy', {
+        copy: function (from_user_id, to_user_id, service_type) {
+            let data = {
                 from: from_user_id,
                 to:   to_user_id
-            });
+            };
+
+            if (service_type) {
+                data.service_type = service_type;
+            }
+
+            return fetch('post', 'rules/copy', data);
         }
     },
 

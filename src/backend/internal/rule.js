@@ -239,6 +239,7 @@ const internalRule = {
      * @param {Object}   data
      * @param {Integer}  data.from
      * @param {Integer}  data.to
+     * @param {String}   [data.service_type]
      */
     copy: (access, data) => {
         return access.can('rules:copy')
@@ -248,10 +249,17 @@ const internalRule = {
                 }
 
                 // 1. Select rules from user
-                return ruleModel
+                let query = ruleModel
                     .query()
-                    .where('is_deleted', 0)
-                    .andWhere('user_id', data.from);
+                    .where('rule.is_deleted', 0)
+                    .andWhere('rule.user_id', data.from);
+
+                if (typeof data.service_type !== 'undefined' && data.service_type) {
+                    query.join('service', 'rule.in_service_id', 'service.id')
+                        .andWhere('service.type', data.service_type);
+                }
+
+                return query;
             })
             .then(rules => {
                 // 2. Insert modified rules for a user

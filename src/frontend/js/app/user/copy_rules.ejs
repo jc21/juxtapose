@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Copy Rules to <%- name %></h4>
             </div>
             <div class="modal-body">
-                <p>This procedure will copy <strong>ALL</strong> of the defined rules from the selected user below in to <%- name %>'s account.</p>
+                <p>This procedure will copy the current rules from the selected user below in to <%- name %>'s account.</p>
                 <p>This will NOT overwrite or remove any existing rules for the user, who currently has <strong><%- rule_count %></strong> rules.</p>
 
                 <div class="form-group">
@@ -23,6 +23,18 @@
                                 }
                             });
                             %>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Rules for Services</label>
+                    <div class="col-sm-9">
+                        <select name="service_type" class="form-control">
+                            <option value="">All Services</option>
+                            <option value="bitbucket-webhook">Bitbucket Rules</option>
+                            <option value="dockerhub-webhook">Docker Hub Rules</option>
+                            <option value="jira-webhook">Jira Rules</option>
+                            <option value="zendesk-webhook">Zendesk Rules</option>
                         </select>
                     </div>
                 </div>

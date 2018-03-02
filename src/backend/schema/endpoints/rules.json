@@ -251,6 +251,9 @@
           "to": {
             "type": "integer",
             "minimum": 1
+          },
+          "service_type": {
+            "$ref": "../definitions.json#/definitions/service_type"
           }
         }
       },
