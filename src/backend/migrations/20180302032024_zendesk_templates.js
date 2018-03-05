@@ -289,7 +289,7 @@ const templates = [
                 }
             },
             satisfaction: {
-                current_rating:  4,
+                current_rating:  '&quot;Good, I&#39;m satisfied&quot;',
                 current_comment: 'Always fun dealing with this guy'
             }
         },

@@ -3,6 +3,8 @@
 const ejs    = require('ejs');
 const liquid = require('liquidjs')();
 
+liquid.registerFilter('unescape', v => decodeURI(v));
+
 /**
  * @param   {String}  content
  * @returns {String}

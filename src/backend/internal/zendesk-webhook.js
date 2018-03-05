@@ -575,6 +575,11 @@ const internalZendeskWebhook = {
                                     _template_id: rule.out_template_id
                                 };
 
+                                // special case, clean the rating comment from being an empty string
+                                if (typeof data.satisfaction !== 'undefined' && typeof data.satisfaction.current_comment === 'string') {
+                                    data.satisfaction.current_comment = data.satisfaction.current_comment.trim();
+                                }
+
                                 templateRender(rule.template.content, _.assign({}, rule.template.default_options, rule.out_template_options, data, debug_data), rule.template.render_engine)
                                     .then(content => {
                                         return {
