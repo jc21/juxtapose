@@ -147,15 +147,21 @@ const internalZendeskWebhook = {
         logger.zendesk_webhook('  ❯ Title:                          ', internalZendeskWebhook.getTicketField(webhook_data, 'title'));
         logger.zendesk_webhook('  ❯ Link:                           ', internalZendeskWebhook.getTicketField(webhook_data, 'link'));
 
-        return internalZendeskWebhook.determineEventsFromPayload(service_id, webhook_data)
-            .then(event_types => {
+        // Get existing ticket details
+        return zendeskTicketStatusModel.query()
+            .where('ticket_id', webhook_data.ticket.id)
+            .andWhere('service_id', service_id)
+            .first()
+            .then(existing_ticket_row => {
+                let event_types = internalZendeskWebhook.determineEventsFromPayload(webhook_data, existing_ticket_row);
+
                 if (event_types.length) {
                     return new Promise((resolve, reject) => {
                         let already_notified_user_ids = [];
 
                         batchflow(event_types).sequential()
                             .each((i, event_type, next) => {
-                                internalZendeskWebhook.processTheseEventTypes(event_type, service_id, webhook_data, already_notified_user_ids)
+                                internalZendeskWebhook.processTheseEventTypes(event_type, service_id, webhook_data, existing_ticket_row, already_notified_user_ids)
                                     .then(notified_user_ids => {
                                         if (notified_user_ids && notified_user_ids.length) {
                                             already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
@@ -204,73 +210,70 @@ const internalZendeskWebhook = {
      * my_ticket_commented  - A comment is made on on your Ticket
      * my_ticket_rated      - A rating is made on your Ticket
      *
-     * @param   {Integer} service_id
      * @param   {Object}  webhook_data
-     * @returns {Promise}
+     * @param   {Object}  existing_ticket_row
+     * @returns {Array}
      */
-    determineEventsFromPayload: (service_id, webhook_data) => {
+    determineEventsFromPayload: (webhook_data, existing_ticket_row) => {
         let event_types = [];
 
-        // Get previously discovered zendesk data
-        return zendeskTicketStatusModel.query()
-            .where('ticket_id', webhook_data.ticket.id)
-            .andWhere('service_id', service_id)
-            .first()
-            .then(row => {
-                if (!row) {
-                    // We have nothing on record, so we'll assume that this is a new ticket
-                    if (!internalZendeskWebhook.isAssigned(webhook_data)) {
-                        // Unassigned
-                        event_types.push('ticket_logged');
-                    } else {
-                        // Assigned to someone. We'll assume this is an update since we've never seen it before.
-                        event_types.push('my_ticket_updated');
+        if (!existing_ticket_row) {
+            // We have nothing on record, so we'll assume that this is a new ticket
+            if (!internalZendeskWebhook.isAssigned(webhook_data)) {
+                // Unassigned
+                event_types.push('ticket_logged');
+            } else {
+                // Assigned to someone. We'll assume this is an update since we've never seen it before.
+                event_types.push('my_ticket_updated');
 
-                        if (internalZendeskWebhook.isRated(webhook_data)) {
-                            event_types.push('my_ticket_rated');
-                        }
-                    }
+                if (internalZendeskWebhook.isRated(webhook_data)) {
+                    event_types.push('my_ticket_rated');
+                }
+            }
 
-                    if (internalZendeskWebhook.hasComment(webhook_data)) {
-                        event_types.push('my_ticket_commented');
-                    }
+            if (internalZendeskWebhook.hasComment(webhook_data)) {
+                event_types.push('my_ticket_commented');
+            }
 
-                    if (internalZendeskWebhook.isRated(webhook_data)) {
-                        event_types.push('ticket_rated');
-                    }
+            if (internalZendeskWebhook.isRated(webhook_data)) {
+                event_types.push('ticket_rated');
+            }
 
-                } else {
-                    // Existing ticket on file. We need to check what's changed
-                    let ticket = row.data.ticket;
+        } else {
+            // Existing ticket on file. We need to check what's changed
+            let ticket = existing_ticket_row.data.ticket;
 
-                    if (internalZendeskWebhook.isAssigned(webhook_data)) {
-                        // my_ticket_assigned - A Ticket is assigned to you
-                        if (!ticket.assignee) {
-                            event_types.push('my_ticket_assigned');
-                        }
-
-                        // my_ticket_reassigned - A Ticket assigned to you is re-assigned
-                        if (ticket.assignee && typeof ticket.assignee.id !== 'undefined' && ticket.assignee.id !== webhook_data.ticket.assignee.id) {
-                            event_types.push('my_ticket_reassigned');
-                        }
-
-                        // my_ticket_rated - A rating is made on your Ticket
-                        if (internalZendeskWebhook.isRated(webhook_data) && (!row.data.satisfaction || !row.data.satisfaction.current_rating)) {
-                            event_types.push('ticket_rated');
-                        }
-
-                        // my_ticket_commented  - A comment is made on on your Ticket
-                        if (ticket.latest_comment && webhook_data.ticket.latest_comment && ticket.latest_comment.id !== webhook_data.ticket.latest_comment.id) {
-                            event_types.push('my_ticket_commented');
-                        }
-
-                        // my_ticket_updated - A Ticket assigned to you is updated
-                        event_types.push('my_ticket_updated');
-                    }
+            if (internalZendeskWebhook.isAssigned(webhook_data)) {
+                // my_ticket_assigned - A Ticket is assigned to you
+                if (!ticket.assignee) {
+                    event_types.push('my_ticket_assigned');
                 }
 
-                return [event_types];
-            });
+                // my_ticket_reassigned - A Ticket assigned to you is re-assigned
+                if (ticket.assignee && typeof ticket.assignee.id !== 'undefined' && ticket.assignee.id !== webhook_data.ticket.assignee.id) {
+                    if (event_types.indexOf('my_ticket_assigned') === -1) {
+                        event_types.push('my_ticket_assigned');
+                    }
+
+                    event_types.push('my_ticket_reassigned');
+                }
+
+                // my_ticket_rated - A rating is made on your Ticket
+                if (internalZendeskWebhook.isRated(webhook_data) && (!existing_ticket_row.data.satisfaction || !existing_ticket_row.data.satisfaction.current_rating)) {
+                    event_types.push('ticket_rated');
+                }
+
+                // my_ticket_commented  - A comment is made on on your Ticket
+                if (ticket.latest_comment && webhook_data.ticket.latest_comment && ticket.latest_comment.id !== webhook_data.ticket.latest_comment.id) {
+                    event_types.push('my_ticket_commented');
+                }
+
+                // my_ticket_updated - A Ticket assigned to you is updated
+                event_types.push('my_ticket_updated');
+            }
+        }
+
+        return [event_types];
     },
 
     /**
@@ -280,16 +283,17 @@ const internalZendeskWebhook = {
      * @param   {String}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
+     * @param   {Object}  existing_ticket_row
      * @param   {Array}   already_notified_user_ids
      * @returns {Promise}
      */
-    processTheseEventTypes: (event_types, service_id, webhook_data, already_notified_user_ids) => {
+    processTheseEventTypes: (event_types, service_id, webhook_data, existing_ticket_row, already_notified_user_ids) => {
         let template_data = _.assign({service_id: service_id}, webhook_data);
 
         return new Promise((resolve, reject) => {
             batchflow(event_types).sequential()
                 .each((i, event_type, next) => {
-                    internalZendeskWebhook.processRules(event_type, template_data, webhook_data, already_notified_user_ids)
+                    internalZendeskWebhook.processRules(event_type, template_data, webhook_data, existing_ticket_row, already_notified_user_ids)
                         .then(notified_user_ids => {
                             if (notified_user_ids && notified_user_ids.length) {
                                 already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
@@ -398,22 +402,26 @@ const internalZendeskWebhook = {
      * @param   {String}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
+     * @param   {Object}  existing_ticket_row
      * @returns {String|Array}
      */
-    getIncomingServiceEmailBasedOnEvent: (event_type, webhook_data) => {
+    getIncomingServiceEmailBasedOnEvent: (event_type, webhook_data, existing_ticket_row) => {
         switch (event_type) {
             case 'my_ticket_assigned':
             case 'my_ticket_updated':
-            case 'my_ticket_reassigned':
             case 'my_ticket_commented':
             case 'my_ticket_rated':
                 return internalZendeskWebhook.getAssignee(webhook_data, 'email').toLowerCase();
                 break;
 
-            default:
-                return null;
+            case 'my_ticket_reassigned':
+                if (existing_ticket_row) {
+                    return internalZendeskWebhook.getAssignee(existing_ticket_row.data, 'email').toLowerCase();
+                }
                 break;
         }
+
+        return null;
     },
 
     /**
@@ -480,15 +488,16 @@ const internalZendeskWebhook = {
      * @param   {String}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
+     * @param   {Object}  existing_ticket_row
      * @param   {Array}   already_notified_user_ids
      * @returns {Promise} with array of user_ids who have been notified, so that they don't get notified again
      */
-    processRules: (event_type, data, webhook_data, already_notified_user_ids) => {
+    processRules: (event_type, data, webhook_data, existing_ticket_row, already_notified_user_ids) => {
         already_notified_user_ids = already_notified_user_ids || [];
 
         logger.zendesk_webhook('  ❯ Processing Rules for:           ', event_type);
 
-        let incoming_destination_email = internalZendeskWebhook.getIncomingServiceEmailBasedOnEvent(event_type, webhook_data);
+        let incoming_destination_email = internalZendeskWebhook.getIncomingServiceEmailBasedOnEvent(event_type, webhook_data, existing_ticket_row);
         logger.zendesk_webhook('    ❯ incoming_destination_email:   ', typeof incoming_destination_email === 'object' && incoming_destination_email !== null ? incoming_destination_email.join(', ') : incoming_destination_email);
 
         let incoming_trigger_user_email = internalZendeskWebhook.getEventUser(webhook_data, 'email').toLowerCase();
