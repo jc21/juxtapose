@@ -2,7 +2,7 @@
 
 # Juxtapose
 
-![Version](https://img.shields.io/badge/version-1.0.3-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.4-green.svg)
 ![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg)
 ![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg)
 
