@@ -32,7 +32,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -88,7 +88,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -144,7 +144,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -202,7 +202,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -257,7 +257,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -312,7 +312,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -365,7 +365,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "<{{ ticket.link }}|{{ ticket.title }}>",\n' +
+                         '          "title": "{{ ticket.title }}",\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
