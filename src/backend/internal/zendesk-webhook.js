@@ -97,6 +97,10 @@ const internalZendeskWebhook = {
                                     });
                             });
                     });
+            })
+            .catch(err => {
+                logger.error(err, webhook_data);
+                throw err;
             });
     },
 
