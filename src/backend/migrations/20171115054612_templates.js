@@ -65,7 +65,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -244,7 +244,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -374,7 +374,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -439,7 +439,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -505,7 +505,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -572,7 +572,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -651,7 +651,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -718,7 +718,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -752,7 +752,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -902,7 +902,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -936,7 +936,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description }}",\n' +
+                         '      "text": "{{ description | unescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -977,7 +977,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {% if from and from.repo %}\n' +
@@ -1116,7 +1116,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1156,7 +1156,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1196,7 +1196,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1280,7 +1280,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
