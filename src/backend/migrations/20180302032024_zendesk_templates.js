@@ -32,7 +32,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -88,7 +88,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -144,7 +144,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -202,7 +202,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -212,7 +212,7 @@ const templates = [
                          '        },\n' +
                          '        {\n' +
                          '          "title": "Comment",\n' +
-                         '          "value": "{{ ticket.latest_comment.value }}"\n' +
+                         '          "value": {{ ticket.latest_comment.value | jsonstring }}\n' +
                          '        }\n' +
                          '      ]\n' +
                          '    }\n' +
@@ -257,7 +257,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -267,7 +267,7 @@ const templates = [
                          '        }{% if satisfaction.current_comment %},\n' +
                          '        {\n' +
                          '          "title": "Comment",\n' +
-                         '          "value": "{{ satisfaction.current_comment | unescape }}",\n' +
+                         '          "value": {{ satisfaction.current_comment | jsonstring }},\n' +
                          '          "short": true\n' +
                          '        }{% endif %}\n' +
                          '      ]\n' +
@@ -312,7 +312,7 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
@@ -365,12 +365,12 @@ const templates = [
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "title": "{{ ticket.title | unescape }}",\n' +
+                         '          "title": {{ ticket.title | jsonstring }},\n' +
                          '          "value": "{{ ticket.requester.name }} ({{ ticket.requester.email }})"\n' +
                          '        },\n' +
                          '        {\n' +
                          '          "title": "Rating",\n' +
-                         '          "value": "{{ satisfaction.current_rating | unescape }}",\n' +
+                         '          "value": {{ satisfaction.current_rating | jsonstring }},\n' +
                          '          "short": true\n' +
                          '        },{\n' +
                          '          "title": "Assignee",\n' +
@@ -379,7 +379,7 @@ const templates = [
                          '        }{% if satisfaction.current_comment %},\n' +
                          '        {\n' +
                          '          "title": "Comment",\n' +
-                         '          "value": "{{ satisfaction.current_comment | unescape }}",\n' +
+                         '          "value": {{ satisfaction.current_comment | jsonstring }},\n' +
                          '          "short": true\n' +
                          '        }{% endif %}\n' +
                          '      ]\n' +

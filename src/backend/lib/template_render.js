@@ -5,6 +5,7 @@ const ejs    = require('ejs');
 const liquid = require('liquidjs')();
 
 liquid.registerFilter('unescape', v => _.unescape(v));
+liquid.registerFilter('jsonstring', v => JSON.stringify(v));
 
 /**
  * @param   {String}  content
