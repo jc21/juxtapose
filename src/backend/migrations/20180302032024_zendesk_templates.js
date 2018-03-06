@@ -264,7 +264,7 @@ const templates = [
                          '          "title": "Rating",\n' +
                          '          "value": "{{ satisfaction.current_rating | unescape }}",\n' +
                          '          "short": true\n' +
-                         '        }{% if satisfaction.current_comment %},\n' +
+                         '        }{% if satisfaction.current_comment and satisfaction.current_comment != "" %},\n' +
                          '        {\n' +
                          '          "title": "Comment",\n' +
                          '          "value": {{ satisfaction.current_comment | jsonstring }},\n' +
@@ -376,7 +376,7 @@ const templates = [
                          '          "title": "Assignee",\n' +
                          '          "value": "{{ ticket.assignee.name }}",\n' +
                          '          "short": true\n' +
-                         '        }{% if satisfaction.current_comment %},\n' +
+                         '        }{% if satisfaction.current_comment and satisfaction.current_comment != "" %},\n' +
                          '        {\n' +
                          '          "title": "Comment",\n' +
                          '          "value": {{ satisfaction.current_comment | jsonstring }},\n' +

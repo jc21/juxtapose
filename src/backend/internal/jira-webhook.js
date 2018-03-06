@@ -27,6 +27,7 @@ const internalJiraWebhook = {
      * @param   {String}  webhook_data.webhookEvent
      * @param   {Object}  webhook_data.issue
      * @param   {Object}  webhook_data.user
+     * @param   {Object}  webhook_data.comment
      * @returns {Promise}
      */
     processIncoming: (token, webhook_data) => {
@@ -35,6 +36,9 @@ const internalJiraWebhook = {
         // 1. Verify Token
         return internalJiraWebhook.verifyToken(token)
             .then(token_data => {
+
+                webhook_data = internalJiraWebhook.sanitizePayload(webhook_data);
+
                 // 2. Make sure service still exists
                 return serviceModel
                     .query()
@@ -79,6 +83,36 @@ const internalJiraWebhook = {
                         return internalJiraWebhook.process(service.id, webhook_data);
                     });
             });
+    },
+
+    /**
+     * @param   {Object}  webhook_data
+     * @param   {String}  webhook_data.webhookEvent
+     * @param   {Object}  webhook_data.issue
+     * @param   {Object}  webhook_data.comment
+     * @returns {Object}
+     */
+    sanitizePayload: webhook_data => {
+        let sanitize = val => {
+            return _.unescape(val.replace(/[\u{0080}-\u{FFFF}]/gu, ''));
+        };
+
+        // Remove special emoji characters and crap from the content so it doesn't mess up the notifications. We don't need smileys anyway
+        if (typeof webhook_data.issue !== 'undefined' && typeof webhook_data.issue.fields !== 'undefined') {
+            if (typeof webhook_data.issue.fields.summary === 'string') {
+                webhook_data.issue.fields.summary = sanitize(webhook_data.issue.fields.summary);
+            }
+
+            if (typeof webhook_data.issue.fields.description === 'string') {
+                webhook_data.issue.fields.description = sanitize(webhook_data.issue.fields.description);
+            }
+        }
+
+        if (typeof webhook_data.comment !== 'undefined' && typeof webhook_data.comment.body !== 'undefined') {
+            webhook_data.comment.body = sanitize(webhook_data.comment.body);
+        }
+
+        return webhook_data;
     },
 
     /**
@@ -868,7 +902,7 @@ const internalJiraWebhook = {
                                     .then(notification_data => {
                                         return notificationQueueModel
                                             .query()
-                                            .insert(notification_data)
+                                            .insert(notification_data);
                                     })
                                     .then(() => {
                                         logger.jira_webhook('      ❯ Notification queue item added');
@@ -919,7 +953,7 @@ const internalJiraWebhook = {
                         if (project !== null && typeof project.key !== 'undefined' && value) {
                             // Support comma separated values for project key
                             let valid_keys = value.split(',');
-                            is_ok = valid_keys.indexOf(project.key) !== -1;
+                            is_ok          = valid_keys.indexOf(project.key) !== -1;
                         }
 
                         break;
