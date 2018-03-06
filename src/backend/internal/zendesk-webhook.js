@@ -23,13 +23,15 @@ const internalZendeskWebhook = {
      *
      * @param   {String}  token
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @returns {Promise}
      */
     processIncoming: (token, webhook_data) => {
         public_key = config.get('jwt.pub');
+
+        webhook_data = internalZendeskWebhook.sanitizePayload(webhook_data);
 
         // 1. Verify Token
         return internalZendeskWebhook.verifyToken(token)
@@ -105,6 +107,46 @@ const internalZendeskWebhook = {
     },
 
     /**
+     * @param   {Object}  webhook_data
+     * @param   {Object}  webhook_data.ticket
+     * @param   {Object}  webhook_data.current_user
+     * @param   {Object}  webhook_data.satisfaction
+     * @returns {Object}
+     */
+    sanitizePayload: webhook_data => {
+        let sanitize = val => {
+            return _.unescape(val.replace(/[\u{0080}-\u{FFFF}]/gu, ''));
+        };
+
+        // Remove special emoji characters and crap from the content so it doesn't mess up the notifications. We don't need smileys anyway
+        if (typeof webhook_data.ticket !== 'undefined') {
+            if (typeof webhook_data.ticket.summary === 'string') {
+                webhook_data.ticket.summary = sanitize(webhook_data.ticket.summary);
+            }
+
+            if (typeof webhook_data.ticket.description === 'string') {
+                webhook_data.ticket.description = sanitize(webhook_data.ticket.description);
+            }
+
+            if (typeof webhook_data.ticket.latest_comment !== 'undefined' && typeof webhook_data.ticket.latest_comment.value === 'string') {
+                webhook_data.ticket.latest_comment.value = sanitize(webhook_data.ticket.latest_comment.value);
+            }
+        }
+
+        if (typeof webhook_data.satisfaction !== 'undefined') {
+            if (typeof webhook_data.satisfaction.current_rating === 'string') {
+                webhook_data.satisfaction.current_rating = sanitize(webhook_data.satisfaction.current_rating);
+            }
+
+            if (typeof webhook_data.satisfaction.current_comment === 'string') {
+                webhook_data.satisfaction.current_comment = sanitize(webhook_data.satisfaction.current_comment);
+            }
+        }
+
+        return webhook_data;
+    },
+
+    /**
      * Internal use
      * Verifies the incoming endpoint token
      *
@@ -141,7 +183,7 @@ const internalZendeskWebhook = {
      *
      * @param   {Integer} service_id
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @returns {Promise|Object}
@@ -284,7 +326,7 @@ const internalZendeskWebhook = {
      * @param   {Array}   event_types
      * @param   {Integer} service_id
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @param   {Object}  existing_ticket_row
@@ -403,7 +445,7 @@ const internalZendeskWebhook = {
      *
      * @param   {String}  event_type
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @param   {Object}  existing_ticket_row
@@ -430,7 +472,7 @@ const internalZendeskWebhook = {
 
     /**
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @param   {String}  field
@@ -449,7 +491,7 @@ const internalZendeskWebhook = {
     /**
      * @param   {Object}  conditions
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @returns {Boolean}
@@ -489,7 +531,7 @@ const internalZendeskWebhook = {
      * @param   {Object}  data
      * @param   {Integer  data.service_id
      * @param   {Object}  webhook_data
-     * @param   {String}  webhook_data.ticket
+     * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
      * @param   {Object}  webhook_data.satisfaction
      * @param   {Object}  existing_ticket_row

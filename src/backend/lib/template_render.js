@@ -1,9 +1,10 @@
 'use strict';
 
+const _      = require('lodash');
 const ejs    = require('ejs');
 const liquid = require('liquidjs')();
 
-liquid.registerFilter('unescape', v => decodeURI(v));
+liquid.registerFilter('unescape', v => _.unescape(v));
 
 /**
  * @param   {String}  content
