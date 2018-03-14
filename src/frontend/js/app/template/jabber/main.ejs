@@ -40,23 +40,23 @@
                         <%
                         var triggers = getTriggers();
                         for (var i = 0; i < triggers.length; i++) {
-                            %>
-                            <h5><%- triggers[i].name %></h5>
-                            <ul class="clean">
-                                <%
-                                for (var j = 0; j < triggers[i].events.length; j++) {
-                                    %>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="event_types[]" value="<%- triggers[i].events[j].type %>"<%- event_types.indexOf(triggers[i].events[j].type) !== -1 ? ' checked' : '' %>>
-                                            <%- triggers[i].events[j].name %>
-                                        </label>
-                                    </li>
-                                    <%
-                                }
-                                %>
-                            </ul>
+                        %>
+                        <h5><%- triggers[i].name %></h5>
+                        <ul class="clean">
                             <%
+                            for (var j = 0; j < triggers[i].events.length; j++) {
+                            %>
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="event_types[]" value="<%- triggers[i].events[j].type %>"<%- event_types.indexOf(triggers[i].events[j].type) !== -1 ? ' checked' : '' %>>
+                                    <%- triggers[i].events[j].name %>
+                                </label>
+                            </li>
+                            <%
+                            }
+                            %>
+                        </ul>
+                        <%
                         }
                         %>
                     </div>

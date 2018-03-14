@@ -555,7 +555,7 @@ const templates = [
             issueurl:   'http://example.com',
             resolution: 'Completed'
         },
-        event_types:     ['resolved_reported', 'resolved_all'],
+        event_types:     ['resolved_reported'],
         render_engine:   'liquid'
     },
 

@@ -80,7 +80,7 @@ const internalService = {
                     .omit(omissions())
                     .patchAndFetchById(row_data.id, row_data)
                     .then(service => {
-                        if (service.type === 'slack') {
+                        if (service.type === 'slack' || service.type === 'jabber') {
                             const internalServiceWorker = require('./service_worker');
                             internalServiceWorker.restart();
                         }

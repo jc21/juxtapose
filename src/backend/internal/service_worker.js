@@ -6,6 +6,8 @@ const internalService        = require('./service');
 const batchflow              = require('batchflow');
 const slackBots              = require('slackbots');
 const notificationQueueModel = require('../models/notification_queue');
+//const xmpp                   = require('simple-xmpp').SimpleXMPP;
+const xmpp = require('../lib/xmpp');
 
 const internalServiceWorker = {
 
@@ -37,6 +39,9 @@ const internalServiceWorker = {
             if (typeof internalServiceWorker.services[idx].handler !== 'undefined') {
                 if (internalServiceWorker.services[idx].type === 'slack') {
                     internalServiceWorker.services[idx].handler.ws.close();
+
+                } else if (internalServiceWorker.services[idx].type === 'jabber') {
+                    internalServiceWorker.services[idx].handler.disconnect();
                 }
 
                 internalServiceWorker.services[idx].handler = null;
@@ -56,7 +61,7 @@ const internalServiceWorker = {
         let started = 0;
 
         return internalService.getActiveServices()
-            .then((services) => {
+            .then(services => {
                 return new Promise((resolve, reject) => {
                     batchflow(services).sequential()
                         .each((i, service, next) => {
@@ -70,15 +75,28 @@ const internalServiceWorker = {
                                         logger.service_worker('Service #' + service.id + ' ERROR: ' + err.message);
                                         next(err);
                                     });
+
+                            } else if (service.type === 'jabber') {
+                                internalServiceWorker.initJabber(service)
+                                    .then(() => {
+                                        started++;
+                                        next();
+                                    })
+                                    .catch(err => {
+                                        logger.service_worker('Service #' + service.id + ' ERROR: ' + err.message);
+                                        next(err);
+                                    });
+
                             } else if (service.type.match(/(.|\n)*-webhook$/im)) {
                                 // can be ignored
                                 next();
+
                             } else {
                                 logger.service_worker('Service #' + service.id + ' of type "' + service.type + '" is not yet supported');
                                 next();
                             }
                         })
-                        .error((err) => {
+                        .error(err => {
                             reject(err);
                         })
                         .end((/*results*/) => {
@@ -88,7 +106,7 @@ const internalServiceWorker = {
                         });
                 });
             })
-            .catch((err) => {
+            .catch(err => {
                 logger.error(err);
             });
     },
@@ -97,8 +115,8 @@ const internalServiceWorker = {
      * @param   {Object}  service
      * @returns {Promise}
      */
-    initSlack: (service) => {
-        return new Promise((resolve, reject) => {
+    initSlack: service => {
+        return new Promise((resolve/*, reject*/) => {
             logger.service_worker('Starting Slack Service #' + service.id + ': ' + service.name);
 
             // Set global
@@ -115,12 +133,6 @@ const internalServiceWorker = {
                 obj.online = true;
             });
 
-            /*
-            obj.handler.on('message', function () {
-                debug('#' + service.id + ' Slack Message:', arguments);
-            });
-            */
-
             obj.handler.on('close', function () {
                 obj.online = false;
             });
@@ -130,10 +142,74 @@ const internalServiceWorker = {
     },
 
     /**
+     * @param   {Object}  service
+     * @returns {Promise}
+     */
+    initJabber: service => {
+        return new Promise((resolve, reject) => {
+            logger.service_worker('Starting Jabber Service #' + service.id + ': ' + service.name);
+
+            // Set global
+            let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+            obj.online  = false;
+            obj.handler = new xmpp({
+                jid:      service.data.jid,
+                password: service.data.password,
+                host:     service.data.server,
+                port:     service.data.port
+            });
+
+            /*
+            obj.handler.on('stanza', function(stanza) {
+                if (!stanza.is('presence') && !stanza.is('iq')) {
+                    logger.info('STANZ:', stanza, stanza.toString());
+                }
+            });
+            */
+
+            obj.handler.on('online', data => {
+                logger.service_worker('Service #' + service.id + ' Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
+                obj.online = true;
+            });
+
+            obj.handler.on('close', () => {
+                logger.service_worker('Service #' + service.id + ' Closed');
+                obj.online = false;
+            });
+
+            obj.handler.on('chat', (from, message) => {
+                logger.service_worker('Service #' + service.id + ' Chat:', message, from);
+                obj.handler.send(from, 'Sorry dude, I\'m not the talkative type.');
+            });
+
+            obj.handler.on('error', err => {
+                //if (err.name !== 'presence') {
+                    logger.error('Service #' + service.id + ' ERROR:', err);
+                //}
+            });
+
+            obj.handler.on('subscribe', from => {
+                logger.service_worker('Service #' + service.id + ' Accepting subscription from:', from);
+                obj.handler.acceptSubscription(from);
+            });
+
+            obj.handler.on('roster', roster => {
+                logger.service_worker('Service #' + service.id + ' Received Roster with ' + roster.length + ' people');
+                obj.roster = roster;
+            });
+
+
+            obj.handler.connect();
+
+            resolve();
+        });
+    },
+
+    /**
      * @param   {Integer}  service_id
      * @returns {null}
      */
-    getService: (service_id) => {
+    getService: service_id => {
         if (typeof internalServiceWorker.services['service-' + service_id] !== 'undefined') {
             return internalServiceWorker.services['service-' + service_id];
         }
@@ -145,7 +221,7 @@ const internalServiceWorker = {
      * @param   {Integer}  service_id
      * @returns {boolean}
      */
-    isOnline: (service_id) => {
+    isOnline: service_id => {
         let service = internalServiceWorker.getService(service_id);
         if (service && typeof service.online !== 'undefined') {
             return service.online;
@@ -172,8 +248,6 @@ const internalServiceWorker = {
                     return new Promise((resolve, reject) => {
                         batchflow(notifications).sequential()
                             .each((i, notification, next) => {
-                                //debug('notification:', notification);
-
                                 // update row with processing
                                 notificationQueueModel
                                     .query()
@@ -205,7 +279,7 @@ const internalServiceWorker = {
                                                         })
                                                         .where('id', notification.id);
                                                 })
-                                                .catch((err) => {
+                                                .catch(err => {
                                                     // update row with error
                                                     return notificationQueueModel
                                                         .query()
@@ -262,14 +336,11 @@ const internalServiceWorker = {
         return new Promise((resolve, reject) => {
             let service = internalServiceWorker.getService(service_id);
             if (service) {
-
-                let slack_options = {
-                    icon_url: service.data.icon_url || 'https://public.jc21.com/jira-notify/apple-icon.png'
-                };
-
                 switch (service.type) {
                     case 'slack':
-                        //debug('SLACK MESSAGE:', username, message, slack_options);
+                        let slack_options = {
+                            icon_url: service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png'
+                        };
 
                         if (typeof message === 'object') {
                             slack_options = _.assign({}, slack_options, message);
@@ -278,13 +349,18 @@ const internalServiceWorker = {
 
                         service.handler.postMessageToUser(username, message, slack_options)
                             .fail(function (data) {
-                                //data = { ok: false, error: 'user_not_found' }
                                 reject(new Error(data.error));
                             })
                             .then(function (data) {
                                 resolve(data || true);
                             });
                         break;
+
+                    case 'jabber':
+                        service.handler.send(username, message);
+                        resolve(true);
+                        break;
+
                     default:
                         reject(new Error('Service type "' + service.type + '" is not yet supported'));
                         break;
@@ -299,7 +375,7 @@ const internalServiceWorker = {
      * @param   {Integer}  service_id
      * @returns {Promise}
      */
-    getUsers: (service_id) => {
+    getUsers: service_id => {
         return new Promise((resolve, reject) => {
             let service = internalServiceWorker.getService(service_id);
             if (service) {
@@ -332,6 +408,45 @@ const internalServiceWorker = {
                                 }
                             });
                         break;
+
+                    case 'jabber':
+                        if (typeof service.roster !== 'undefined') {
+                            resolve(_.sortBy(service.roster, ['name']));
+                        } else {
+                            reject(new Error('Roster is not set'));
+                        }
+                        break;
+
+                    /*
+
+                        service.handler.getUsers()
+                            .fail(function (data) {
+                                reject(new Error(data.error));
+                            })
+                            .then(function (data) {
+                                if (typeof data.members !== 'undefined') {
+                                    let real_users = _.filter(data.members, function (m) {
+                                        return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT';
+                                    });
+
+                                    let users = [];
+                                    _.map(real_users, real_user => {
+                                        users.push({
+                                            id:           real_user.id,
+                                            name:         real_user.name,
+                                            real_name:    real_user.profile.real_name,
+                                            display_name: real_user.profile.display_name,
+                                            avatar:       real_user.profile.image_24
+                                        });
+                                    });
+
+                                    resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
+                                } else {
+                                    reject(new Error('Invalid response from service'));
+                                }
+                            });
+                        break;
+                        */
                     default:
                         reject(new Error('Service type "' + service.type + '" is not yet supported'));
                         break;

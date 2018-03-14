@@ -24,6 +24,10 @@ module.exports = Mn.View.extend({
                     Controller.showSlackConfig(this.model);
                     break;
 
+                case 'jabber':
+                    Controller.showJabberConfig(this.model);
+                    break;
+
                 case 'jira-webhook':
                     Controller.showJiraWebhookConfig(this.model);
                     break;
@@ -44,9 +48,7 @@ module.exports = Mn.View.extend({
 
         'click @ui.test': function (e) {
             e.preventDefault();
-            if (this.model.get('type') === 'slack') {
-                Controller.showServiceTest(this.model);
-            }
+            Controller.showServiceTest(this.model);
         },
 
         'click @ui.endpoint': function (e) {

@@ -19,16 +19,9 @@ module.exports = Mn.View.extend({
             let service = $(e.currentTarget).attr('rel');
 
             this.model.set({service_type: service});
+            this.model.setDefaultByServiceTypes();
 
-            switch (service) {
-                case 'slack':
-                    Controller.showSlackTemplate(this.model);
-                    break;
-
-                default:
-                    alert('This service type is not supported: ' + service);
-                    break;
-            }
+            Controller.showGeneralTemplate(this.model);
         }
     }
 });

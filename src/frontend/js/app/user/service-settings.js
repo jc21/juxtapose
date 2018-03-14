@@ -110,6 +110,35 @@ module.exports = Mn.View.extend({
                                 .appendTo($select);
                         });
                 }
+            } else if (service.type === 'jabber') {
+                let $select = view.$el.find('select[name="settings[' + service.id + '][username]"]');
+
+                if ($select.length) {
+                    Api.Services.getUsers(service.id)
+                        .then(users => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Select...')
+                                .appendTo($select);
+
+                            let selected_username = view.getServiceSetting(service.id, 'username');
+
+                            _.map(users, user => {
+                                $('<option>')
+                                    .val(user.jid)
+                                    .text(user.name)
+                                    .prop('selected', selected_username === user.jid)
+                                    .appendTo($select);
+                            });
+                        })
+                        .catch(err => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Error loading users! Try again')
+                                .prop('selected', true)
+                                .appendTo($select);
+                        });
+                }
             }
         });
     },

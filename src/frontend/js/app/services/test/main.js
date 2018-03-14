@@ -12,11 +12,9 @@ module.exports = Mn.View.extend({
     template: template,
 
     ui: {
-        form:     'form',
-        buttons:  'form button',
-        cancel:   'button.cancel',
-        username: 'input[name="username"]',
-        message:  'input[name="message"]'
+        form:             'form',
+        buttons:          'form button',
+        username_options: 'select[name="username"]'
     },
 
     events: {
@@ -28,9 +26,39 @@ module.exports = Mn.View.extend({
                 .then((/*result*/) => {
                     App.UI.closeModal();
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
+                });
+        }
+    },
+
+    onRender: function () {
+        let view = this;
+
+        if (this.model.get('type') === 'jabber') {
+            Api.Services.getUsers(this.model.get('id'))
+                .then(users => {
+                    view.ui.username_options.empty();
+                    $('<option>')
+                        .val('')
+                        .text('Select...')
+                        .appendTo(view.ui.username_options);
+
+                    _.map(users, user => {
+                        $('<option>')
+                            .val(user.jid)
+                            .text(user.name)
+                            .appendTo(view.ui.username_options);
+                    });
+                })
+                .catch(err => {
+                    view.ui.username_options.empty();
+                    $('<option>')
+                        .val('')
+                        .text('Error loading users! Try again')
+                        .prop('selected', true)
+                        .appendTo(view.ui.username_options);
                 });
         }
     }

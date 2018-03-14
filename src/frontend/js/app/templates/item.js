@@ -17,11 +17,7 @@ module.exports = Mn.View.extend({
     events: {
         'click @ui.edit': function (e) {
             e.preventDefault();
-            switch (this.model.get('service_type')) {
-                case 'slack':
-                    Controller.showSlackTemplate(this.model);
-                    break;
-            }
+            Controller.showGeneralTemplate(this.model);
         }
     },
 

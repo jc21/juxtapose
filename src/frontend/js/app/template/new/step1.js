@@ -20,8 +20,6 @@ module.exports = Mn.View.extend({
                 in_service_type: $(e.currentTarget).data('service_type')
             });
 
-            this.model.setDefaultByInServiceType();
-
             Controller.showNewTemplate2(this.model);
         }
     }

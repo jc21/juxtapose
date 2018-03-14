@@ -72,6 +72,8 @@
   }
 }
 
+/* SLACK */
+
 .template-slack-preview {
   position: relative;
   color: #2c2d30;
@@ -183,5 +185,100 @@
     background-color: transparent;
     border: 1px solid #ddd;
     color: #999;
+  }
+}
+
+/* JABBER */
+
+.template-jabber-preview {
+  position: relative;
+  color: #212121;
+  line-height: 22px;
+  word-wrap: break-word;
+  padding: .5rem;
+
+  .message_gutter {
+    text-align: right;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    padding-right: 10px;
+
+    .message_icon {
+      margin-top: 12px;
+      display: block;
+
+      img {
+        border-radius: 36px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        width: 36px;
+        height: 36px;
+        top: -5px;
+        left: 2px;
+      }
+    }
+  }
+
+  .message_content {
+    margin: 1px 0 0 36px;
+
+    .message_content_header {
+      display: flex;
+      align-items: baseline;
+
+      .message_content_header_left {
+        flex: 1 1 auto;
+
+        .message_sender {
+          margin-right: .25rem;
+          display: inline;
+          font-weight: 900;
+          color: #2c2d30;
+          line-height: 18px;
+
+          a {
+            color: #2c2d30;
+            font-weight: 900;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .bot_label {
+            color: #a3a3a3;
+            font-weight: normal;
+            font-size: 12px;
+            margin: 0 .15rem;
+            padding: 0 .1rem;
+            display: inline;
+          }
+        }
+
+        .time_star_and_extra_metadata a {
+          text-decoration: none;
+          cursor: default;
+          margin-right: .25rem;
+          opacity: 1;
+          display: inline;
+          line-height: 18px;
+          color: #717274;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .text {
+      padding: 1px 0 3px 0;
+    }
+  }
+
+  a, & a:link, & a:visited {
+    color: #0576b9;
+    text-decoration: none;
   }
 }

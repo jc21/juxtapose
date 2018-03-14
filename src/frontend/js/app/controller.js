@@ -68,6 +68,19 @@ module.exports = {
     },
 
     /**
+     * Jabber Service Config
+     *
+     * @param model
+     */
+    showJabberConfig: function (model) {
+        if (Cache.User.isAdmin()) {
+            require(['./main', './services/jabber/main'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model}));
+            });
+        }
+    },
+
+    /**
      * Jira Webhook Config
      *
      * @param model
@@ -182,13 +195,13 @@ module.exports = {
     },
 
     /**
-     * Slack Template Config
+     * General Template Config, for slack/jabber
      *
      * @param model
      */
-    showSlackTemplate: function (model) {
+    showGeneralTemplate: function (model) {
         if (Cache.User.isAdmin()) {
-            require(['./main', './template/slack/main'], function (App, View) {
+            require(['./main', './template/general/main'], function (App, View) {
                 App.UI.showModalDialog(new View({model: model}));
             });
         }

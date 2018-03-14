@@ -49,7 +49,7 @@ module.exports = Mn.View.extend({
                     App.UI.closeModal();
                     Controller.showRules();
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });

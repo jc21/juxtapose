@@ -1,6 +1,6 @@
 {
   "name": "juxtapose",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Self hosted glue for internal tools",
   "main": "src/backend/index.js",
   "directories": {
@@ -27,6 +27,7 @@
     "moment": "^2.21.0",
     "mysql": "^2.14.1",
     "node-rsa": "^0.4.2",
+    "node-xmpp": "^1.1.0",
     "objection": "^0.8.9",
     "path": "^0.12.7",
     "slackbots": "git://github.com/jc21/slack-bot-api.git#proxy-support",

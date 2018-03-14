@@ -14,22 +14,22 @@ const model = Backbone.Model.extend({
                 icon_url: '{{ icon_url }}',
                 text:     'Enter Message Here'
             }, null, 2),
-            default_options: {
-                icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
-                panel_color: '#0090ff'
-            },
+            default_options: {},
             example_data:    {},
             event_types:     [],
             render_engine:   'liquid'
         };
     },
 
-    setDefaultByInServiceType: function () {
+    setDefaultByServiceTypes: function () {
+        let content;
+        let default_options = {};
 
         // Jira Default Data
         if (this.get('in_service_type') === 'jira-webhook') {
-            this.set({
-                content:      JSON.stringify({
+
+            if (this.get('service_type') === 'slack') {
+                content = JSON.stringify({
                     icon_url:    '{{ icon_url }}',
                     text:        '{{ user }} has assigned an issue to you',
                     attachments: [
@@ -38,8 +38,20 @@ const model = Backbone.Model.extend({
                             color: '{{ panel_color }}'
                         }
                     ]
-                }, null, 2),
-                example_data: {
+                }, null, 2);
+
+                default_options = {
+                    icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
+                    panel_color: '#0090ff'
+                };
+            } else {
+                content = '{{ user }} has assigned {{ issuekey }} to you: {{ issueurl }}';
+            }
+
+            this.set({
+                content:         content,
+                default_options: default_options,
+                example_data:    {
                     summary:     'Enable Feature x for Customer y',
                     issuekey:    'FEAT-1234',
                     issueurl:    'http://example.com',
@@ -56,8 +68,9 @@ const model = Backbone.Model.extend({
 
             // Bitbucket Default Data
         } else if (this.get('in_service_type') === 'bitbucket-webhook') {
-            this.set({
-                content:         JSON.stringify({
+
+            if (this.get('service_type') === 'slack') {
+                content = JSON.stringify({
                     icon_url:    '{{ icon_url }}',
                     text:        '{{ user }} has opened a PR',
                     attachments: [
@@ -66,11 +79,19 @@ const model = Backbone.Model.extend({
                             color: '{{ panel_color }}'
                         }
                     ]
-                }, null, 2),
-                default_options: {
+                }, null, 2);
+
+                default_options = {
                     icon_url:    'https://public.jc21.com/juxtapose/icons/orange.png',
                     panel_color: '#ffbf00'
-                },
+                };
+            } else {
+                content = '{{ user }} has opened a PR: {{ prurl }}';
+            }
+
+            this.set({
+                content:         content,
+                default_options: default_options,
                 example_data:    {
                     user:           'Billy Bob',
                     prurl:          'http://example.com',
@@ -90,8 +111,9 @@ const model = Backbone.Model.extend({
 
             // Docker Hub Default Data
         } else if (this.get('in_service_type') === 'dockerhub-webhook') {
-            this.set({
-                content:         JSON.stringify({
+
+            if (this.get('service_type') === 'slack') {
+                content = JSON.stringify({
                     icon_url:    '{{ icon_url }}',
                     text:        'Docker Repository <{{ url }}|{{ repo }}> updated by {{ pusher }}',
                     attachments: [
@@ -111,11 +133,19 @@ const model = Backbone.Model.extend({
                             ]
                         }
                     ]
-                }, null, 2),
-                default_options: {
+                }, null, 2);
+
+                default_options = {
                     icon_url:    'https://public.jc21.com/juxtapose/icons/red.png',
                     panel_color: '#114c6d'
-                },
+                };
+            } else {
+                content = 'Docker Repository updated by {{ pusher }}: {{ url }}';
+            }
+
+            this.set({
+                content:         content,
+                default_options: default_options,
                 example_data:    {
                     pusher:        'jc21',
                     owner:         'jc21',

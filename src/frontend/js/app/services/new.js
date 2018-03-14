@@ -23,6 +23,10 @@ module.exports = Mn.View.extend({
                     Controller.showSlackConfig();
                     break;
 
+                case 'jabber':
+                    Controller.showJabberConfig();
+                    break;
+
                 case 'jira-webhook':
                     Controller.showJiraWebhookConfig();
                     break;

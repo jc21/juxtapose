@@ -125,7 +125,6 @@ module.exports = Mn.View.extend({
 
     refreshCode: function () {
         _.map(this.codemirrors, cm => {
-            console.log('REFRESHING ... ');
             cm.refresh();
         });
     },

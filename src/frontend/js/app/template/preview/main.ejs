@@ -125,6 +125,29 @@
         </div>
         <%
     }
+} else if (service_type === 'jabber' ) {
+    %>
+    <div class="template-jabber-preview">
+        <div class="message_gutter">
+            <div class="message_icon">
+                <img src="https://public.jc21.com/juxtapose/icons/default.png">
+            </div>
+        </div>
+        <div class="message_content">
+            <div class="message_content_header">
+                <div class="message_content_header_left">
+                    <span class="message_sender color_bot_Your_App">
+                        <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
+                    </span>
+                    <span class="time_star_and_extra_metadata">
+                        <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
+                    </span>
+                </div>
+            </div>
+            <div class="message_content_body"><%- preview %></div>
+        </div>
+    </div>
+    <%
 } else { %>
     <div>Error: Rendering template for service type "<%- service_type %>" is not yet implemented</div>
 <% } %>
