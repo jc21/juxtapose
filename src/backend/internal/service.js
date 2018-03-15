@@ -32,7 +32,7 @@ const internalService = {
                     .insertAndFetch(data);
             })
             .then(service => {
-                if (service.type === 'slack') {
+                if (service.type === 'slack' || service.type === 'jabber') {
                     const internalServiceWorker = require('./service_worker');
                     internalServiceWorker.restart();
                 } else if (service.type.match(/(.|\n)*-webhook$/im)) {
@@ -154,7 +154,7 @@ const internalService = {
                         is_deleted: 1
                     })
                     .then(() => {
-                        if (service.type === 'slack') {
+                        if (service.type === 'slack' || service.type === 'jabber') {
                             const internalServiceWorker = require('./service_worker');
                             internalServiceWorker.restart();
                         }
