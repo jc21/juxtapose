@@ -227,11 +227,11 @@ In addition to the functionality provided in the base Liquid engine, this projec
 
    Example: `{{ summary | unescape }}`
 
-2. `jsonstring` - Will take any data type and return it as a JSON encoded string. Be aware that the string will be pre and post fixed with the `"` double quotes.
+2. `jsonstring` - Will take any data type and return it as a JSON encoded string. Be aware that the string will be prepended/appended with the `"` double quotes.
 
    Example: `{{ issuetype | jsonstring }}`
 
-3. `jsonescape` - Will make a data type compatible to be included in a existing json string. It will also `unescape` for you. Does not pre/post append `"` double quotes.
+3. `jsonescape` - Will make a data type compatible to be included in a existing json string. It will also `unescape` for you. Does not prepend/append `"` double quotes.
 
    Example: `{{ summary | jsonescape }}`
 
