@@ -33,7 +33,7 @@ const templates = [
                          '  "text": "{{ user }} has assigned an issue to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -64,8 +64,8 @@ const templates = [
                          '  "text": "{{ user }} has assigned {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -98,8 +98,8 @@ const templates = [
                          '  "text": "New comment added to {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> by {{ comment.name }}",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ comment.content }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ comment.content | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -134,11 +134,11 @@ const templates = [
                          '  "text": "{{ comment.name }} has comment an issue assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "value": "{{ comment.content }}"\n' +
+                         '          "value": "{{ comment.content | jsonescape }}"\n' +
                          '        }\n' +
                          '      ]\n' +
                          '    }\n' +
@@ -173,11 +173,11 @@ const templates = [
                          '  "text": "{{ comment.name }} has commented on an issue you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
-                         '          "value": "{{ comment.content }}"\n' +
+                         '          "value": "{{ comment.content | jsonescape }}"\n' +
                          '        }\n' +
                          '      ]\n' +
                          '    }\n' +
@@ -212,7 +212,7 @@ const templates = [
                          '  "text": "{{ user }} has logged an issue",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -243,8 +243,8 @@ const templates = [
                          '  "text": "{{ user }} has logged {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -277,7 +277,7 @@ const templates = [
                          '  "text": "{{ user }} has re-assigned an issue away from you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "text": "New Asignee: {{ assignee }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
@@ -311,7 +311,7 @@ const templates = [
                          '  "text": "{{ user }} has re-opened an Unassigned issue",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -342,7 +342,7 @@ const templates = [
                          '  "text": "{{ user }} has re-opened an issue assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -373,8 +373,8 @@ const templates = [
                          '  "text": "{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -407,7 +407,7 @@ const templates = [
                          '  "text": "{{ user }} has re-opened an issue you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -438,8 +438,8 @@ const templates = [
                          '  "text": "{{ user }} has re-opened {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -472,7 +472,7 @@ const templates = [
                          '  "text": "{{ user }} has resolved an issue as {{ resolution }}",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -504,8 +504,8 @@ const templates = [
                          '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> as {{ resolution }}",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -539,7 +539,7 @@ const templates = [
                          '  "text": "{{ user }} has resolved an issue you reported as {{ resolution }}",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -571,8 +571,8 @@ const templates = [
                          '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -619,7 +619,7 @@ const templates = [
                          '  "text": "{{ user }} has resolved an issue assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -650,8 +650,8 @@ const templates = [
                          '  "text": "{{ user }} has resolved {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -684,7 +684,7 @@ const templates = [
                          '  "text": "{{ user }} has updated an issue",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -717,8 +717,8 @@ const templates = [
                          '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -751,8 +751,8 @@ const templates = [
                          '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}>",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -792,7 +792,7 @@ const templates = [
                          '  "text": "{{ user }} has updated an issue you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -824,7 +824,7 @@ const templates = [
                          '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> you reported",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -870,7 +870,7 @@ const templates = [
                          '  "text": "{{ user }} has updated an issue assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary }}>",\n' +
+                         '      "title": "<{{ issueurl }}|{{ issuekey }} - {{ summary | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -901,8 +901,8 @@ const templates = [
                          '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -935,8 +935,8 @@ const templates = [
                          '  "text": "{{ user }} has updated {{ issuetype }} <{{ issueurl }}|{{ issuekey }}> assigned to you",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ issueurl }}|{{ summary }}>",\n' +
-                         '      "text": "{{ description | unescape }}",\n' +
+                         '      "title": "<{{ issueurl }}|{{ summary | jsonescape }}>",\n' +
+                         '      "text": "{{ description | jsonescape }}",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -977,7 +977,7 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
+                         '      {% if description %}"text": "{{ description | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {% if from and from.repo %}\n' +
@@ -1030,7 +1030,7 @@ const templates = [
                          '  "text": "{{ user }} has approved your PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
@@ -1076,7 +1076,7 @@ const templates = [
                          '  "text": "{{ user }} has reviewed your PR as Needs Work",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1115,8 +1115,8 @@ const templates = [
                          '  "text": "{{ user }} has merged a PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
+                         '      {% if description %}"text": "{{ description | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1155,8 +1155,8 @@ const templates = [
                          '  "text": "{{ user }} has declined your PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
+                         '      {% if description %}"text": "{{ description | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1195,8 +1195,8 @@ const templates = [
                          '  "text": "{{ user }} has deleted your PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
+                         '      {% if description %}"text": "{{ description | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1235,8 +1235,8 @@ const templates = [
                          '  "text": "{{ user }} has commented on your PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if comment and comment.text %}"text": "{{ comment.text }}",{% endif %}\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
+                         '      {% if comment and comment.text %}"text": "{{ comment.text | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +
@@ -1279,8 +1279,8 @@ const templates = [
                          '  "text": "{{ user }} has merged your PR",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
-                         '      "title": "<{{ prurl }}|{{ title }}>",\n' +
-                         '      {% if description %}"text": "{{ description | unescape }}",{% endif %}\n' +
+                         '      "title": "<{{ prurl }}|{{ title | jsonescape }}>",\n' +
+                         '      {% if description %}"text": "{{ description | jsonescape }}",{% endif %}\n' +
                          '      "color": "{{ panel_color }}"\n' +
                          '    }\n' +
                          '  ]\n' +

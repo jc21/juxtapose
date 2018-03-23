@@ -4,8 +4,19 @@ const _      = require('lodash');
 const ejs    = require('ejs');
 const liquid = require('liquidjs')();
 
-liquid.registerFilter('unescape', v => _.unescape(v));
+liquid.registerFilter('unescape',   v => _.unescape(v));
 liquid.registerFilter('jsonstring', v => JSON.stringify(v));
+liquid.registerFilter('jsonescape', v => {
+    return JSON.stringify(_.unescape(v))
+        .replace(/\\'/g, "\\'")
+        .replace(/\\"/g, '\\"')
+        .replace(/\\&/g, "\\&")
+        .replace(/\\r/g, "\\r")
+        .replace(/\\t/g, "\\t")
+        .replace(/\\b/g, "\\b")
+        .replace(/\\f/g, "\\f")
+        .replace(/^"+|"+$/g, '');
+});
 
 /**
  * @param   {String}  content
