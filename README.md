@@ -219,7 +219,7 @@ It's as easy as adding this to your config file:
 
 This project uses [Liquid template engine](http://shopify.github.io/liquid/basics/introduction/) for dynamic notification content.
 
-This means that your Templates can contain wildcards from the data supplied and also display differnt message content based on fields using control sturctues.
+This means that your Templates can contain wildcards from the data supplied and also display different message content based on fields using control sturctues.
 
 In addition to the functionality provided in the base Liquid engine, this project supports the following modifiers:
 
