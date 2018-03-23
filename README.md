@@ -215,19 +215,26 @@ It's as easy as adding this to your config file:
 }
 ```
 
-### Create a verbose Template for debugging
+### Template Language Tips
 
-It's actually pretty easy. Create a new Template and use this code for the content:
+This project uses [Liquid template engine](http://shopify.github.io/liquid/basics/introduction/) for dynamic notification content.
 
-```json
-{
-  "text": "```<%= prettyPrint(arguments[0]) %>```",
-  "unfurl_links": false,
-  "unfurl_media": false
-}
-```
+This means that your Templates can contain wildcards from the data supplied and also display differnt message content based on fields using control sturctues.
 
-You'll see what kind of output to expect after you've saved the template.
+In addition to the functionality provided in the base Liquid engine, this project supports the following modifiers:
+
+1. `unescape` - Will convert HTML entities like `&amp;` to `&`.
+
+   Example: `{{ summary | unescape }}`
+
+2. `jsonstring` - Will take any data type and return it as a JSON encoded string. Be aware that the string will be pre and post fixed with the `"` double quotes.
+
+   Example: `{{ issuetype | jsonstring }}`
+
+3. `jsonescape` - Will make a data type compatible to be included in a existing json string. It will also `unescape` for you. Does not pre/post append `"` double quotes.
+
+   Example: `{{ summary | jsonescape }}`
+
 
 ### Proxy
 
