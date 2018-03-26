@@ -139,7 +139,7 @@ const internalZendeskWebhook = {
             }
 
             if (typeof webhook_data.satisfaction.current_comment === 'string') {
-                webhook_data.satisfaction.current_comment = sanitize(webhook_data.satisfaction.current_comment);
+                webhook_data.satisfaction.current_comment = sanitize(webhook_data.satisfaction.current_comment).replace(/^"+|"+$/g, '');
             }
         }
 
