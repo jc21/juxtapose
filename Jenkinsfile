@@ -16,7 +16,7 @@ pipeline {
           sh 'docker pull $DOCKER_CI_TOOLS'
           sh 'docker run --rm -v $(pwd):/srv/app jc21/node npm --registry=$NPM_REGISTRY install'
           sh 'docker run --rm -v $(pwd):/srv/app jc21/node gulp build'
-          sh 'docker run --rm -v $(pwd):/srv/app jc21/node -e NODE_ENV=production npm prune --production'
+          sh 'docker run --rm -v $(pwd):/srv/app -e NODE_ENV=production jc21/node npm prune --production'
           sh 'docker run --rm -v $(pwd):/data $DOCKER_CI_TOOLS node-prune'
       }
     }
