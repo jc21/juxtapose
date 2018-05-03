@@ -24,23 +24,23 @@ pipeline {
       steps {
         sh 'docker build -t $TEMP_IMAGE_NAME .'
 
-        sh '''zip -qr "juxtapose_$TAG_VERSION.zip" juxtapose -x \
-\*.gitkeep \
-juxtapose/bin\* \
-juxtapose/config/my.cnf \
-juxtapose/data\* \
-juxtapose/src/frontend\* \
-juxtapose/test\* \
-juxtapose/node_modules\* \
-juxtapose/.git\* \
-juxtapose/.env \
-juxtapose/.gitignore \
-juxtapose/docker-compose.yml \
-juxtapose/Dockerfile \
-juxtapose/gulpfile.js \
-juxtapose/knexfile.js \
-juxtapose/nodemon.json \
-juxtapose/webpack.config.js \
+        sh '''zip -qr "juxtapose_$TAG_VERSION.zip" juxtapose -x \\
+\\*.gitkeep \\
+juxtapose/bin\\* \\
+juxtapose/config/my.cnf \\
+juxtapose/data\\* \\
+juxtapose/src/frontend\\* \\
+juxtapose/test\\* \\
+juxtapose/node_modules\\* \\
+juxtapose/.git\\* \\
+juxtapose/.env \\
+juxtapose/.gitignore \\
+juxtapose/docker-compose.yml \\
+juxtapose/Dockerfile \\
+juxtapose/gulpfile.js \\
+juxtapose/knexfile.js \\
+juxtapose/nodemon.json \\
+juxtapose/webpack.config.js \\
 juxtapose/webpack_stats.html
 
 exit $?'''
