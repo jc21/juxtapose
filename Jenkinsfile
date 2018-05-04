@@ -68,8 +68,6 @@ exit $?'''
           sh 'docker push docker.io/jc21/$IMAGE_NAME:$TAG_VERSION'
         }
 
-        sh 'docker rmi  $TEMP_IMAGE_NAME'
-
         dir(path: 'zips') {
             archiveArtifacts(artifacts: '**/*.zip', caseSensitive: true, onlyIfSuccessful: true)
         }
@@ -85,6 +83,9 @@ exit $?'''
     }
     failure {
       slackSend color: "#d61111", message: "FAILED: <${BUILD_URL}|${JOB_NAME}> build #${BUILD_NUMBER} - Duration: ${currentBuild.durationString}"
+    }
+    always {
+      sh 'docker rmi  $TEMP_IMAGE_NAME'
     }
   }
 }
