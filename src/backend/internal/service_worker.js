@@ -117,7 +117,7 @@ const internalServiceWorker = {
      */
     initSlack: service => {
         return new Promise((resolve/*, reject*/) => {
-            logger.service_worker('Starting Slack Service #' + service.id + ': ' + service.name);
+            logger.service_worker('Starting Service #' + service.id + ' (slack): ' + service.name);
 
             // Set global
             let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
@@ -131,10 +131,22 @@ const internalServiceWorker = {
 
             obj.handler.on('start', function () {
                 obj.online = true;
+                logger.service_worker('Service #' + service.id + ' (slack) Connected');
             });
 
             obj.handler.on('close', function () {
                 obj.online = false;
+                logger.service_worker('Service #' + service.id + ' (slack) Closed');
+
+                // reconnect
+                setTimeout(function () {
+                    logger.service_worker('Service #' + service.id + ' (slack) reconnecting ...');
+
+                    internalServiceWorker.initSlack(service)
+                        .catch(err => {
+                            logger.service_worker('Service #' + service.id + ' (slack) ERROR: ' + err.message);
+                        });
+                }, 2000);
             });
 
             resolve();
@@ -147,7 +159,7 @@ const internalServiceWorker = {
      */
     initJabber: service => {
         return new Promise((resolve, reject) => {
-            logger.service_worker('Starting Jabber Service #' + service.id + ': ' + service.name);
+            logger.service_worker('Starting Service #' + service.id + ' (jabber): ' + service.name);
 
             // Set global
             let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
@@ -168,33 +180,44 @@ const internalServiceWorker = {
             */
 
             obj.handler.on('online', data => {
-                logger.service_worker('Service #' + service.id + ' Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
+                logger.service_worker('Service #' + service.id + ' (jabber) Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
                 obj.online = true;
             });
 
             obj.handler.on('close', () => {
-                logger.service_worker('Service #' + service.id + ' Closed');
+                logger.service_worker('Service #' + service.id + ' (jabber) Closed');
                 obj.online = false;
+                obj.handler.disconnect();
+
+                // reconnect
+                setTimeout(function () {
+                    logger.service_worker('Service #' + service.id + ' (jabber) reconnecting ...');
+
+                    internalServiceWorker.initJabber(service)
+                        .catch(err => {
+                            logger.service_worker('Service #' + service.id + ' (jabber) ERROR: ' + err.message);
+                        });
+                }, 2000);
             });
 
             obj.handler.on('chat', (from, message) => {
-                logger.service_worker('Service #' + service.id + ' Chat:', message, from);
+                logger.service_worker('Service #' + service.id + ' (jabber) Chat:', message, from);
                 obj.handler.send(from, 'Sorry dude, I\'m not the talkative type.');
             });
 
             obj.handler.on('error', err => {
                 //if (err.name !== 'presence') {
-                    logger.error('Service #' + service.id + ' ERROR:', err);
+                    logger.error('Service #' + service.id + ' (jabber) ERROR:', err);
                 //}
             });
 
             obj.handler.on('subscribe', from => {
-                logger.service_worker('Service #' + service.id + ' Accepting subscription from:', from);
+                logger.service_worker('Service #' + service.id + ' (jabber) Accepting subscription from:', from);
                 obj.handler.acceptSubscription(from);
             });
 
             obj.handler.on('roster', roster => {
-                logger.service_worker('Service #' + service.id + ' Received Roster with ' + roster.length + ' people');
+                logger.service_worker('Service #' + service.id + ' (jabber) Received Roster with ' + roster.length + ' people');
                 obj.roster = roster;
             });
 
@@ -417,36 +440,6 @@ const internalServiceWorker = {
                         }
                         break;
 
-                    /*
-
-                        service.handler.getUsers()
-                            .fail(function (data) {
-                                reject(new Error(data.error));
-                            })
-                            .then(function (data) {
-                                if (typeof data.members !== 'undefined') {
-                                    let real_users = _.filter(data.members, function (m) {
-                                        return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT';
-                                    });
-
-                                    let users = [];
-                                    _.map(real_users, real_user => {
-                                        users.push({
-                                            id:           real_user.id,
-                                            name:         real_user.name,
-                                            real_name:    real_user.profile.real_name,
-                                            display_name: real_user.profile.display_name,
-                                            avatar:       real_user.profile.image_24
-                                        });
-                                    });
-
-                                    resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
-                                } else {
-                                    reject(new Error('Invalid response from service'));
-                                }
-                            });
-                        break;
-                        */
                     default:
                         reject(new Error('Service type "' + service.type + '" is not yet supported'));
                         break;
