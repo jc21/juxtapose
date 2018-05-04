@@ -24,24 +24,27 @@ pipeline {
       steps {
         sh 'docker build -t $TEMP_IMAGE_NAME .'
 
-        sh '''docker run --rm -v $(pwd):/data/juxtapose -w /data $DOCKER_CI_TOOLS zip -qr "juxtapose_$TAG_VERSION.zip" juxtapose -x \\
-\\*.gitkeep \\
-juxtapose/bin\\* \\
-juxtapose/config/my.cnf \\
-juxtapose/data\\* \\
-juxtapose/src/frontend\\* \\
-juxtapose/test\\* \\
-juxtapose/node_modules\\* \\
-juxtapose/.git\\* \\
-juxtapose/.env \\
-juxtapose/.gitignore \\
-juxtapose/docker-compose.yml \\
-juxtapose/Dockerfile \\
-juxtapose/gulpfile.js \\
-juxtapose/knexfile.js \\
-juxtapose/nodemon.json \\
-juxtapose/webpack.config.js \\
-juxtapose/webpack_stats.html
+        sh '''rm -rf zips
+mkdir -p zips
+docker run --rm -v $(pwd):/data/juxtapose -w /data $DOCKER_CI_TOOLS zip -qr "/data/juxtapose/zips/juxtapose_$TAG_VERSION.zip" juxtapose -x \\
+    \\*.gitkeep \\
+    juxtapose/zips\\* \\
+    juxtapose/bin\\* \\
+    juxtapose/config/my.cnf \\
+    juxtapose/data\\* \\
+    juxtapose/src/frontend\\* \\
+    juxtapose/test\\* \\
+    juxtapose/node_modules\\* \\
+    juxtapose/.git\\* \\
+    juxtapose/.env \\
+    juxtapose/.gitignore \\
+    juxtapose/docker-compose.yml \\
+    juxtapose/Dockerfile \\
+    juxtapose/gulpfile.js \\
+    juxtapose/knexfile.js \\
+    juxtapose/nodemon.json \\
+    juxtapose/webpack.config.js \\
+    juxtapose/webpack_stats.html
 
 exit $?'''
       }
@@ -66,7 +69,9 @@ exit $?'''
 
         sh 'docker rmi  $TEMP_IMAGE_NAME'
 
-        archiveArtifacts(artifacts: '**/juxtapose_*.zip', caseSensitive: true, onlyIfSuccessful: true)
+        dir(path: 'zips') {
+            archiveArtifacts(artifacts: '**/*.zip', caseSensitive: true, onlyIfSuccessful: true)
+        }
       }
     }
   }
