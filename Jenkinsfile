@@ -24,7 +24,7 @@ pipeline {
       steps {
         sh 'docker build -t $TEMP_IMAGE_NAME .'
 
-        sh '''zip -qr "juxtapose_$TAG_VERSION.zip" juxtapose -x \\
+        sh '''docker run --rm -v $(pwd):/data/juxtapose -w /data $DOCKER_CI_TOOLS -- zip -qr "juxtapose_$TAG_VERSION.zip" juxtapose -x \\
 \\*.gitkeep \\
 juxtapose/bin\\* \\
 juxtapose/config/my.cnf \\
