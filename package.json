@@ -1,6 +1,6 @@
 {
   "name": "juxtapose",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Self hosted glue for internal tools",
   "main": "src/backend/index.js",
   "directories": {
@@ -53,7 +53,7 @@
     "gulp-concat-util": "^0.5.5",
     "gulp-ejs": "^3.0.1",
     "gulp-imagemin": "^3.3.0",
-    "gulp-sass": "^3.1.0",
+    "gulp-sass": "^4.0.1",
     "gulp-util": "^3.0.8",
     "image-size": "^0.6.1",
     "jquery": "^3.2.1",
