@@ -2,11 +2,9 @@
 
 # Juxtapose
 
-![Version](https://img.shields.io/badge/version-1.1.1-green.svg)
-![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg)
-![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg)
-
-![Build Status](http://bamboo.jc21.com/plugins/servlet/wittified/build-status/AB-JUX)
+![Version](https://img.shields.io/badge/version-1.1.1-green.svg?style=for-the-badge)
+![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg?style=for-the-badge)
+![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg?style=for-the-badge)
 
 > **[juhk-stuh-pohz, juhk-stuh-pohz]**
 >
