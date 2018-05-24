@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name  = 'liquid';
-const logger        = require('../logger');
+const logger        = require('../logger').migrate;
 const templateModel = require('../models/template');
 const batchflow     = require('batchflow');
 
@@ -15,17 +15,17 @@ const batchflow     = require('batchflow');
  * @returns {Promise}
  */
 exports.up = function (knex/*, Promise*/) {
-    logger.migrate('[' + migrate_name + '] Migrating Up...');
+    logger.info('[' + migrate_name + '] Migrating Up...');
 
     return knex.schema.table('template', function (table) {
         // This might already exist if coming from a blank database
         table.string('render_engine', '15').notNull().defaultTo('');
     })
         .then(() => {
-            logger.migrate('[' + migrate_name + '] template Table updated');
+            logger.info('[' + migrate_name + '] template Table updated');
         })
         .catch(ex => {
-            logger.migrate('[' + migrate_name + '] template Table already up to date');
+            logger.info('[' + migrate_name + '] template Table already up to date');
         })
         .then(() => {
             // Find all templates without a render engine set, and update their content and render_engine
@@ -60,7 +60,7 @@ exports.up = function (knex/*, Promise*/) {
                 });
         })
         .then(() => {
-            logger.migrate('[' + migrate_name + '] template Table data updated');
+            logger.info('[' + migrate_name + '] template Table data updated');
         });
 };
 
@@ -72,6 +72,6 @@ exports.up = function (knex/*, Promise*/) {
  * @returns {Promise}
  */
 exports.down = function (knex, Promise) {
-    logger.migrate('[' + migrate_name + '] You can\'t migrate down this one.');
+    logger.warn('[' + migrate_name + '] You can\'t migrate down this one.');
     return Promise.resolve(true);
 };

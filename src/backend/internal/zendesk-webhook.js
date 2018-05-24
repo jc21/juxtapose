@@ -3,7 +3,7 @@
 const _                        = require('lodash');
 const config                   = require('config');
 const batchflow                = require('batchflow');
-const logger                   = require('../logger');
+const logger                   = require('../logger').zendesk;
 const error                    = require('../lib/error');
 const serviceModel             = require('../models/service');
 const jwt                      = require('jsonwebtoken');
@@ -53,7 +53,7 @@ const internalZendeskWebhook = {
                     })
                     // 4. Save data for debugging
                     .then(service => {
-                        logger.zendesk_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
+                        logger.info('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
                         return zendeskIncomingLogModel
                             .query()
                             .insert({
@@ -61,7 +61,7 @@ const internalZendeskWebhook = {
                                 data:       webhook_data
                             })
                             .then(log_row => {
-                                logger.zendesk_webhook('  ❯ Saved in log table as ID #' + log_row.id);
+                                logger.info('  ❯ Saved in log table as ID #' + log_row.id);
                                 return service;
                             });
                     })
@@ -189,9 +189,9 @@ const internalZendeskWebhook = {
      * @returns {Promise|Object}
      */
     process: (service_id, webhook_data) => {
-        logger.zendesk_webhook('  ❯ Ticket ID:                      ', internalZendeskWebhook.getTicketField(webhook_data, 'id'));
-        logger.zendesk_webhook('  ❯ Title:                          ', internalZendeskWebhook.getTicketField(webhook_data, 'title'));
-        logger.zendesk_webhook('  ❯ Link:                           ', internalZendeskWebhook.getTicketField(webhook_data, 'link'));
+        logger.info('  ❯ Ticket ID:                      ', internalZendeskWebhook.getTicketField(webhook_data, 'id'));
+        logger.info('  ❯ Title:                          ', internalZendeskWebhook.getTicketField(webhook_data, 'title'));
+        logger.info('  ❯ Link:                           ', internalZendeskWebhook.getTicketField(webhook_data, 'link'));
 
         // Get existing ticket details
         return zendeskTicketStatusModel.query()
@@ -529,7 +529,7 @@ const internalZendeskWebhook = {
     /**
      * @param   {String}  event_type
      * @param   {Object}  data
-     * @param   {Integer  data.service_id
+     * @param   {Integer} data.service_id
      * @param   {Object}  webhook_data
      * @param   {Object}  webhook_data.ticket
      * @param   {Object}  webhook_data.current_user
@@ -541,13 +541,13 @@ const internalZendeskWebhook = {
     processRules: (event_type, data, webhook_data, existing_ticket_row, already_notified_user_ids) => {
         already_notified_user_ids = already_notified_user_ids || [];
 
-        logger.zendesk_webhook('  ❯ Processing Rules for:           ', event_type);
+        logger.info('  ❯ Processing Rules for:           ', event_type);
 
         let incoming_destination_email = internalZendeskWebhook.getIncomingServiceEmailBasedOnEvent(event_type, webhook_data, existing_ticket_row);
-        logger.zendesk_webhook('    ❯ incoming_destination_email:   ', typeof incoming_destination_email === 'object' && incoming_destination_email !== null ? incoming_destination_email.join(', ') : incoming_destination_email);
+        logger.info('    ❯ incoming_destination_email:   ', typeof incoming_destination_email === 'object' && incoming_destination_email !== null ? incoming_destination_email.join(', ') : incoming_destination_email);
 
         let incoming_trigger_user_email = internalZendeskWebhook.getEventUser(webhook_data, 'email').toLowerCase();
-        logger.zendesk_webhook('    ❯ incoming_trigger_user_email:  ', incoming_trigger_user_email);
+        logger.info('    ❯ incoming_trigger_user_email:  ', incoming_trigger_user_email);
 
         if (incoming_destination_email && incoming_trigger_user_email) {
             if (typeof incoming_destination_email === 'string' && incoming_destination_email === incoming_trigger_user_email) {
@@ -589,7 +589,7 @@ const internalZendeskWebhook = {
         } else if (typeof incoming_destination_email === 'object' && incoming_destination_email !== null && incoming_destination_email.length) {
             query.whereIn('in_sd.service_username', incoming_destination_email);
         } else if (anon_event_types.indexOf(event_type) === -1) {
-            logger.zendesk_webhook('    ❯ No valid recipients for this event type');
+            logger.info('    ❯ No valid recipients for this event type');
             return Promise.resolve(already_notified_user_ids);
         }
 
@@ -604,14 +604,14 @@ const internalZendeskWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.zendesk_webhook('    ❯ Processing Rule #' + rule.id);
+                            logger.info('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.zendesk_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
+                                logger.info('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalZendeskWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.zendesk_webhook('      ❯ Extra conditions do not match');
+                                logger.info('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
                                 // Debugging data in the payload
@@ -642,7 +642,7 @@ const internalZendeskWebhook = {
                                             .insert(notification_data);
                                     })
                                     .then(() => {
-                                        logger.zendesk_webhook('      ❯ Notification queue item added');
+                                        logger.info('      ❯ Notification queue item added');
                                         this_already_notified_user_ids.push(rule.user_id);
 
                                     })
@@ -662,7 +662,7 @@ const internalZendeskWebhook = {
                             reject(err);
                         })
                         .end(() => {
-                            logger.zendesk_webhook('    ❯ Done processing Rules for:    ', event_type);
+                            logger.info('    ❯ Done processing Rules for:    ', event_type);
                             resolve(this_already_notified_user_ids);
                         });
                 });

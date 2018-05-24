@@ -3,7 +3,7 @@
 'use strict';
 
 const app           = require('./app');
-const logger        = require('./logger');
+const logger        = require('./logger').global;
 const config        = require('config');
 const migrate       = require('./migrate');
 const setup         = require('./setup');

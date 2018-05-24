@@ -1,7 +1,6 @@
 'use strict';
 
 const error  = require('../error');
-const debug  = require('debug')('juxtapose:validator:api');
 const path   = require('path');
 const parser = require('json-schema-ref-parser');
 
@@ -31,8 +30,6 @@ function apiValidator(schema, payload/*, description*/) {
             resolve(payload);
         } else {
             let message = ajv.errorsText(validate.errors);
-            debug(validate.errors);
-
             //var first_error = validate.errors.slice(0, 1).pop();
             let err = new error.ValidationError(message);
             err.debug = [validate.errors, payload];

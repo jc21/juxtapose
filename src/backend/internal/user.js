@@ -63,8 +63,6 @@ const internalUser = {
      * @return {Promise}
      */
     update: (access, data) => {
-        //debug('Updating user record', data);
-
         if (typeof data.is_disabled !== 'undefined') {
             data.is_disabled = data.is_disabled ? 1 : 0;
         }
@@ -127,8 +125,6 @@ const internalUser = {
      * @return {Promise}
      */
     get: (access, data) => {
-        //debug('Getting user record', data);
-
         if (typeof data === 'undefined') {
             data = {};
         }
@@ -170,22 +166,6 @@ const internalUser = {
     },
 
     /**
-     * @param {Access}  access
-     * @param {Integer} user_id
-     */
-    getAuthenticationByUserId: (access, user_id) => {
-        //debug('Getting user authentication methods', user_id);
-
-        return access.can('users:get', user_id)
-            .then(() => {
-                return authModel
-                    .query()
-                    .where('user_id', user_id)
-                    .omit(['secret', 'user_id', 'id']);
-            });
-    },
-
-    /**
      * Checks if an email address is available, but if a user_id is supplied, it will ignore checking
      * against that user.
      *
@@ -204,8 +184,7 @@ const internalUser = {
         }
 
         return query
-            .then((user) => {
-                //debug('isEmailAvailable', email, user_id, !user);
+            .then(user => {
                 return !user;
             });
     },
@@ -218,8 +197,6 @@ const internalUser = {
      * @returns {Promise}
      */
     delete: (access, data) => {
-        //debug('Deleting user record', data);
-
         return access.can('users:delete', data.id)
             .then(() => {
                 return internalUser.get(access, {id: data.id});
@@ -247,32 +224,6 @@ const internalUser = {
     },
 
     /**
-     * This is mainly used when performing tests and wanting to revert the change
-     *
-     * @param {Access}  access
-     * @param {Object}  data
-     * @param {Integer} data.id
-     * @returns {Promise}
-     */
-    undelete: (access, data) => {
-        //debug('Undeleting user record', data);
-
-        return access.can('users:undelete', data.id)
-            .then(() => {
-                return userModel
-                    .query()
-                    .where('id', data.id)
-                    .patch({
-                        modified_on: userModel.raw('NOW()'),
-                        is_deleted:  0
-                    });
-            })
-            .then(() => {
-                return true;
-            });
-    },
-
-    /**
      * This will only count the users
      *
      * @param {Access}  access
@@ -286,7 +237,7 @@ const internalUser = {
                     .query()
                     .count('id as count')
                     .where('is_deleted', 0)
-                    .first('count');
+                    .first();
 
                 // Query is used for searching
                 if (typeof search_query === 'string') {
@@ -348,7 +299,6 @@ const internalUser = {
                 }
 
                 if (typeof expand !== 'undefined' && expand !== null) {
-                    //debug('User Eager Loading', '[' + expand.join(', ') + ']');
                     query.eager('[' + expand.join(', ') + ']');
                 }
 

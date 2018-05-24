@@ -29,7 +29,7 @@ const replacePreviewLinks = function (content) {
 /**
  * @param   {Object|String} content
  * @param   {Object}        data
- * @param   {String}        engine    'ejs' or 'liquid'
+ * @param   {String}        [engine]    'ejs' or 'liquid'
  * @param   {Boolean}       [for_preview]
  * @returns {Promise}
  */

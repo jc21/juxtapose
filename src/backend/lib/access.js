@@ -1,7 +1,6 @@
 'use strict';
 
 const _          = require('lodash');
-const debug      = require('debug')('juxtapose:access');
 const validator  = require('ajv');
 const error      = require('./error');
 const userModel  = require('../models/user');
@@ -10,8 +9,6 @@ const TokenModel = require('../models/token');
 const roleSchema = require('./access/roles.json');
 
 module.exports = function (token_string) {
-    //debug('Access from token %s', token_string && token_string.substr(-10));
-
     let Token                 = new TokenModel();
     let token_data            = null;
     let initialised           = false;
@@ -34,8 +31,6 @@ module.exports = function (token_string) {
                 resolve(Token.load(token_string)
                     .then((data) => {
                         token_data = data;
-
-                        //debug('Access Token Data:', token_data);
 
                         // At this point we need to load the user from the DB and make sure they:
                         // - exist (and not soft deleted)
@@ -224,8 +219,6 @@ module.exports = function (token_string) {
          * @returns {Promise}
          */
         can: (permission, data) => {
-            //debug('Permission: ' + permission + ', Data:', data);
-
             if (allow_internal_access === true) {
                 return Promise.resolve(true);
                 //return true;
@@ -254,9 +247,9 @@ module.exports = function (token_string) {
 
                                 permissionSchema.properties[permission] = require('./access/' + permission.replace(/:/gim, '-') + '.json');
 
-                                //debug('objectSchema:', JSON.stringify(objectSchema, null, 2));
-                                //debug('permissionSchema:', JSON.stringify(permissionSchema, null, 2));
-                                //debug('data_schema:', JSON.stringify(data_schema, null, 2));
+                                //console.log('objectSchema:', JSON.stringify(objectSchema, null, 2));
+                                //console.log('permissionSchema:', JSON.stringify(permissionSchema, null, 2));
+                                //console.log('data_schema:', JSON.stringify(data_schema, null, 2));
 
                                 let ajv = validator({
                                     verbose:      true,
@@ -275,9 +268,10 @@ module.exports = function (token_string) {
                                 return ajv.validate('permissions', data_schema);
                             });
                     })
-                    .catch((err) => {
-                        debug(err.message);
-                        debug(err.errors);
+                    .catch(err => {
+                        //console.log(err.message);
+                        //console.log(err.errors);
+
                         throw new error.PermissionError('Permission Denied', err);
                     });
             }

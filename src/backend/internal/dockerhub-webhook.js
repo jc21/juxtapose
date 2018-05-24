@@ -2,7 +2,7 @@
 
 const _                         = require('lodash');
 const batchflow                 = require('batchflow');
-const logger                    = require('../logger');
+const logger                    = require('../logger').dockerhub;
 const serviceModel              = require('../models/service');
 const ruleModel                 = require('../models/rule');
 const templateRender            = require('../lib/template_render');
@@ -41,7 +41,7 @@ const internalDockerhubWebhook = {
             })
             // 4. Save data for debugging
             .then(service => {
-                logger.dockerhub_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
+                logger.info('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
                 return dockerhubIncomingLogModel
                     .query()
                     .insert({
@@ -49,7 +49,7 @@ const internalDockerhubWebhook = {
                         data:       webhook_data
                     })
                     .then(log_row => {
-                        logger.dockerhub_webhook('  ❯ Saved in log table as ID #' + log_row.id);
+                        logger.info('  ❯ Saved in log table as ID #' + log_row.id);
                         return service;
                     });
             })
@@ -81,7 +81,7 @@ const internalDockerhubWebhook = {
      */
     process: (service_id, webhook_data) => {
         if (typeof webhook_data.push_data === 'object') {
-            logger.dockerhub_webhook('  ❯ Repo:                           ', webhook_data.repository.repo_name);
+            logger.info('  ❯ Repo:                           ', webhook_data.repository.repo_name);
 
             let event_types = [
                 ['repo_updated']
@@ -177,7 +177,7 @@ const internalDockerhubWebhook = {
      * @param   {Object}  webhook_data.repository
      * @returns {Object}
      */
-    getCommonTemplateData: (webhook_data) => {
+    getCommonTemplateData: webhook_data => {
         return {
             pusher:        webhook_data.push_data.pusher,
             owner:         webhook_data.repository.owner,
@@ -230,7 +230,7 @@ const internalDockerhubWebhook = {
     /**
      * @param   {String}  event_type
      * @param   {Object}  data
-     * @param   {Integer  data.service_id
+     * @param   {Integer} data.service_id
      * @param   {Object}  webhook_data
      * @param   {Object}  webhook_data.push_data
      * @param   {Object}  webhook_data.repository
@@ -240,7 +240,7 @@ const internalDockerhubWebhook = {
     processRules: (event_type, data, webhook_data, already_notified_user_ids) => {
         already_notified_user_ids = already_notified_user_ids || [];
 
-        logger.dockerhub_webhook('  ❯ Processing Rules for:           ', event_type);
+        logger.info('  ❯ Processing Rules for:           ', event_type);
 
         // This complex query should only get the rules for users
         // where a notification hasn't already been sent to a user for this webhook
@@ -265,14 +265,14 @@ const internalDockerhubWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.dockerhub_webhook('    ❯ Processing Rule #' + rule.id);
+                            logger.info('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.dockerhub_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
+                                logger.info('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalDockerhubWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.dockerhub_webhook('      ❯ Extra conditions do not match');
+                                logger.info('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
 
@@ -299,7 +299,7 @@ const internalDockerhubWebhook = {
                                             .insert(notification_data);
                                     })
                                     .then(() => {
-                                        logger.dockerhub_webhook('      ❯ Notification queue item added');
+                                        logger.info('      ❯ Notification queue item added');
                                         this_already_notified_user_ids.push(rule.user_id);
 
                                     })
@@ -319,7 +319,7 @@ const internalDockerhubWebhook = {
                             reject(err);
                         })
                         .end(() => {
-                            logger.dockerhub_webhook('    ❯ Done processing Rules for:    ', event_type);
+                            logger.info('    ❯ Done processing Rules for:    ', event_type);
                             resolve(this_already_notified_user_ids);
                         });
                 });

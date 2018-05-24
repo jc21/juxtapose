@@ -266,10 +266,6 @@ const internalTemplate = {
                     query.orderBy('created_on', 'DESC');
                 }
 
-                //if (typeof expand !== 'undefined' && expand !== null) {
-                //    query.eager('[' + expand.join(', ') + ']');
-                //}
-
                 return query;
             });
     },

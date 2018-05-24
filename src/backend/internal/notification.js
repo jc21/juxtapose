@@ -1,7 +1,6 @@
 'use strict';
 
 const _                     = require('lodash');
-const debug                 = require('debug')('juxtapose:internal:notification');
 const notifcationQueueModel = require('../models/notification_queue');
 
 const internalNotification = {

@@ -1,13 +1,12 @@
 'use strict';
 
 const _                      = require('lodash');
-const logger                 = require('../logger');
+const logger                 = require('../logger').services;
 const internalService        = require('./service');
 const batchflow              = require('batchflow');
 const slackBots              = require('slackbots');
 const notificationQueueModel = require('../models/notification_queue');
-//const xmpp                   = require('simple-xmpp').SimpleXMPP;
-const xmpp = require('../lib/xmpp');
+const xmpp                   = require('../lib/xmpp');
 
 const internalServiceWorker = {
 
@@ -20,7 +19,7 @@ const internalServiceWorker = {
      *
      */
     start: () => {
-        logger.service_worker('Starting');
+        logger.info('Starting');
         internalServiceWorker.init();
     },
 
@@ -28,7 +27,7 @@ const internalServiceWorker = {
      *
      */
     restart: () => {
-        logger.service_worker('Restarting');
+        logger.info('Restarting');
 
         if (internalServiceWorker.interval) {
             clearInterval(internalServiceWorker.interval);
@@ -37,7 +36,7 @@ const internalServiceWorker = {
 
         _.map(internalServiceWorker.services, (unused, idx) => {
             if (typeof internalServiceWorker.services[idx].handler !== 'undefined') {
-                if (internalServiceWorker.services[idx].type === 'slack') {
+                if (internalServiceWorker.services[idx].type === 'slack' && typeof internalServiceWorker.services[idx].handler.ws !== 'undefined') {
                     internalServiceWorker.services[idx].handler.ws.close();
 
                 } else if (internalServiceWorker.services[idx].type === 'jabber') {
@@ -72,7 +71,7 @@ const internalServiceWorker = {
                                         next();
                                     })
                                     .catch(err => {
-                                        logger.service_worker('Service #' + service.id + ' ERROR: ' + err.message);
+                                        logger.error('Service #' + service.id + ' ERROR: ' + err.message);
                                         next(err);
                                     });
 
@@ -83,7 +82,7 @@ const internalServiceWorker = {
                                         next();
                                     })
                                     .catch(err => {
-                                        logger.service_worker('Service #' + service.id + ' ERROR: ' + err.message);
+                                        logger.error('Service #' + service.id + ' ERROR: ' + err.message);
                                         next(err);
                                     });
 
@@ -92,7 +91,7 @@ const internalServiceWorker = {
                                 next();
 
                             } else {
-                                logger.service_worker('Service #' + service.id + ' of type "' + service.type + '" is not yet supported');
+                                logger.warn('Service #' + service.id + ' of type "' + service.type + '" is not yet supported');
                                 next();
                             }
                         })
@@ -100,7 +99,7 @@ const internalServiceWorker = {
                             reject(err);
                         })
                         .end((/*results*/) => {
-                            logger.service_worker(started + ' Services Started');
+                            logger.success(started + ' Services Started');
                             internalServiceWorker.interval = setInterval(internalServiceWorker.checkNotificationQueue, internalServiceWorker.interval_timeout);
                             resolve();
                         });
@@ -117,7 +116,7 @@ const internalServiceWorker = {
      */
     initSlack: service => {
         return new Promise((resolve/*, reject*/) => {
-            logger.service_worker('Starting Service #' + service.id + ' (slack): ' + service.name);
+            logger.info('Starting Service #' + service.id + ' (slack): ' + service.name);
 
             // Set global
             let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
@@ -131,20 +130,20 @@ const internalServiceWorker = {
 
             obj.handler.on('start', function () {
                 obj.online = true;
-                logger.service_worker('Service #' + service.id + ' (slack) Connected');
+                logger.success('Service #' + service.id + ' (slack) Connected');
             });
 
             obj.handler.on('close', function () {
                 obj.online = false;
-                logger.service_worker('Service #' + service.id + ' (slack) Closed');
+                logger.info('Service #' + service.id + ' (slack) Closed');
 
                 // reconnect
                 setTimeout(function () {
-                    logger.service_worker('Service #' + service.id + ' (slack) reconnecting ...');
+                    logger.info('Service #' + service.id + ' (slack) reconnecting ...');
 
                     internalServiceWorker.initSlack(service)
                         .catch(err => {
-                            logger.service_worker('Service #' + service.id + ' (slack) ERROR: ' + err.message);
+                            logger.error('Service #' + service.id + ' (slack) ERROR: ' + err.message);
                         });
                 }, 2000);
             });
@@ -159,7 +158,7 @@ const internalServiceWorker = {
      */
     initJabber: service => {
         return new Promise((resolve, reject) => {
-            logger.service_worker('Starting Service #' + service.id + ' (jabber): ' + service.name);
+            logger.info('Starting Service #' + service.id + ' (jabber): ' + service.name);
 
             // Set global
             let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
@@ -171,56 +170,48 @@ const internalServiceWorker = {
                 port:     service.data.port
             });
 
-            /*
-            obj.handler.on('stanza', function(stanza) {
-                if (!stanza.is('presence') && !stanza.is('iq')) {
-                    logger.info('STANZ:', stanza, stanza.toString());
-                }
-            });
-            */
-
             obj.handler.on('online', data => {
-                logger.service_worker('Service #' + service.id + ' (jabber) Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
+                logger.success('Service #' + service.id + ' (jabber) Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
                 obj.online = true;
             });
 
             obj.handler.on('close', () => {
-                logger.service_worker('Service #' + service.id + ' (jabber) Closed');
+                logger.info('Service #' + service.id + ' (jabber) Closed');
                 obj.online = false;
-                obj.handler.disconnect();
+
+                if (typeof obj.handler !== 'undefined' && obj.handler !== null) {
+                    obj.handler.disconnect();
+                }
 
                 // reconnect
                 setTimeout(function () {
-                    logger.service_worker('Service #' + service.id + ' (jabber) reconnecting ...');
+                    logger.info('Service #' + service.id + ' (jabber) reconnecting ...');
 
                     internalServiceWorker.initJabber(service)
                         .catch(err => {
-                            logger.service_worker('Service #' + service.id + ' (jabber) ERROR: ' + err.message);
+                            logger.error('Service #' + service.id + ' (jabber) ERROR: ' + err.message);
                         });
                 }, 2000);
             });
 
             obj.handler.on('chat', (from, message) => {
-                logger.service_worker('Service #' + service.id + ' (jabber) Chat:', message, from);
+                logger.info('Service #' + service.id + ' (jabber) Chat:', message, from);
                 obj.handler.send(from, 'Sorry dude, I\'m not the talkative type.');
             });
 
             obj.handler.on('error', err => {
-                //if (err.name !== 'presence') {
-                    logger.error('Service #' + service.id + ' (jabber) ERROR:', err);
-                //}
+                logger.error('Service #' + service.id + ' (jabber) ERROR:', err.message);
             });
 
             obj.handler.on('subscribe', from => {
-                logger.service_worker('Service #' + service.id + ' (jabber) Accepting subscription from:', from);
+                logger.info('Service #' + service.id + ' (jabber) Accepting subscription from:', from);
                 obj.handler.acceptSubscription(from);
             });
 
             obj.handler.on('roster', roster => {
-                logger.service_worker('Service #' + service.id + ' (jabber) Received Roster with ' + roster.length + ' people');
+                logger.info('Service #' + service.id + ' (jabber) Received Roster with ' + roster.length + ' people');
                 obj.roster = roster;
             });
-
 
             obj.handler.connect();
 
@@ -257,8 +248,6 @@ const internalServiceWorker = {
      * Checks for queue items ready to process and processes them
      */
     checkNotificationQueue: function () {
-        //logger.service_worker('Interval fired');
-
         if (!internalServiceWorker.interval_processing) {
             internalServiceWorker.interval_processing = true;
 
@@ -290,7 +279,7 @@ const internalServiceWorker = {
 
                                         if (service_settings) {
                                             // Send
-                                            logger.service_worker('Sending notification #' + notification.id + ' to @' + service_settings.service_username + ' at ' + service_settings.type + ' service #' + notification.service_id);
+                                            logger.info('Sending notification #' + notification.id + ' to @' + service_settings.service_username + ' at ' + service_settings.type + ' service #' + notification.service_id);
 
                                             internalServiceWorker.sendMessage(notification.service_id, service_settings.service_username, notification.content)
                                                 .then(() => {
@@ -315,7 +304,7 @@ const internalServiceWorker = {
                                                     next();
                                                 });
                                         } else {
-                                            logger.service_worker('Could not send notification #' + notification.id + ' because destination username was not configured');
+                                            logger.error('Could not send notification #' + notification.id + ' because destination username was not configured');
 
                                             // update row with error
                                             notificationQueueModel

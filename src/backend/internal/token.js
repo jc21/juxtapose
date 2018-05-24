@@ -10,12 +10,12 @@ const TokenModel = require('../models/token');
 module.exports = {
 
     /**
-     * @param {Object} data
-     * @param {String} data.identity
-     * @param {String} data.secret
-     * @param {String} [data.scope]
-     * @param {String} [data.expiry]
-     * @param {String} [issuer]
+     * @param   {Object} data
+     * @param   {String} data.identity
+     * @param   {String} data.secret
+     * @param   {String} [data.scope]
+     * @param   {String} [data.expiry]
+     * @param   {String} [issuer]
      * @returns {Promise}
      */
     getTokenFromEmail: (data, issuer) => {
@@ -95,7 +95,7 @@ module.exports = {
     getFreshToken: (access, data) => {
         let Token = new TokenModel();
 
-        data = data || {};
+        data        = data || {};
         data.expiry = data.expiry || '30d';
 
         if (access && access.token.get('attrs').id) {

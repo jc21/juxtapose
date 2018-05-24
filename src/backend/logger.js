@@ -1,42 +1,13 @@
-const winston = require('winston');
+const {Signale} = require('signale');
 
-winston.remove(winston.transports.Console);
+module.exports = {
+    global:    new Signale({scope: 'Global   '}),
+    migrate:   new Signale({scope: 'Migrate  '}),
+    services:  new Signale({scope: 'Services '}),
 
-winston.add(winston.transports.Console, {
-    colorize:    true,
-    timestamp:   true,
-    prettyPrint: true,
-    depth:       3
-});
-
-winston.setLevels({
-    error:             0,
-    warn:              1,
-    info:              2,
-    success:           2,
-    migrate:           2,
-    service_worker:    2,
-    jira_webhook:      2,
-    bitbucket_webhook: 2,
-    dockerhub_webhook: 2,
-    zendesk_webhook:   2,
-    verbose:           3,
-    debug:             4
-});
-
-winston.addColors({
-    error:             'red',
-    warn:              'yellow',
-    info:              'cyan',
-    success:           'green',
-    migrate:           'blue',
-    service_worker:    'green',
-    jira_webhook:      'magenta',
-    bitbucket_webhook: 'blue',
-    dockerhub_webhook: 'yellow',
-    zendesk_webhook:   'cyan',
-    verbose:           'blue',
-    debug:             'magenta'
-});
-
-module.exports = winston;
+    // Specific services
+    bitbucket: new Signale({scope: 'Bitbucket'}),
+    jira:      new Signale({scope: 'Jira     '}),
+    dockerhub: new Signale({scope: 'DockerHub'}),
+    zendesk:   new Signale({scope: 'Zendesk  '})
+};

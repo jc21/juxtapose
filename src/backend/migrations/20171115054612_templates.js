@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name     = 'templates';
-const logger           = require('../logger');
+const logger           = require('../logger').migrate;
 const batchflow        = require('batchflow');
 const internalTemplate = require('../internal/template');
 
@@ -1366,12 +1366,12 @@ const templates = [
  * @returns {Promise}
  */
 exports.up = function (knex, Promise) {
-    logger.migrate('[' + migrate_name + '] Migrating Up...');
+    logger.info('[' + migrate_name + '] Migrating Up...');
 
     return new Promise((resolve, reject) => {
         batchflow(templates).sequential()
             .each((i, template_data, next) => {
-                logger.migrate('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
+                logger.info('[' + migrate_name + '] Creating Template: ' + template_data.in_service_type + ' -> ' + template_data.service_type + ' -> ' + template_data.name);
 
                 internalTemplate.createRaw(template_data)
                     .then(next)
@@ -1397,6 +1397,6 @@ exports.up = function (knex, Promise) {
  * @returns {Promise}
  */
 exports.down = function (knex, Promise) {
-    logger.migrate('[' + migrate_name + '] You can\'t migrate down the templates.');
+    logger.warn('[' + migrate_name + '] You can\'t migrate down the templates.');
     return Promise.resolve(true);
 };

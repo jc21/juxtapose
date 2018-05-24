@@ -30,6 +30,7 @@
     "node-xmpp": "^1.1.0",
     "objection": "^0.8.9",
     "path": "^0.12.7",
+    "signale": "^1.1.0",
     "slackbots": "git://github.com/jc21/slack-bot-api.git#proxy-support",
     "winston": "^2.3.1"
   },
@@ -71,6 +72,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "signale": {
+    "displayDate": true,
+    "displayTimestamp": true
   },
   "author": "",
   "license": "MIT"

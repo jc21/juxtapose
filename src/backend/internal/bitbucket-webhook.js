@@ -3,7 +3,7 @@
 const _                         = require('lodash');
 const config                    = require('config');
 const batchflow                 = require('batchflow');
-const logger                    = require('../logger');
+const logger                    = require('../logger').bitbucket;
 const error                     = require('../lib/error');
 const serviceModel              = require('../models/service');
 const jwt                       = require('jsonwebtoken');
@@ -50,7 +50,7 @@ const internalBitbucketWebhook = {
                     })
                     // 4. Save data for debugging
                     .then(service => {
-                        logger.bitbucket_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
+                        logger.info('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
                         return bitbucketIncomingLogModel
                             .query()
                             .insert({
@@ -58,7 +58,7 @@ const internalBitbucketWebhook = {
                                 data:       webhook_data
                             })
                             .then(log_row => {
-                                logger.bitbucket_webhook('  ❯ Saved in log table as ID #' + log_row.id);
+                                logger.info('  ❯ Saved in log table as ID #' + log_row.id);
                                 return service;
                             });
                     })
@@ -123,12 +123,12 @@ const internalBitbucketWebhook = {
      */
     process: (service_id, webhook_data) => {
         if (typeof webhook_data.eventKey === 'string') {
-            logger.bitbucket_webhook('  ❯ Event:                          ', webhook_data.eventKey);
-            logger.bitbucket_webhook('  ❯ From:                           ', internalBitbucketWebhook.getFromProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getFromRepoField(webhook_data, 'slug'));
-            logger.bitbucket_webhook('  ❯ To:                             ', internalBitbucketWebhook.getToProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getToRepoField(webhook_data, 'slug'));
-            logger.bitbucket_webhook('  ❯ Title:                          ', internalBitbucketWebhook.getPrField(webhook_data, 'title'));
-            logger.bitbucket_webhook('  ❯ PR State:                       ', internalBitbucketWebhook.getPrField(webhook_data, 'state'));
-            logger.bitbucket_webhook('  ❯ PR Owner:                       ', internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'));
+            logger.info('  ❯ Event:                          ', webhook_data.eventKey);
+            logger.info('  ❯ From:                           ', internalBitbucketWebhook.getFromProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getFromRepoField(webhook_data, 'slug'));
+            logger.info('  ❯ To:                             ', internalBitbucketWebhook.getToProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getToRepoField(webhook_data, 'slug'));
+            logger.info('  ❯ Title:                          ', internalBitbucketWebhook.getPrField(webhook_data, 'title'));
+            logger.info('  ❯ PR State:                       ', internalBitbucketWebhook.getPrField(webhook_data, 'state'));
+            logger.info('  ❯ PR Owner:                       ', internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'));
 
             let event_types = [];
 
@@ -564,7 +564,7 @@ const internalBitbucketWebhook = {
     /**
      * @param   {String}  event_type
      * @param   {Object}  data
-     * @param   {Integer  data.service_id
+     * @param   {Integer} data.service_id
      * @param   {Object}  webhook_data
      * @param   {Object}  webhook_data.pullRequest
      * @param   {Object}  webhook_data.actor
@@ -574,13 +574,13 @@ const internalBitbucketWebhook = {
     processRules: (event_type, data, webhook_data, already_notified_user_ids) => {
         already_notified_user_ids = already_notified_user_ids || [];
 
-        logger.bitbucket_webhook('  ❯ Processing Rules for:           ', event_type);
+        logger.info('  ❯ Processing Rules for:           ', event_type);
 
         let incoming_destination_username = internalBitbucketWebhook.getIncomingServiceUsernameBasedOnEvent(event_type, webhook_data);
-        logger.bitbucket_webhook('    ❯ destination_incoming_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);
+        logger.info('    ❯ destination_incoming_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);
 
         let incoming_trigger_username = internalBitbucketWebhook.getEventUser(webhook_data);
-        logger.bitbucket_webhook('    ❯ incoming_trigger_username:    ', incoming_trigger_username);
+        logger.info('    ❯ incoming_trigger_username:    ', incoming_trigger_username);
 
         if (incoming_destination_username && incoming_trigger_username) {
             if (typeof incoming_destination_username === 'string' && incoming_destination_username === incoming_trigger_username) {
@@ -622,7 +622,7 @@ const internalBitbucketWebhook = {
             query.whereIn('in_sd.service_username', incoming_destination_username);
         } else if (anon_event_types.indexOf(event_type) === -1) {
             //
-            logger.bitbucket_webhook('    ❯ No valid recipients for this event type');
+            logger.info('    ❯ No valid recipients for this event type');
             return Promise.resolve(already_notified_user_ids);
         }
 
@@ -637,14 +637,14 @@ const internalBitbucketWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.bitbucket_webhook('    ❯ Processing Rule #' + rule.id);
+                            logger.info('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.bitbucket_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
+                                logger.info('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalBitbucketWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.bitbucket_webhook('      ❯ Extra conditions do not match');
+                                logger.info('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
 
@@ -673,7 +673,7 @@ const internalBitbucketWebhook = {
                                             .insert(notification_data);
                                     })
                                     .then(() => {
-                                        logger.bitbucket_webhook('      ❯ Notification queue item added');
+                                        logger.info('      ❯ Notification queue item added');
                                         this_already_notified_user_ids.push(rule.user_id);
 
                                     })
@@ -693,7 +693,7 @@ const internalBitbucketWebhook = {
                             reject(err);
                         })
                         .end(() => {
-                            logger.bitbucket_webhook('    ❯ Done processing Rules for:    ', event_type);
+                            logger.info('    ❯ Done processing Rules for:    ', event_type);
                             resolve(this_already_notified_user_ids);
                         });
                 });

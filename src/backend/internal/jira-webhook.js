@@ -3,7 +3,7 @@
 const _                      = require('lodash');
 const config                 = require('config');
 const batchflow              = require('batchflow');
-const logger                 = require('../logger');
+const logger                 = require('../logger').jira;
 const error                  = require('../lib/error');
 const serviceModel           = require('../models/service');
 const jwt                    = require('jsonwebtoken');
@@ -56,7 +56,7 @@ const internalJiraWebhook = {
                     })
                     // 4. Save data for debugging
                     .then(service => {
-                        logger.jira_webhook('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
+                        logger.info('❯ Incoming Webhook for Service #' + service.id + ': ' + service.name);
                         return jiraIncomingLogModel
                             .query()
                             .insert({
@@ -64,7 +64,7 @@ const internalJiraWebhook = {
                                 data:       webhook_data
                             })
                             .then(log_row => {
-                                logger.jira_webhook('  ❯ Saved in log table as ID #' + log_row.id);
+                                logger.info('  ❯ Saved in log table as ID #' + log_row.id);
                                 return service;
                             });
                     })
@@ -122,7 +122,7 @@ const internalJiraWebhook = {
      * @param   {String}  token
      * @returns {Promise}
      */
-    verifyToken: (token) => {
+    verifyToken: token => {
         return new Promise((resolve, reject) => {
             try {
                 if (!token || token === null || token === 'null') {
@@ -159,12 +159,12 @@ const internalJiraWebhook = {
      */
     process: (service_id, webhook_data) => {
         if (typeof webhook_data.webhookEvent === 'string') {
-            logger.jira_webhook('  ❯ Webhook Event:                  ', webhook_data.webhookEvent);
-            logger.jira_webhook('  ❯ Issue:                          ', internalJiraWebhook.getIssueKey(webhook_data), '(#' + internalJiraWebhook.getIssueId(webhook_data) + ')');
-            logger.jira_webhook('  ❯ isResolved:                     ', internalJiraWebhook.isResolved(webhook_data));
-            logger.jira_webhook('  ❯ isResolveEvent:                 ', internalJiraWebhook.isResolveEvent(webhook_data));
-            logger.jira_webhook('  ❯ isReopenEvent:                  ', internalJiraWebhook.isReopenEvent(webhook_data));
-            logger.jira_webhook('  ❯ isCommentUpdate:                ', internalJiraWebhook.isCommentUpdate(webhook_data));
+            logger.info('  ❯ Webhook Event:                  ', webhook_data.webhookEvent);
+            logger.info('  ❯ Issue:                          ', internalJiraWebhook.getIssueKey(webhook_data), '(#' + internalJiraWebhook.getIssueId(webhook_data) + ')');
+            logger.info('  ❯ isResolved:                     ', internalJiraWebhook.isResolved(webhook_data));
+            logger.info('  ❯ isResolveEvent:                 ', internalJiraWebhook.isResolveEvent(webhook_data));
+            logger.info('  ❯ isReopenEvent:                  ', internalJiraWebhook.isReopenEvent(webhook_data));
+            logger.info('  ❯ isCommentUpdate:                ', internalJiraWebhook.isCommentUpdate(webhook_data));
 
             let process_promises = [];
 
@@ -342,9 +342,7 @@ const internalJiraWebhook = {
         let event_types = [];
 
         return internalJiraWebhook.getJiraIssueStatus(service_id, internalJiraWebhook.getIssueId(webhook_data))
-            .then((known_issue_status) => {
-
-                //logger.jira_webhook(known_issue_status);
+            .then(known_issue_status => {
 
                 let assignee    = internalJiraWebhook.getAssigneeUsername(webhook_data);
                 let is_resolved = internalJiraWebhook.isResolved(webhook_data);
@@ -498,7 +496,7 @@ const internalJiraWebhook = {
                     return already_notified_user_ids;
                 });
         } else {
-            logger.jira_webhook('    ❯ Known Jira Issue doesn\'t have a previous assignee');
+            logger.info('    ❯ Known Jira Issue doesn\'t have a previous assignee');
             return Promise.resolve(already_notified_user_ids);
         }
     },
@@ -645,7 +643,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String}
      */
-    getIssueUrl: (webhook_data) => {
+    getIssueUrl: webhook_data => {
         if (typeof webhook_data.issue !== 'undefined' &&
             typeof webhook_data.issue.self !== 'undefined') {
             return webhook_data.issue.self.replace(/(.*)\/rest\/api.*/gim, '$1/browse/') + webhook_data.issue.key;
@@ -661,7 +659,7 @@ const internalJiraWebhook = {
      * @param   {String}  webhook_data.issue.id
      * @returns {Integer}
      */
-    getIssueId: (webhook_data) => {
+    getIssueId: webhook_data => {
         if (typeof webhook_data.issue !== 'undefined' &&
             typeof webhook_data.issue.id !== 'undefined') {
             return parseInt(webhook_data.issue.id, 10);
@@ -676,7 +674,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String}
      */
-    getIssueKey: (webhook_data) => {
+    getIssueKey: webhook_data => {
         if (typeof webhook_data.issue !== 'undefined' &&
             typeof webhook_data.issue.key !== 'undefined') {
             return webhook_data.issue.key;
@@ -738,7 +736,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String|null}
      */
-    getAssigneeName: (webhook_data) => {
+    getAssigneeName: webhook_data => {
         let assignee = internalJiraWebhook.getIssueField(webhook_data, 'assignee');
         if (assignee !== null && typeof assignee.displayName !== 'undefined') {
             return assignee.displayName;
@@ -753,7 +751,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String|null}
      */
-    getAssigneeUsername: (webhook_data) => {
+    getAssigneeUsername: webhook_data => {
         let assignee = internalJiraWebhook.getIssueField(webhook_data, 'assignee');
         if (assignee !== null && typeof assignee.name !== 'undefined') {
             return assignee.name;
@@ -768,7 +766,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String|null}
      */
-    getReporterName: (webhook_data) => {
+    getReporterName: webhook_data => {
         let reporter = internalJiraWebhook.getIssueField(webhook_data, 'reporter');
         if (reporter !== null && typeof reporter.displayName !== 'undefined') {
             return reporter.displayName;
@@ -783,7 +781,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String|null}
      */
-    getReporterUsername: (webhook_data) => {
+    getReporterUsername: webhook_data => {
         let reporter = internalJiraWebhook.getIssueField(webhook_data, 'reporter');
         if (reporter !== null && typeof reporter.name !== 'undefined') {
             return reporter.name;
@@ -795,7 +793,7 @@ const internalJiraWebhook = {
     /**
      * @param   {String}  event_type
      * @param   {Object}  data
-     * @param   {Integer  data.service_id
+     * @param   {Integer} data.service_id
      * @param   {Object}  webhook_data
      * @param   {String}  webhook_data.webhookEvent
      * @param   {Object}  webhook_data.issue
@@ -807,13 +805,13 @@ const internalJiraWebhook = {
     processRules: (event_type, data, webhook_data, already_notified_user_ids, known_issue_status) => {
         already_notified_user_ids = already_notified_user_ids || [];
 
-        logger.jira_webhook('  ❯ Processing Rules for:           ', event_type);
+        logger.info('  ❯ Processing Rules for:           ', event_type);
 
         let incoming_destination_username = internalJiraWebhook.getIncomingServiceUsernameBasedOnEvent(event_type, webhook_data, known_issue_status);
-        logger.jira_webhook('    ❯ destination_incoming_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);
+        logger.info('    ❯ destination_incoming_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);
 
         let incoming_trigger_username = internalJiraWebhook.getEventUser(webhook_data);
-        logger.jira_webhook('    ❯ incoming_trigger_username:    ', incoming_trigger_username);
+        logger.info('    ❯ incoming_trigger_username:    ', incoming_trigger_username);
 
         if (incoming_destination_username && incoming_trigger_username) {
             if (typeof incoming_destination_username === 'string' && incoming_destination_username === incoming_trigger_username) {
@@ -856,7 +854,7 @@ const internalJiraWebhook = {
             query.whereIn('in_sd.service_username', incoming_destination_username);
         } else if (anon_event_types.indexOf(event_type) === -1) {
             //
-            logger.jira_webhook('    ❯ No valid recipients for this event type');
+            logger.info('    ❯ No valid recipients for this event type');
             return Promise.resolve(already_notified_user_ids);
         }
 
@@ -871,14 +869,14 @@ const internalJiraWebhook = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            logger.jira_webhook('    ❯ Processing Rule #' + rule.id);
+                            logger.info('    ❯ Processing Rule #' + rule.id);
 
                             if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
-                                logger.jira_webhook('      ❯ We have already processed a notification for this user_id:', rule.user_id);
+                                logger.info('      ❯ We have already processed a notification for this user_id:', rule.user_id);
                                 next(0);
                             } else if (!internalJiraWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {
                                 // extra conditions don't match the event
-                                logger.jira_webhook('      ❯ Extra conditions do not match');
+                                logger.info('      ❯ Extra conditions do not match');
                                 next(0);
                             } else {
 
@@ -905,7 +903,7 @@ const internalJiraWebhook = {
                                             .insert(notification_data);
                                     })
                                     .then(() => {
-                                        logger.jira_webhook('      ❯ Notification queue item added');
+                                        logger.info('      ❯ Notification queue item added');
                                         this_already_notified_user_ids.push(rule.user_id);
 
                                     })
@@ -925,7 +923,7 @@ const internalJiraWebhook = {
                             reject(err);
                         })
                         .end(() => {
-                            logger.jira_webhook('    ❯ Done processing Rules for:    ', event_type);
+                            logger.info('    ❯ Done processing Rules for:    ', event_type);
                             resolve(this_already_notified_user_ids);
                         });
                 });
@@ -1025,7 +1023,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.user
      * @returns {Object}
      */
-    getCommonTemplateData: (webhook_data) => {
+    getCommonTemplateData: webhook_data => {
         return {
             user:        internalJiraWebhook.getEventUser(webhook_data, 'displayName'),
             issueurl:    internalJiraWebhook.getIssueUrl(webhook_data),
@@ -1047,7 +1045,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.changelog
      * @returns {String}
      */
-    getChangelogData: (webhook_data) => {
+    getChangelogData: webhook_data => {
         let fields = [];
 
         if (typeof webhook_data.changelog !== 'undefined' && typeof webhook_data.changelog.items !== 'undefined' && webhook_data.changelog.items.length) {
@@ -1066,7 +1064,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {Array}
      */
-    getCommentAuthors: (webhook_data) => {
+    getCommentAuthors: webhook_data => {
         let authors = [];
         if (typeof webhook_data.issue.fields !== 'undefined' && typeof webhook_data.issue.fields.comment !== 'undefined' && webhook_data.issue.fields.comment.comments.length) {
             _.map(webhook_data.issue.fields.comment.comments, function (item) {
@@ -1083,7 +1081,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data
      * @returns {Boolean}
      */
-    isCommentUpdate: (webhook_data) => {
+    isCommentUpdate: webhook_data => {
         return typeof webhook_data.comment !== 'undefined' && typeof webhook_data.comment.body !== 'undefined';
     },
 
@@ -1093,7 +1091,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.comment.updateAuthor
      * @returns {Object}
      */
-    getCommentData: (webhook_data) => {
+    getCommentData: webhook_data => {
         if (internalJiraWebhook.isCommentUpdate(webhook_data)) {
             let author = typeof webhook_data.comment.updateAuthor !== 'undefined' && typeof webhook_data.comment.updateAuthor.name !== 'undefined' ? webhook_data.comment.updateAuthor : webhook_data.comment.author;
 
@@ -1113,7 +1111,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {Boolean}
      */
-    isResolved: (webhook_data) => {
+    isResolved: webhook_data => {
         let resolution = internalJiraWebhook.getIssueField(webhook_data, 'resolution');
         return !!(resolution && typeof resolution.id !== 'undefined' && resolution.id !== null && resolution.id);
     },
@@ -1124,7 +1122,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {String}
      */
-    getResolution: (webhook_data) => {
+    getResolution: webhook_data => {
         let resolution = internalJiraWebhook.getIssueField(webhook_data, 'resolution');
         if (resolution && typeof resolution.id !== 'undefined' && resolution.name !== null && resolution.name) {
             return resolution.name;
@@ -1141,7 +1139,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {Boolean}
      */
-    isResolveEvent: (webhook_data) => {
+    isResolveEvent: webhook_data => {
         let response = false;
 
         if (typeof webhook_data.changelog !== 'undefined' && webhook_data.changelog && typeof webhook_data.changelog.items !== 'undefined' && webhook_data.changelog.items.length) {
@@ -1163,7 +1161,7 @@ const internalJiraWebhook = {
      * @param   {Object}  webhook_data.issue
      * @returns {Boolean}
      */
-    isReopenEvent: (webhook_data) => {
+    isReopenEvent: webhook_data => {
         let response = false;
 
         if (typeof webhook_data.changelog !== 'undefined' && webhook_data.changelog && typeof webhook_data.changelog.items !== 'undefined' && webhook_data.changelog.items.length) {

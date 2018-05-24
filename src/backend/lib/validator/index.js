@@ -1,6 +1,5 @@
 'use strict';
 
-const debug       = require('debug')('juxtapose:validator');
 const _           = require('lodash');
 const error       = require('../error');
 const definitions = require('../../schema/definitions.json');
@@ -35,7 +34,8 @@ function validator(schema, payload) {
                 if (valid && !validate.errors) {
                     resolve(_.cloneDeep(payload));
                 } else {
-                    debug('Validation failed:', schema, payload);
+                    //console.log('Validation failed:', schema, payload);
+
                     let message = ajv.errorsText(validate.errors);
                     reject(new error.InternalValidationError(message));
                 }

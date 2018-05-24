@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name = 'zendesk';
-const logger       = require('../logger');
+const logger       = require('../logger').migrate;
 
 /**
  * Migrate
@@ -13,7 +13,7 @@ const logger       = require('../logger');
  * @returns {Promise}
  */
 exports.up = function (knex/*, Promise*/) {
-    logger.migrate('[' + migrate_name + '] Migrating Up...');
+    logger.info('[' + migrate_name + '] Migrating Up...');
 
     return knex.schema.createTable('zendesk_incoming_log', table => {
         table.increments().primary();
@@ -23,7 +23,7 @@ exports.up = function (knex/*, Promise*/) {
         table.json('data').notNull();
     })
         .then(() => {
-            logger.migrate('[' + migrate_name + '] zendesk_incoming_log Table created');
+            logger.info('[' + migrate_name + '] zendesk_incoming_log Table created');
 
             return knex.schema.createTable('zendesk_ticket_status', table => {
                 table.increments().primary();
@@ -36,7 +36,7 @@ exports.up = function (knex/*, Promise*/) {
             });
         })
         .then(() => {
-            logger.migrate('[' + migrate_name + '] zendesk_ticket_status Table created');
+            logger.info('[' + migrate_name + '] zendesk_ticket_status Table created');
         });
 };
 
@@ -48,6 +48,6 @@ exports.up = function (knex/*, Promise*/) {
  * @returns {Promise}
  */
 exports.down = function (knex, Promise) {
-    logger.migrate('[' + migrate_name + '] You can\'t migrate down this one.');
+    logger.warn('[' + migrate_name + '] You can\'t migrate down this one.');
     return Promise.resolve(true);
 };

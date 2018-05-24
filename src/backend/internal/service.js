@@ -60,8 +60,6 @@ const internalService = {
      * @return {Promise}
      */
     update: (access, data) => {
-        //debug('Updating service record', data);
-
         return access.can('services', data.id)
             .then(() => {
                 if (data.type.match(/(.|\n)*-webhook$/im)) {
@@ -99,8 +97,6 @@ const internalService = {
      * @return {Promise}
      */
     get: (access, data) => {
-        //debug('Getting service record', data);
-
         return access.can('services', data.id)
             .then(() => {
                 let query = serviceModel
@@ -114,7 +110,6 @@ const internalService = {
                 }
 
                 if (typeof data.expand !== 'undefined' && data.expand !== null) {
-                    //debug('Service Eager Loading', '[' + data.expand.join(', ') + ']');
                     query.eager('[' + data.expand.join(', ') + ']');
                 }
 
@@ -136,13 +131,11 @@ const internalService = {
      * @returns {Promise}
      */
     delete: (access, data) => {
-        //debug('Deleting service record', data);
-
         return access.can('services', data.id)
             .then(() => {
                 return internalService.get(access, {id: data.id});
             })
-            .then((service) => {
+            .then(service => {
                 if (!service) {
                     throw new error.ItemNotFoundError(data.id);
                 }
@@ -270,7 +263,6 @@ const internalService = {
      * @return {Promise}
      */
     test: (access, data) => {
-        //debug('Testing service', data);
         const internalServiceWorker = require('./service_worker');
 
         return access.can('services', data.id)

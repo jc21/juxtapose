@@ -3,7 +3,7 @@
 const fs        = require('fs');
 const NodeRSA   = require('node-rsa');
 const config    = require('config');
-const logger    = require('./logger');
+const logger    = require('./logger').global;
 const userModel = require('./models/user');
 const authModel = require('./models/auth');
 

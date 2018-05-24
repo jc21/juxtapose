@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name = 'identifier_for_migrate';
-const logger       = require('../src/backend/logger');
+const logger       = require('../src/backend/logger').migrate;
 
 /**
  * Migrate
@@ -14,7 +14,7 @@ const logger       = require('../src/backend/logger');
  */
 exports.up = function (knex, Promise) {
 
-    logger.migrate('[' + migrate_name + '] Migrating Up...');
+    logger.info('[' + migrate_name + '] Migrating Up...');
 
     // Create Table example:
 
@@ -26,10 +26,10 @@ exports.up = function (knex, Promise) {
          table.integer('modified_on').notNull();
      })
      .then(function () {
-        logger.migrate('[' + migrate_name + '] Notification Table created');
+        logger.info('[' + migrate_name + '] Notification Table created');
      });*/
 
-    logger.migrate('[' + migrate_name + '] Migrating Up Complete');
+    logger.info('[' + migrate_name + '] Migrating Up Complete');
 
     return Promise.resolve(true);
 };
@@ -42,16 +42,16 @@ exports.up = function (knex, Promise) {
  * @returns {Promise}
  */
 exports.down = function (knex, Promise) {
-    logger.migrate('[' + migrate_name + '] Migrating Down...');
+    logger.info('[' + migrate_name + '] Migrating Down...');
 
     // Drop table example:
 
     /*return knex.schema.dropTable('notification')
      .then(() => {
-        logger.migrate('[' + migrate_name + '] Notification Table dropped');
+        logger.info('[' + migrate_name + '] Notification Table dropped');
      });*/
 
-    logger.migrate('[' + migrate_name + '] Migrating Down Complete');
+    logger.info('[' + migrate_name + '] Migrating Down Complete');
 
     return Promise.resolve(true);
 };

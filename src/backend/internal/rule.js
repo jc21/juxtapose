@@ -54,8 +54,6 @@ const internalRule = {
      * @return {Promise}
      */
     update: (access, data) => {
-        //debug('Updating rule record', data);
-
         return access.can('rules:update', data.id)
             .then(() => {
                 return ruleModel
@@ -75,8 +73,6 @@ const internalRule = {
      * @returns {Promise}
      */
     delete: (access, data) => {
-        //debug('Deleting Rule record', data);
-
         return access.can('rules:delete', data.id)
             .then(() => {
                 return internalRule.get(access, {id: data.id});
@@ -121,13 +117,12 @@ const internalRule = {
                 }
 
                 if (typeof data.expand !== 'undefined' && data.expand !== null) {
-                    //debug('Rule Eager Loading', '[' + data.expand.join(', ') + ']');
                     query.eager('[' + data.expand.join(', ') + ']');
                 }
 
                 return query;
             })
-            .then((row) => {
+            .then(row => {
                 if (row) {
                     return _.omit(row, omissions());
                 } else {
@@ -266,7 +261,7 @@ const internalRule = {
                 return new Promise((resolve, reject) => {
                     batchflow(rules).sequential()
                         .each((i, rule, next) => {
-                            let new_rule = _.omit(rule, ['fired_count', 'user_id', 'id']);
+                            let new_rule     = _.omit(rule, ['fired_count', 'user_id', 'id']);
                             new_rule.user_id = data.to;
 
                             ruleModel
