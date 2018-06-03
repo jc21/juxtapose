@@ -2,10 +2,20 @@
 
 import Mn from 'backbone.marionette';
 
-const template = require('./main.ejs');
+const templates = {
+    'zendesk-webhook': require('./zendesk-webhook.ejs'),
+    'jenkins-webhook': require('./jenkins-webhook.ejs'),
+    'default':         require('./main.ejs')
+};
 
 module.exports = Mn.View.extend({
-    template: template,
+    template: function (data) {
+        if (typeof templates[data.type] !== 'undefined') {
+            return templates[data.type](data);
+        }
+
+        return templates.default(data);
+    },
 
     templateContext: function () {
         let view = this;
@@ -21,6 +31,6 @@ module.exports = Mn.View.extend({
 
                 return base_url + '?t=' + view.model.get('data').token;
             }
-        }
+        };
     }
 });

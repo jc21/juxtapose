@@ -209,6 +209,56 @@ const model = Backbone.Model.extend({
                     }
                 }
             });
+        } else if (this.get('in_service_type') === 'jenkins-webhook') {
+            this.set({
+                content:         JSON.stringify({
+                    icon_url:    '{{ icon_url }}',
+                    text:        'A build has succeeded',
+                    attachments: [
+                        {
+                            color:  '{{ panel_color }}',
+                            text:   '<{{ project.url }}/{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>',
+                            fields: [
+                                {
+                                    title: 'Cause',
+                                    value: '{{ build.cause | jsonescape }}',
+                                    short: true
+                                },
+                                {
+                                    title: 'Duration',
+                                    value: '{{ build.duration_string }}',
+                                    short: true
+                                }
+                            ]
+                        }
+                    ]
+                }, null, 2),
+                default_options: {
+                    icon_url:    'https://public.jc21.com/juxtapose/icons/orange.png',
+                    panel_color: '#18ce00'
+                },
+                example_data:    {
+                    project: {
+                        url:          'https://ci.example.com/job/Docker/job/docker-node/job/master/',
+                        name:         'master',
+                        full_name:    'Docker/docker-node/master',
+                        display_name: 'master'
+                    },
+                    build:   {
+                        number:          5,
+                        display_name:    '#5',
+                        url:             'job/Docker/job/docker-node/job/master/5/',
+                        duration:        0,
+                        duration_string: '30 min',
+                        start_time_ms:   1527776303554,
+                        time_ms:         1527776303542,
+                        has_artifacts:   false,
+                        cause:           'Push event to branch master',
+                        log:             '[...truncated 56.79 KB...]\n2c78bad31e9c: Pushed\n145b89be85f1: Pushed\n18cabbd35713: Pushed\n3c93376a81c2: Pushed'
+                    }
+                }
+
+            });
         }
     }
 });

@@ -21,6 +21,6 @@ else
 
     cd "$CODEBASE"
 
-    docker-compose run --rm --no-deps app node node_modules/knex/bin/cli.js migrate:make "$1"
+    sudo /usr/local/bin/docker-compose run --rm --no-deps app node node_modules/knex/bin/cli.js migrate:make "$1"
     exit $?
 fi

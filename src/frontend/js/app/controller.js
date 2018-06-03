@@ -133,6 +133,19 @@ module.exports = {
     },
 
     /**
+     * Jenkins Webhook Config
+     *
+     * @param model
+     */
+    showJenkinsWebhookConfig: function (model) {
+        if (Cache.User.isAdmin()) {
+            require(['./main', './services/jenkins-webhook/main'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model}));
+            });
+        }
+    },
+
+    /**
      * Service Test Dialog
      *
      * @param model

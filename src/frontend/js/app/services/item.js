@@ -43,6 +43,10 @@ module.exports = Mn.View.extend({
                 case 'zendesk-webhook':
                     Controller.showZendeskWebhookConfig(this.model);
                     break;
+
+                case 'jenkins-webhook':
+                    Controller.showJenkinsWebhookConfig(this.model);
+                    break;
             }
         },
 

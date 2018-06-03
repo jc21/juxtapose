@@ -1,6 +1,6 @@
 {
   "name": "juxtapose",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Self hosted glue for internal tools",
   "main": "src/backend/index.js",
   "directories": {

@@ -62,7 +62,7 @@ module.exports = Mn.View.extend({
             },
 
             isUserSetup: function () {
-                if (view.model.get('in_service').type !== 'dockerhub-webhook') {
+                if (view.model.get('in_service').type !== 'dockerhub-webhook' && view.model.get('in_service').type !== 'jenkins-webhook') {
                     // Checks if the user has the services listed in this rule set up correctly
                     let services = Cache.User.get('services');
 

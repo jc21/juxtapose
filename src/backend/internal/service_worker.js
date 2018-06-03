@@ -280,7 +280,7 @@ const internalServiceWorker = {
                                         if (service_settings) {
                                             // Send
                                             logger.info('Sending notification #' + notification.id + ' to @' + service_settings.service_username + ' at ' + service_settings.type + ' service #' + notification.service_id);
-
+logger.info(notification.content);
                                             internalServiceWorker.sendMessage(notification.service_id, service_settings.service_username, notification.content)
                                                 .then(() => {
                                                     // update row with error

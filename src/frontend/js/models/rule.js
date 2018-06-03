@@ -35,6 +35,12 @@ const trigger_groups = {
         global:       {
             name: 'Global'
         }
+    },
+
+    'jenkins-webhook': {
+        all: {
+            name: 'All Events'
+        }
     }
 };
 
@@ -176,6 +182,37 @@ const trigger_types = {
         ticket_rated:         {
             name:  'Any Ticket is rated',
             group: 'global'
+        }
+    },
+
+    'jenkins-webhook': {
+        build_success:    {
+            name:  'Build Success',
+            group: 'all'
+        },
+        build_failure:    {
+            name:  'Build Failure',
+            group: 'all'
+        },
+        build_aborted:    {
+            name:  'Build Aborted',
+            group: 'all'
+        },
+        build_unstable:   {
+            name:  'Build Unstable',
+            group: 'all'
+        },
+        build_regression: {
+            name:  'Build Regression',
+            group: 'all'
+        },
+        build_changed: {
+            name:  'Build Result Changed',
+            group: 'all'
+        },
+        build_fixed: {
+            name:  'Build Fixed',
+            group: 'all'
         }
     }
 };

@@ -12,7 +12,7 @@ var services = getServices();
                 <% if (services.length) { %>
                     <dl>
                         <% _.each(services, function (service) {
-                            if (service.type !== 'dockerhub-webhook') {
+                            if (service.type !== 'dockerhub-webhook' && service.type !== 'jenkins-webhook') {
                                 %>
                                 <h4>
                                     <img src="images/services/<%- service.type %>.png" width="20" alt="<%- service.type %>">

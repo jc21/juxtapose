@@ -1,7 +1,7 @@
 'use strict';
 
 const migrate_name = 'identifier_for_migrate';
-const logger       = require('../src/backend/logger').migrate;
+const logger       = require('../logger').migrate;
 
 /**
  * Migrate

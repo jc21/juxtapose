@@ -9,5 +9,6 @@ module.exports = {
     bitbucket: new Signale({scope: 'Bitbucket'}),
     jira:      new Signale({scope: 'Jira     '}),
     dockerhub: new Signale({scope: 'DockerHub'}),
-    zendesk:   new Signale({scope: 'Zendesk  '})
+    zendesk:   new Signale({scope: 'Zendesk  '}),
+    jenkins:   new Signale({scope: 'Jenkins  '})
 };

@@ -215,13 +215,37 @@
         }
       }
     },
+    "jenkins_webhook_data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "version",
+        "event",
+        "project",
+        "build"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "event": {
+          "type": "string"
+        },
+        "project": {
+          "type": "object"
+        },
+        "build": {
+          "type": "object"
+        }
+      }
+    },
     "service_type": {
       "description": "Service Type",
       "example": "slack",
       "type": "string",
       "minLength": 2,
       "maxLength": 30,
-      "pattern": "^(slack|jira-webhook|bitbucket-webhook|dockerhub-webhook|zendesk-webhook|jabber)$"
+      "pattern": "^(slack|jira-webhook|bitbucket-webhook|dockerhub-webhook|zendesk-webhook|jenkins-webhook|jabber)$"
     }
   }
 }
