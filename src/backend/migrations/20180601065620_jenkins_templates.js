@@ -6,7 +6,7 @@ const batchflow        = require('batchflow');
 const internalTemplate = require('../internal/template');
 
 const common_values = {
-    icon_url_orange:      'https://public.jc21.com/juxtapose/icons/orange.png',
+    icon_url_jenkins:      'https://public.jc21.com/juxtapose/icons/jenkins.png',
     service_type_slack:   'slack',
     service_type_jenkins: 'jenkins-webhook'
 };
@@ -55,7 +55,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#18ce00'
         },
         example_data:    example_data,
@@ -93,7 +93,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#18ce00'
         },
         example_data:    example_data,
@@ -118,7 +118,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#b70000'
         },
         example_data:    example_data,
@@ -156,7 +156,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#b70000'
         },
         example_data:    example_data,
@@ -198,7 +198,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#b70000'
         },
         example_data:    example_data,
@@ -223,7 +223,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#a0a0a0'
         },
         example_data:    example_data,
@@ -261,7 +261,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#a0a0a0'
         },
         example_data:    example_data,
@@ -286,7 +286,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#edae02'
         },
         example_data:    example_data,
@@ -324,7 +324,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#edae02'
         },
         example_data:    example_data,
@@ -367,7 +367,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#edae02'
         },
         example_data:    example_data,
@@ -392,7 +392,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#42aabf'
         },
         example_data:    example_data,
@@ -430,7 +430,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#42aabf'
         },
         example_data:    example_data,
@@ -472,7 +472,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#42aabf'
         },
         example_data:    example_data,
@@ -497,7 +497,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#0048ff'
         },
         example_data:    example_data,
@@ -535,7 +535,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#0048ff'
         },
         example_data:    example_data,
@@ -560,7 +560,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#d0ff00'
         },
         example_data:    example_data,
@@ -598,7 +598,7 @@ const templates = [
                          '  ]\n' +
                          '}',
         default_options: {
-            icon_url:    common_values.icon_url_orange,
+            icon_url:    common_values.icon_url_jenkins,
             panel_color: '#d0ff00'
         },
         example_data:    example_data,
