@@ -72,11 +72,10 @@ const templates = [
         name:            'Build Success',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has succeeded",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> SUCCEEDED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -135,11 +134,10 @@ const templates = [
         name:            'Build Failure',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has failed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has FAILED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -173,11 +171,10 @@ const templates = [
         name:            'Build Failure Full',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has failed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has FAILED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -240,11 +237,10 @@ const templates = [
         name:            'Build Aborted',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has been aborted",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has been ABORTED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -303,11 +299,10 @@ const templates = [
         name:            'Build Unstable',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has become unstable",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has become UNSTABLE",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -342,11 +337,10 @@ const templates = [
         name:            'Build Unstable Full',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has become unstable",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has become UNSTABLE",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -409,11 +403,10 @@ const templates = [
         name:            'Build Regression',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has regressed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has REGRESSED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -447,11 +440,10 @@ const templates = [
         name:            'Build Regression Full',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has regressed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has REGRESSED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -514,11 +506,10 @@ const templates = [
         name:            'Build Result Changed',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build result has changed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has CHANGED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
@@ -577,11 +568,10 @@ const templates = [
         name:            'Build Fixed',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "A build has been fixed",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has been FIXED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
-                         '      "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>",\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
