@@ -225,6 +225,7 @@ const internalJenkinsWebhook = {
         // change the log to a full string
         webhook_data.build.log             = webhook_data.build.log.join('\n');
         webhook_data.build.duration_string = webhook_data.build.duration_string.replace(' and counting', '');
+        webhook_data.timestamp             = Math.abs(webhook_data.build.time_ms / 1000);
         return webhook_data;
     },
 

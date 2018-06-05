@@ -29,7 +29,8 @@ const example_data = {
         has_artifacts:   false,
         cause:           'Push event to branch master',
         log:             '[...truncated 56.79 KB...]\n2c78bad31e9c: Pushed\n145b89be85f1: Pushed\n18cabbd35713: Pushed\n3c93376a81c2: Pushed'
-    }
+    },
+    timestamp: 1526602255
 };
 
 /**
