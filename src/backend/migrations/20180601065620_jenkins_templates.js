@@ -102,7 +102,47 @@ const templates = [
     },
 
     /**
-     * 3: Build Failure Minimal
+     * 3: Build Success Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Success Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "SUCCESS: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} has Succeeded",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#18ce00'
+        },
+        example_data:    example_data,
+        event_types:     ['build_success'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 4: Build Failure Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -127,7 +167,7 @@ const templates = [
     },
 
     /**
-     * 4: Build Failure
+     * 5: Build Failure
      */
     {
         service_type:    common_values.service_type_slack,
@@ -164,7 +204,51 @@ const templates = [
     },
 
     /**
-     * 5: Build Failure Full
+     * 6: Build Failure Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Failure Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "FAILED: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} has Failed",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Log",\n' +
+                         '          "value": "```{{ build.log | jsonescape }}```\\n<{{ project.url }}{{ build.number }}/console|View Log>"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#b70000'
+        },
+        example_data:    example_data,
+        event_types:     ['build_failure'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 7: Build Failure Full
      */
     {
         service_type:    common_values.service_type_slack,
@@ -205,7 +289,7 @@ const templates = [
     },
 
     /**
-     * 6: Build Aborted Minimal
+     * 8: Build Aborted Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -230,7 +314,7 @@ const templates = [
     },
 
     /**
-     * 7: Build Aborted
+     * 9: Build Aborted
      */
     {
         service_type:    common_values.service_type_slack,
@@ -238,7 +322,7 @@ const templates = [
         name:            'Build Aborted',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has been ABORTED",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> was ABORTED",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
@@ -267,7 +351,47 @@ const templates = [
     },
 
     /**
-     * 8: Build Unstable Minimal
+     * 10: Build Aborted Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Aborted Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "ABORTED: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} was Aborted",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#a0a0a0'
+        },
+        example_data:    example_data,
+        event_types:     ['build_aborted'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 11: Build Unstable Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -292,7 +416,7 @@ const templates = [
     },
 
     /**
-     * 9: Build Unstable
+     * 12: Build Unstable
      */
     {
         service_type:    common_values.service_type_slack,
@@ -300,7 +424,7 @@ const templates = [
         name:            'Build Unstable',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has become UNSTABLE",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> is UNSTABLE",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
@@ -330,7 +454,7 @@ const templates = [
 
 
     /**
-     * 9: Build Unstable Full
+     * 13: Build Unstable Full
      */
     {
         service_type:    common_values.service_type_slack,
@@ -338,7 +462,7 @@ const templates = [
         name:            'Build Unstable Full',
         content:         '{\n' +
                          '  "icon_url": "{{ icon_url }}",\n' +
-                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> has become UNSTABLE",\n' +
+                         '  "text": "<{{ project.url }}{{ build.number }}/|{{ project.full_name }} #{{ build.number }}> is UNSTABLE",\n' +
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
@@ -371,7 +495,51 @@ const templates = [
     },
 
     /**
-     * 10: Build Regression Minimal
+     * 14: Build Unstable Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Unstable Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "UNSTABLE: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} is Unstable",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Log",\n' +
+                         '          "value": "```{{ build.log | jsonescape }}```\\n<{{ project.url }}{{ build.number }}/console|View Log>"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#edae02'
+        },
+        example_data:    example_data,
+        event_types:     ['build_unstable'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 15: Build Regression Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -396,7 +564,7 @@ const templates = [
     },
 
     /**
-     * 11: Build Regression
+     * 16: Build Regression
      */
     {
         service_type:    common_values.service_type_slack,
@@ -433,7 +601,7 @@ const templates = [
     },
 
     /**
-     * 12: Build Regression Full
+     * 17: Build Regression Full
      */
     {
         service_type:    common_values.service_type_slack,
@@ -474,7 +642,51 @@ const templates = [
     },
 
     /**
-     * 12: Build Result Changed Minimal
+     * 18: Build Regression Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Regression Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "REGRESSED: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} has Regressed",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Log",\n' +
+                         '          "value": "```{{ build.log | jsonescape }}```\\n<{{ project.url }}{{ build.number }}/console|View Log>"\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#42aabf'
+        },
+        example_data:    example_data,
+        event_types:     ['build_regression'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 19: Build Result Changed Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -499,7 +711,7 @@ const templates = [
     },
 
     /**
-     * 13: Build Result Changed
+     * 20: Build Result Changed
      */
     {
         service_type:    common_values.service_type_slack,
@@ -536,7 +748,47 @@ const templates = [
     },
 
     /**
-     * 14: Build Fixed Minimal
+     * 21: Build Result Changed Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Result Changed Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "CHANGED: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} has Changed",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#0048ff'
+        },
+        example_data:    example_data,
+        event_types:     ['build_changed'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 22: Build Fixed Minimal
      */
     {
         service_type:    common_values.service_type_slack,
@@ -561,7 +813,7 @@ const templates = [
     },
 
     /**
-     * 15: Build Fixed
+     * 23: Build Fixed
      */
     {
         service_type:    common_values.service_type_slack,
@@ -573,6 +825,46 @@ const templates = [
                          '  "attachments": [\n' +
                          '    {\n' +
                          '      "color": "{{ panel_color }}",\n' +
+                         '      "fields": [\n' +
+                         '        {\n' +
+                         '          "title": "Cause",\n' +
+                         '          "value": "{{ build.cause | jsonescape }}",\n' +
+                         '          "short": true\n' +
+                         '        },\n' +
+                         '        {\n' +
+                         '          "title": "Duration",\n' +
+                         '          "value": "{{ build.duration_string }}",\n' +
+                         '          "short": true\n' +
+                         '        }\n' +
+                         '      ]\n' +
+                         '    }\n' +
+                         '  ]\n' +
+                         '}',
+        default_options: {
+            icon_url:    common_values.icon_url_jenkins,
+            panel_color: '#d0ff00'
+        },
+        example_data:    example_data,
+        event_types:     ['build_fixed'],
+        render_engine:   'liquid'
+    },
+
+    /**
+     * 24: Build Fixed Detailed
+     */
+    {
+        service_type:    common_values.service_type_slack,
+        in_service_type: common_values.service_type_jenkins,
+        name:            'Build Fixed Detailed',
+        content:         '{\n' +
+                         '  "icon_url": "{{ icon_url }}",\n' +
+                         '  "attachments": [\n' +
+                         '    {\n' +
+                         '      "fallback": "FIXED: {{ project.full_name }} #{{ build.number }}",\n' +
+                         '      "title": "{{ project.full_name }} #{{ build.number }} is Fixed",\n' +
+                         '      "title_link": "{{ project.url }}{{ build.number }}",\n' +
+                         '      "color": "{{ panel_color }}",\n' +
+                         '      "ts": {{ timestamp }},\n' +
                          '      "fields": [\n' +
                          '        {\n' +
                          '          "title": "Cause",\n' +
