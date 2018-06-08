@@ -24,30 +24,9 @@ pipeline {
         sh 'docker run --rm -v $(pwd):/srv/app jc21/node yarn --registry=$NPM_REGISTRY install --prod'
         sh 'docker run --rm -v $(pwd):/data $DOCKER_CI_TOOLS node-prune'
         sh 'docker build -t $TEMP_IMAGE_NAME .'
-
-        sh '''rm -rf zips
-mkdir -p zips
-docker run --rm -v $(pwd):/data/juxtapose -w /data $DOCKER_CI_TOOLS zip -qr "/data/juxtapose/zips/juxtapose_$TAG_VERSION.zip" juxtapose -x \\
-    \\*.gitkeep \\
-    juxtapose/zips\\* \\
-    juxtapose/bin\\* \\
-    juxtapose/config/my.cnf \\
-    juxtapose/data\\* \\
-    juxtapose/src/frontend\\* \\
-    juxtapose/test\\* \\
-    juxtapose/node_modules\\* \\
-    juxtapose/.git\\* \\
-    juxtapose/.env \\
-    juxtapose/.gitignore \\
-    juxtapose/docker-compose.yml \\
-    juxtapose/Dockerfile \\
-    juxtapose/gulpfile.js \\
-    juxtapose/knexfile.js \\
-    juxtapose/nodemon.json \\
-    juxtapose/webpack.config.js \\
-    juxtapose/webpack_stats.html
-
-exit $?'''
+        sh 'rm -rf zips'
+        sh 'mkdir -p zips'
+        sh 'docker run --rm -v $(pwd):/data/juxtapose -w /data $DOCKER_CI_TOOLS zip -qr "/data/juxtapose/zips/juxtapose_$TAG_VERSION.zip" juxtapose -x *.gitkeep juxtapose/zips/* juxtapose/bin/* juxtapose/config/my.cnf juxtapose/data/* juxtapose/src/frontend/* juxtapose/test/* juxtapose/node_modules/* juxtapose/.git/* juxtapose/.env juxtapose/.gitignore juxtapose/docker-compose.yml juxtapose/Dockerfile juxtapose/gulpfile.js juxtapose/knexfile.js juxtapose/nodemon.json juxtapose/webpack.config.js juxtapose/webpack_stats.html'
       }
     }
     stage('Publish') {
