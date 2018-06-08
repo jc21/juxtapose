@@ -5,6 +5,7 @@ import Mn from 'backbone.marionette';
 const template         = require('./item.ejs');
 const preview_template = require('../template/preview/main.ejs');
 const Controller       = require('../controller');
+const Helpers          = require('../../lib/helpers');
 
 module.exports = Mn.View.extend({
     template:  template,
@@ -26,13 +27,16 @@ module.exports = Mn.View.extend({
 
         return {
             getPreview: function () {
-                return preview_template(view.model.attributes);
+                let data = view.model.attributes;
+                data.shortTime = Helpers.shortTime;
+                return preview_template(data);
             }
         };
     },
 
     onRender: function () {
-        this.$el.addClass('service-' + this.model.get('in_service_type'));
+        // This is for the filters
+        this.$el.addClass('service-' + this.model.get('in_service_type') + ' service-' + this.model.get('service_type'));
     },
 
     initialize: function () {

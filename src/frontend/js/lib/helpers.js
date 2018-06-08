@@ -14,7 +14,7 @@ module.exports = {
     },
 
     /**
-     * @param   {String} date
+     * @param   {String|Integer} date
      * @returns {String}
      */
     shortTime: function (date) {

@@ -19,6 +19,33 @@
     }
   }
 
+  // new:
+  .message-source-duo {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 74px;
+    height: 36px;
+    border-radius: 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    text-align: center;
+    background: #fff;
+
+    img {
+      margin-top: -25px;
+      width: 23px;
+      height: 23px;
+    }
+
+    .divider {
+      display: inline-block;
+      width: 1px;
+      border-right: 1px solid #ccc;
+      height: 100%;
+    }
+  }
+
   .message-title {
     background-color: #DDDDDE;
     border-radius: 3px 3px 0 0;
@@ -28,7 +55,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: #8b8b8f;
-    padding-left: 25px;
+    padding-left: 62px;
 
     .pull-right {
       margin-right: 5px;
@@ -95,7 +122,7 @@
     padding-right: 10px;
 
     .message_icon {
-      margin-top: 12px;
+      margin-top: 14px;
       display: block;
 
       img {
@@ -170,7 +197,7 @@
       padding: 0 0 0 8px;
       margin: 0 0 3px 0;
 
-      .attachment_title {
+      .attachment-title {
         font-size: 15px;
         font-weight: bold;
       }
@@ -178,13 +205,20 @@
       .author {
         color: #717274;
       }
+
+      .attachment-ts {
+        color: #999;
+        font-size: 11px;
+        padding-top: 3px;
+      }
     }
   }
 
   pre {
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.3);
     border: 1px solid #ddd;
-    color: #999;
+    color: #777;
+    margin-bottom: 2px;
   }
 }
 
@@ -197,35 +231,8 @@
   word-wrap: break-word;
   padding: .5rem;
 
-  .message_gutter {
-    text-align: right;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 36px;
-    padding-right: 10px;
-
-    .message_icon {
-      margin-top: 12px;
-      display: block;
-
-      img {
-        border-radius: 36px;
-        background-size: 100%;
-        background-repeat: no-repeat;
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-        width: 36px;
-        height: 36px;
-        top: -5px;
-        left: 2px;
-      }
-    }
-  }
-
   .message_content {
-    margin: 1px 0 0 36px;
+    margin: 1px 0 0 8px;
 
     .message_content_header {
       display: flex;

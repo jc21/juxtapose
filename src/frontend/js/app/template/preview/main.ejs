@@ -15,6 +15,14 @@
         <%
     }
 
+    var codeFormatter = function (str) {
+        str = str.replace(/(?:^| |\n)```((.|\n)*)```/gim, "<pre>$1</pre>")
+        if (typeof replaceSlackLinks === 'function') {
+            str = replaceSlackLinks(str);
+        }
+        return str;
+    };
+
     if (!_error) {
         %>
         <div class="template-slack-preview">
@@ -43,13 +51,7 @@
                 <%
                 if (typeof _content.text !== 'undefined' ) { %>
                     <div class="text">
-                        <%
-                        _content.text = _content.text.replace(/(?:^| )```((.|\n)*)```/gim, "<pre>$1</pre>");
-                        if (typeof replaceSlackLinks === 'function') {
-                            _content.text = replaceSlackLinks(_content.text);
-                        }
-                        %>
-                        <%= _content.text %>
+                        <%= codeFormatter(_content.text) %>
                     </div>
                 <%
                 }
@@ -65,14 +67,18 @@
                             <% } %>
 
                             <% if (typeof _content.attachments[i].title !== 'undefined') { %>
-                                <div class="attachment_title">
-                                    <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].title) : _content.attachments[i].title %>
+                                <div class="attachment-title">
+                                    <% if (typeof _content.attachments[i].title_link !== 'undefined' && _content.attachments[i].title_link) { %>
+                                        <a href="<%- _content.attachments[i].title_link %>" target="_blank"><%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].title) : _content.attachments[i].title %></a>
+                                    <% } else { %>
+                                        <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].title) : _content.attachments[i].title %>
+                                    <% } %>
                                 </div>
                             <% } %>
 
                             <% if (typeof _content.attachments[i].text !== 'undefined') { %>
-                                <div class="attachment_text">
-                                    <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].text) : _content.attachments[i].text %>
+                                <div class="attachment-text">
+                                    <%= codeFormatter(_content.attachments[i].text) %>
                                 </div>
                             <% } %>
 
@@ -102,12 +108,12 @@
                                         %>
                                         <td<%- short ? ' width="50%"' : '' %>>
                                             <% if (typeof _content.attachments[i].fields[j].title !== 'undefined') { %>
-                                                <div class="attachment_title">
+                                                <div class="attachment-title">
                                                     <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].fields[j].title) : _content.attachments[i].fields[j].title %>
                                                 </div>
                                             <% } %>
                                             <% if (typeof _content.attachments[i].fields[j].value !== 'undefined') { %>
-                                                <%= typeof replaceSlackLinks === 'function' ? replaceSlackLinks(_content.attachments[i].fields[j].value) : _content.attachments[i].fields[j].value %>
+                                                <%= codeFormatter(_content.attachments[i].fields[j].value) %>
                                             <% } %>
                                         </td>
                                         <%
@@ -116,6 +122,14 @@
                                     </tr></table>
                                 <%
                             } %>
+
+                            <!-- Timestamp -->
+                            <% if (typeof _content.attachments[i].ts !== 'undefined' && _content.attachments[i].ts) {
+                                %>
+                                <div class="attachment-ts"><%- shortTime(_content.attachments[i].ts) %></div>
+                                <%
+                            }
+                            %>
                         </div>
                         <%
                     }
@@ -128,11 +142,6 @@
 } else if (service_type === 'jabber' ) {
     %>
     <div class="template-jabber-preview">
-        <div class="message_gutter">
-            <div class="message_icon">
-                <img src="https://public.jc21.com/juxtapose/icons/default.png">
-            </div>
-        </div>
         <div class="message_content">
             <div class="message_content_header">
                 <div class="message_content_header_left">

@@ -8,6 +8,7 @@ const Controller       = require('../controller');
 const Api              = require('../api');
 const Cache            = require('../cache');
 const preview_template = require('../template/preview/main.ejs');
+const Helpers          = require('../../lib/helpers');
 
 module.exports = Mn.View.extend({
     template:  template,
@@ -55,9 +56,10 @@ module.exports = Mn.View.extend({
             },
 
             getPreview: function () {
-                let template      = view.model.get('template');
-                template.preview  = view.model.get('preview');
-                template.bot_name = view.model.get('out_service').name;
+                let template       = view.model.get('template');
+                template.preview   = view.model.get('preview');
+                template.bot_name  = view.model.get('out_service').name;
+                template.shortTime = Helpers.shortTime;
                 return preview_template(template);
             },
 
