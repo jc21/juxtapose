@@ -4,9 +4,10 @@ import Mn from 'backbone.marionette';
 
 const template         = require('./step5-item.ejs');
 const preview_template = require('../../template/preview/main.ejs');
+const Helpers          = require('../../../lib/helpers');
 
 module.exports = Mn.View.extend({
-    template:  template,
+    template: template,
 
     triggers: {
         'click .panel': 'select:template'
@@ -17,7 +18,9 @@ module.exports = Mn.View.extend({
 
         return {
             getPreview: function () {
-                return preview_template(view.model.attributes);
+                let data       = view.model.attributes;
+                data.shortTime = Helpers.shortTime;
+                return preview_template(data);
             }
         };
     }

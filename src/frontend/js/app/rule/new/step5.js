@@ -3,7 +3,6 @@
 import Mn from 'backbone.marionette';
 
 const template      = require('./step5.ejs');
-const Controller    = require('../../controller');
 const ListView      = require('./step5-items');
 const TemplateModel = require('../../../models/template');
 
