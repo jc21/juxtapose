@@ -81,6 +81,19 @@ module.exports = {
     },
 
     /**
+     * Google Chat Service Config
+     *
+     * @param model
+     */
+    showGoogleChatConfig: function (model) {
+        if (Cache.User.isAdmin()) {
+            require(['./main', './services/gchat/main'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model}));
+            });
+        }
+    },
+
+    /**
      * Jira Webhook Config
      *
      * @param model

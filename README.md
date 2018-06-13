@@ -2,7 +2,7 @@
 
 # Juxtapose
 
-![Version](https://img.shields.io/badge/version-1.2.1-green.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.3.0-green.svg?style=for-the-badge)
 ![Stars](https://img.shields.io/docker/stars/jc21/juxtapose.svg?style=for-the-badge)
 ![Pulls](https://img.shields.io/docker/pulls/jc21/juxtapose.svg?style=for-the-badge)
 
@@ -28,7 +28,8 @@ swamped in noise, thus improving productivity.
 **Outgoing services**
 
 - Slack (via Slack Bot)
-- Jabber / XMPP / Google Hangouts
+- Jabber / XMPP
+- Google Chat
 
  
 ## Features

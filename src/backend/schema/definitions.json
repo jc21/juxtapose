@@ -245,7 +245,7 @@
       "type": "string",
       "minLength": 2,
       "maxLength": 30,
-      "pattern": "^(slack|jira-webhook|bitbucket-webhook|dockerhub-webhook|zendesk-webhook|jenkins-webhook|jabber)$"
+      "pattern": "^(slack|jira-webhook|bitbucket-webhook|dockerhub-webhook|zendesk-webhook|jenkins-webhook|jabber|gchat)$"
     }
   }
 }

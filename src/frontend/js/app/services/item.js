@@ -28,6 +28,10 @@ module.exports = Mn.View.extend({
                     Controller.showJabberConfig(this.model);
                     break;
 
+                case 'gchat':
+                    Controller.showGoogleChatConfig(this.model);
+                    break;
+
                 case 'jira-webhook':
                     Controller.showJiraWebhookConfig(this.model);
                     break;

@@ -7,6 +7,7 @@ const batchflow              = require('batchflow');
 const slackBots              = require('slackbots');
 const notificationQueueModel = require('../models/notification_queue');
 const xmpp                   = require('../lib/xmpp');
+const GoogleChatBot          = require('../lib/gchat');
 
 const internalServiceWorker = {
 
@@ -43,6 +44,11 @@ const internalServiceWorker = {
                     internalServiceWorker.services[idx].handler.disconnect();
                 }
 
+                // Remove any interval timer if one applies to this service's handler
+                if (typeof internalServiceWorker.services[idx].handler.interval !== 'undefined') {
+                    clearInterval(internalServiceWorker.services[idx].handler.interval);
+                }
+
                 internalServiceWorker.services[idx].handler = null;
             }
         });
@@ -77,6 +83,17 @@ const internalServiceWorker = {
 
                             } else if (service.type === 'jabber') {
                                 internalServiceWorker.initJabber(service)
+                                    .then(() => {
+                                        started++;
+                                        next();
+                                    })
+                                    .catch(err => {
+                                        logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+                                        next(err);
+                                    });
+
+                            } else if (service.type === 'gchat') {
+                                internalServiceWorker.initGchat(service)
                                     .then(() => {
                                         started++;
                                         next();
@@ -162,6 +179,7 @@ const internalServiceWorker = {
 
             // Set global
             let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+
             obj.online  = false;
             obj.handler = new xmpp({
                 jid:      service.data.jid,
@@ -196,7 +214,7 @@ const internalServiceWorker = {
 
             obj.handler.on('chat', (from, message) => {
                 logger.info('Service #' + service.id + ' (jabber) Chat:', message, from);
-                obj.handler.send(from, 'Sorry dude, I\'m not the talkative type.');
+                obj.handler.send(from, 'Hey, it\'s Juxtapose here. You said: ' + message);
             });
 
             obj.handler.on('error', err => {
@@ -217,6 +235,86 @@ const internalServiceWorker = {
 
             resolve();
         });
+    },
+
+    /**
+     * @param   {Object}  service
+     * @returns {Promise}
+     */
+    initGchat: service => {
+        return new Promise((resolve, reject) => {
+            logger.info('Starting Service #' + service.id + ' (gchat): ' + service.name);
+
+            // Set global
+            let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+            obj.online = false;
+
+            let credentials = JSON.parse(service.data.credentials_json);
+            obj.handler     = new GoogleChatBot(credentials);
+
+            resolve(obj.handler.authorize()
+                .then(() => {
+                    obj.online = true;
+
+                    logger.success('Service #' + service.id + ' (gchat) Authorized');
+                    internalServiceWorker.gchatIntervalFire(obj);
+
+                    obj.handler.interval = setInterval(function () {
+                        internalServiceWorker.gchatIntervalFire(obj);
+                    }, 180000); // 3 mins
+                })
+                .catch(err => {
+                    logger.error('Service #' + service.id + ' (gchat) Failed to authorize: ', err);
+                })
+            );
+        });
+    },
+
+    /**
+     * Hit when ghat authenticates and also at intervals
+     *
+     * @param {Object}  service
+     * @param {Object}  service.handler
+     */
+    gchatIntervalFire: service => {
+        //let gchat_logger = require('../logger').gchat;
+
+        // List spaces
+        //gchat_logger.info('❯ Listing spaces ...');
+
+        service.handler.listSpaces()
+            .then(spaces_result => {
+                service.spaces = spaces_result.data.spaces;
+
+                return new Promise((resolve, reject) => {
+                    // Now, for each SPACE, get members sequentially
+                    batchflow(service.spaces).sequential()
+                        .each((i, space, next) => {
+                            //gchat_logger.info('  ❯ Fetching members for space: ' + space.name + ' ...');
+
+                            service.handler.listMembers(space.name)
+                                .then(members_result => {
+                                    service.spaces[i].members = members_result.data.memberships;
+                                    //gchat_logger.success('    ❯ Found ' + members_result.data.memberships.length + ' members in ' + space.name);
+                                    next(true);
+                                })
+                                .catch(err => {
+                                    //gchat_logger.error('    ❯ Failed to list members: ', err);
+                                    next(err);
+                                });
+
+                        })
+                        .error(err => {
+                            reject(err);
+                        })
+                        .end((/*results*/) => {
+                            resolve();
+                        });
+                });
+            })
+            .catch(err => {
+                logger.error('Service #' + service.id + ' (gchat) Failed to list spaces: ', err);
+            });
     },
 
     /**
@@ -280,7 +378,7 @@ const internalServiceWorker = {
                                         if (service_settings) {
                                             // Send
                                             logger.info('Sending notification #' + notification.id + ' to @' + service_settings.service_username + ' at ' + service_settings.type + ' service #' + notification.service_id);
-logger.info(notification.content);
+
                                             internalServiceWorker.sendMessage(notification.service_id, service_settings.service_username, notification.content)
                                                 .then(() => {
                                                     // update row with error
@@ -349,6 +447,9 @@ logger.info(notification.content);
             let service = internalServiceWorker.getService(service_id);
             if (service) {
                 switch (service.type) {
+
+                    // ===========================
+                    // Slack
                     case 'slack':
                         let slack_options = {
                             icon_url: service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png'
@@ -368,9 +469,25 @@ logger.info(notification.content);
                             });
                         break;
 
+                    // ===========================
+                    // Jabber
                     case 'jabber':
                         service.handler.send(username, message);
                         resolve(true);
+                        break;
+
+                    // ===========================
+                    // Google Chat
+                    case 'gchat':
+                        // The space name is the "username" variable supplied to this function
+
+                        service.handler.createMessage(username, message)
+                            .then(sent_message => {
+                                resolve(sent_message || true);
+                            })
+                            .catch(err => {
+                                reject(err);
+                            });
                         break;
 
                     default:
@@ -392,6 +509,9 @@ logger.info(notification.content);
             let service = internalServiceWorker.getService(service_id);
             if (service) {
                 switch (service.type) {
+
+                    //===================
+                    // Slack
                     case 'slack':
                         service.handler.getUsers()
                             .fail(function (data) {
@@ -421,11 +541,46 @@ logger.info(notification.content);
                             });
                         break;
 
+                    //===================
+                    // Jabber
                     case 'jabber':
                         if (typeof service.roster !== 'undefined') {
                             resolve(_.sortBy(service.roster, ['name']));
                         } else {
                             reject(new Error('Roster is not set'));
+                        }
+                        break;
+
+                    //===================
+                    // Google Chat
+                    case 'gchat':
+                        if (typeof service.spaces !== 'undefined') {
+
+                            // Massage the data to something easy for the UI
+                            let data = [];
+
+                            service.spaces.map(function (space) {
+                                let members = [];
+
+                                space.members.map(function (member) {
+                                    if (member.state === 'JOINED' && member.member.type === 'HUMAN') {
+                                        members.push(member.member.displayName || member.member.name);
+                                    }
+                                });
+
+                                if (members.length) {
+                                    data.push({
+                                        type:        space.type,
+                                        name:        space.name,
+                                        displayName: space.type === 'DM' ? members.join(', ') : (space.displayName || space.name),
+                                        members:     members
+                                    });
+                                }
+                            });
+
+                            resolve(_.sortBy(data, ['displayName']));
+                        } else {
+                            reject(new Error('Spaces are not set'));
                         }
                         break;
 

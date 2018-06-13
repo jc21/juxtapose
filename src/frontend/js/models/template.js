@@ -44,6 +44,39 @@ const model = Backbone.Model.extend({
                     icon_url:    'https://public.jc21.com/juxtapose/icons/default.png',
                     panel_color: '#0090ff'
                 };
+
+            } else if (this.get('service_type') === 'gchat') {
+                content = JSON.stringify({
+                    cards: [
+                        {
+                            sections: [
+                                {
+                                    widgets: [
+                                        {
+                                            keyValue: {
+                                                topLabel:         '{{ user }} has assigned an issue to you',
+                                                content:          '{{ summary }}',
+                                                contentMultiline: 'true',
+                                                bottomLabel:      '{{ issuetype }} - {{ issuestatus }}',
+                                                onClick:          {
+                                                    openLink: {
+                                                        url: '{{ issueurl }}'
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            textParagraph: {
+                                                text: '{{ description }}'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }, null, 2);
+
             } else {
                 content = '{{ user }} has assigned {{ issuekey }} to you: {{ issueurl }}';
             }
@@ -62,7 +95,8 @@ const model = Backbone.Model.extend({
                     user:        'Billy Bob',
                     project:     'Web Application',
                     resolution:  'Unresolved',
-                    assignee:    'Joe Citizen'
+                    assignee:    'Joe Citizen',
+                    description: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et.'
                 }
             });
 

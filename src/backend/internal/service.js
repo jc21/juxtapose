@@ -32,7 +32,7 @@ const internalService = {
                     .insertAndFetch(data);
             })
             .then(service => {
-                if (service.type === 'slack' || service.type === 'jabber') {
+                if (service.type === 'slack' || service.type === 'jabber' || service.type === 'gchat') {
                     const internalServiceWorker = require('./service_worker');
                     internalServiceWorker.restart();
                 } else if (service.type.match(/(.|\n)*-webhook$/im)) {
@@ -78,7 +78,7 @@ const internalService = {
                     .omit(omissions())
                     .patchAndFetchById(row_data.id, row_data)
                     .then(service => {
-                        if (service.type === 'slack' || service.type === 'jabber') {
+                        if (service.type === 'slack' || service.type === 'jabber' || service.type === 'gchat') {
                             const internalServiceWorker = require('./service_worker');
                             internalServiceWorker.restart();
                         }
@@ -115,7 +115,7 @@ const internalService = {
 
                 return query;
             })
-            .then((row) => {
+            .then(row => {
                 if (row) {
                     return _.omit(row, omissions());
                 } else {
@@ -147,7 +147,7 @@ const internalService = {
                         is_deleted: 1
                     })
                     .then(() => {
-                        if (service.type === 'slack' || service.type === 'jabber') {
+                        if (service.type === 'slack' || service.type === 'jabber' || service.type === 'gchat') {
                             const internalServiceWorker = require('./service_worker');
                             internalServiceWorker.restart();
                         }
@@ -182,7 +182,7 @@ const internalService = {
 
                 return query;
             })
-            .then((row) => {
+            .then(row => {
                 return parseInt(row.count, 10);
             });
     },
@@ -233,7 +233,7 @@ const internalService = {
 
                 return query;
             })
-            .then((services) => {
+            .then(services => {
                 return new Promise((resolve/*, reject*/) => {
                     const internalServiceWorker = require('./service_worker');
 
@@ -288,7 +288,7 @@ const internalService = {
     /**
      * @param {Access} access
      */
-    getAvailable: (access) => {
+    getAvailable: access => {
         return access.can('services:available')
             .then(() => {
                 return serviceModel
@@ -318,7 +318,7 @@ const internalService = {
      * @param  {String}  row.data.validation_key
      * @return {Promise}
      */
-    generateEndpointToken: (row) => {
+    generateEndpointToken: row => {
         let private_key = config.get('jwt.key');
         let options     = {algorithm: 'RS256'};
 

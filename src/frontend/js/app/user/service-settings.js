@@ -139,6 +139,35 @@ module.exports = Mn.View.extend({
                                 .appendTo($select);
                         });
                 }
+            } else if (service.type === 'gchat') {
+                let $select = view.$el.find('select[name="settings[' + service.id + '][username]"]');
+
+                if ($select.length) {
+                    Api.Services.getUsers(service.id)
+                        .then(spaces => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Select...')
+                                .appendTo($select);
+
+                            let selected_username = view.getServiceSetting(service.id, 'username');
+
+                            _.map(spaces, space => {
+                                $('<option>')
+                                    .val(space.name)
+                                    .text(space.displayName + ' (' + space.type + ')')
+                                    .prop('selected', selected_username === space.name)
+                                    .appendTo($select);
+                            });
+                        })
+                        .catch(err => {
+                            $select.empty();
+                            $('<option>')
+                                .text('Error loading spaces! Try again')
+                                .prop('selected', true)
+                                .appendTo($select);
+                        });
+                }
             }
         });
     },

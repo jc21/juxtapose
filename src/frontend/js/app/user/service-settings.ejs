@@ -37,6 +37,15 @@ var services = getServices();
                                                 <option value="">Loading...</option>
                                             </select>
                                         </div>
+                                    <% } else if (service.type === 'gchat') { %>
+                                        <div class="col-md-4 text-right field-label">
+                                            Google Chat Space:
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select class="form-control" name="settings[<%- service.id %>][username]">
+                                                <option value="">Loading...</option>
+                                            </select>
+                                        </div>
                                     <% } else if (service.type === 'jira-webhook') { %>
                                         <div class="col-md-4 text-right field-label">
                                             Jira Username:

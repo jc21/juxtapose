@@ -1,5 +1,14 @@
-<% if (service_type === 'slack' ) {
-    var _error = false;
+<%
+var _error = false;
+var codeFormatter = function (str) {
+    str = str.replace(/(?:^| |\n)```((.|\n)*)```/gim, "<pre>$1</pre>")
+    if (typeof replaceSlackLinks === 'function') {
+        str = replaceSlackLinks(str);
+    }
+    return str;
+};
+
+if (service_type === 'slack' ) {
     try {
         var _content = preview;
         if (typeof preview === 'string') {
@@ -15,19 +24,11 @@
         <%
     }
 
-    var codeFormatter = function (str) {
-        str = str.replace(/(?:^| |\n)```((.|\n)*)```/gim, "<pre>$1</pre>")
-        if (typeof replaceSlackLinks === 'function') {
-            str = replaceSlackLinks(str);
-        }
-        return str;
-    };
-
     if (!_error) {
         %>
         <div class="template-slack-preview">
-            <div class="message_gutter">
-                <div class="message_icon">
+            <div class="message-gutter">
+                <div class="message-icon">
                     <% if (typeof _content.icon_url !== 'undefined') { %>
                         <img src="<%- _content.icon_url %>">
                     <% } else { %>
@@ -35,14 +36,14 @@
                     <% } %>
                 </div>
             </div>
-            <div class="message_content">
-                <div class="message_content_header">
-                    <div class="message_content_header_left">
-                        <span class="message_sender color_bot_Your_App">
+            <div class="message-content">
+                <div class="message-content-header">
+                    <div class="message-content-header-left">
+                        <span class="message-sender color_bot_Your_App">
                             <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
-                            <span class="bot_label">APP</span>
+                            <span class="bot-label">APP</span>
                         </span>
-                        <span class="time_star_and_extra_metadata">
+                        <span class="time-star-and-extra-metadata">
                             <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
                         </span>
                     </div>
@@ -139,21 +140,168 @@
         </div>
         <%
     }
+
+} else if (service_type === 'gchat' ) {
+    try {
+        var _content = preview;
+        if (typeof preview === 'string') {
+            _content = JSON.parse(preview);
+        }
+    } catch (ex) {
+        _error = true;
+        %>
+        <div class="template-gchat-preview">
+            <strong>Error:</strong><br>
+            Preview content is not valid JSON.
+        </div>
+        <%
+    }
+
+    if (!_error) {
+        %>
+        <div class="template-gchat-preview">
+            <div class="message-gutter">
+                <div class="message-icon">
+                    <img src="https://public.jc21.com/juxtapose/icons/default.png">
+                </div>
+            </div>
+            <div class="message-prefix">
+                <strong>Juxtapose</strong> BOT <%- typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM' %>
+            </div>
+            <% if (typeof _content.cards !== 'undefined') { %>
+                <div class="message-cards">
+                    <%
+                    _.map(_content.cards, function (card) {
+                        %>
+                        <div class="card">
+                            <%
+                            if (typeof card.header !== 'undefined') {
+                                %>
+                                <div class="card-header<%- typeof card.header.imageUrl !== 'undefined' ? ' has-icon' : '' %>">
+                                    <% if (typeof card.header.imageUrl !== 'undefined') { %>
+                                        <img src="<%- card.header.imageUrl %>">
+                                    <% } %>
+                                    <% if (typeof card.header.title !== 'undefined') { %>
+                                        <h3><%- card.header.title %></h3>
+                                    <% } %>
+                                    <% if (typeof card.header.subtitle !== 'undefined') { %>
+                                        <h4><%- card.header.subtitle %></h4>
+                                    <% } %>
+                                </div>
+                                <%
+                            }
+
+                            _.map(card.sections, function (section) {
+                                %>
+                                <div class="card-section">
+                                    <%
+                                    _.map(section.widgets, function (widget) {
+
+                                        if (typeof widget.keyValue !== 'undefined') {
+                                            var kv = widget.keyValue;
+                                            %>
+                                            <div class="widget widget-keyvalue<%- typeof kv.icon !== 'undefined' || typeof kv.iconUrl !== 'undefined' ? ' has-icon' : '' %>">
+                                                <%
+                                                if (typeof kv.iconUrl !== 'undefined') {
+                                                    %>
+                                                    <div class="icon"><img src="<%- kv.iconUrl %>"></div>
+                                                    <%
+                                                } else if (typeof kv.icon !== 'undefined') {
+                                                    %>
+                                                    <div class="icon"><img src="/images/gchat-icons/<%- kv.icon.toLowerCase() %>.png" class="icon"></div>
+                                                    <%
+                                                }
+
+                                                if (typeof kv.content !== 'undefined') {
+                                                    %>
+                                                    <div class="kv">
+                                                        <% if (typeof kv.topLabel !== 'undefined') { %>
+                                                            <div class="kv-toplabel"><%- kv.topLabel %></div>
+                                                        <% } %>
+                                                        <div class="kv-content<%- typeof kv.contentMultiline !== 'undefined' && kv.contentMultiline ? ' multiline' : '' %>"><%- kv.content %></div>
+                                                        <% if (typeof kv.bottomLabel !== 'undefined') { %>
+                                                            <div class="kv-bottomlabel"><%- kv.bottomLabel %></div>
+                                                        <% } %>
+                                                    </div>
+                                                    <%
+                                                }
+
+                                                if (typeof kv.button !== 'undefined') {
+                                                    %>
+                                                    <div class="kv-button">
+                                                        <%
+                                                        if (typeof kv.button.textButton !== 'undefined' && typeof kv.button.textButton.text !== 'undefined') {
+                                                            %>
+                                                            <%- kv.button.textButton.text %>
+                                                            <%
+                                                        }
+                                                        %>
+                                                    </div>
+                                                    <%
+                                                }
+                                                %>
+                                            </div>
+                                            <%
+                                        } else if (typeof widget.textParagraph !== 'undefined') {
+                                            if (typeof widget.textParagraph.text === 'undefined') {
+                                                widget.textParagraph.text = 'undefined';
+                                            }
+                                            %>
+                                            <div class="widget">
+                                                <%= codeFormatter(widget.textParagraph.text) %>
+                                            </div>
+                                            <%
+                                        } else if (typeof widget.image !== 'undefined' && typeof widget.image.imageUrl !== 'undefined') {
+                                            %>
+                                            <div class="widget widget-image">
+                                                <img src="<%- widget.image.imageUrl %>">
+                                            </div>
+                                            <%
+                                        } else {
+                                            %>
+                                            <div class="widget">
+                                                <%= codeFormatter('```' + JSON.stringify(widget, null, 2) + '```') %>
+                                            </div>
+                                            <%
+                                        }
+                                    });
+                                    %>
+                                </div>
+                                <%
+                            });
+                            %>
+                        </div>
+                        <%
+                    });
+                    %>
+                </div>
+            <% } else if (typeof _content.text !== 'undefined') {%>
+                <div class="message-content">
+                    <%= codeFormatter(_content.text) %>
+                </div>
+            <% } else { %>
+                <div class="message-content">
+                    Error: Neither "text" nor "cards" message content is defined!
+                </div>
+            <% } %>
+        </div>
+        <%
+    }
 } else if (service_type === 'jabber' ) {
     %>
     <div class="template-jabber-preview">
-        <div class="message_content">
-            <div class="message_content_header">
-                <div class="message_content_header_left">
-                    <span class="message_sender color_bot_Your_App">
+        <div class="message-content">
+            <div class="message-content-header">
+                <div class="message-content-header-left">
+                    <span class="message-sender color_bot_Your_App">
                         <a class="app_preview_link"><%- typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose Bot' %></a>
                     </span>
-                    <span class="time_star_and_extra_metadata">
+                    <span class="time-star-and-extra-metadata">
                         <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
                     </span>
                 </div>
             </div>
-            <div class="message_content_body"><%- preview %></div>
+            <div class="message-content_body"><%- preview %></div>
         </div>
     </div>
     <%

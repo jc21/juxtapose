@@ -1029,6 +1029,7 @@ const internalJiraWebhook = {
             issueurl:    internalJiraWebhook.getIssueUrl(webhook_data),
             issuekey:    internalJiraWebhook.getIssueKey(webhook_data),
             issuetype:   internalJiraWebhook.getIssueField(webhook_data, 'issuetype', 'name'),
+            issuestatus: internalJiraWebhook.getIssueField(webhook_data, 'status', 'name'),
             summary:     internalJiraWebhook.getIssueField(webhook_data, 'summary'),
             assignee:    internalJiraWebhook.getAssigneeName(webhook_data) || 'Unassigned',
             reporter:    internalJiraWebhook.getReporterName(webhook_data),
