@@ -149,6 +149,9 @@ const internalGchatBot = {
             case 'ADDED_TO_SPACE':
                 return internalGchatBot.eventAddedToSpace(service_id, webhook_data);
 
+            case 'REMOVED_FROM_SPACE':
+                return internalGchatBot.eventRemovedFromSpace(service_id, webhook_data);
+
             case 'MESSAGE':
                 return internalGchatBot.eventMessage(service_id, webhook_data);
         }
@@ -173,6 +176,17 @@ const internalGchatBot = {
                       ' and I\'ll start sending events through :)'
             };
         }
+
+        return {};
+    },
+
+    /**
+     * @param   {Integer} service_id
+     * @param   {Object}  webhook_data
+     */
+    eventRemovedFromSpace: (service_id, webhook_data) => {
+        // Tell service to update it's list of spaces
+        internalServiceWorker.syncData(service_id);
 
         return {};
     },
