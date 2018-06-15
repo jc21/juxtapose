@@ -12,6 +12,7 @@ const templateRender           = require('../lib/template_render');
 const notificationQueueModel   = require('../models/notification_queue');
 const zendeskIncomingLogModel  = require('../models/zendesk_incoming_log');
 const zendeskTicketStatusModel = require('../models/zendesk_ticket_status');
+const gravatar                 = require('gravatar');
 const ALGO                     = 'RS256';
 
 let public_key = null;
@@ -335,6 +336,40 @@ const internalZendeskWebhook = {
      */
     processTheseEventTypes: (event_types, service_id, webhook_data, existing_ticket_row, already_notified_user_ids) => {
         let template_data = _.assign({service_id: service_id}, webhook_data);
+
+        // Gravatar url for current_user email if it exists
+        if (typeof template_data.current_user !== 'undefined') {
+            let gravatar_url       = 'https://public.jc21.com/juxtapose/icons/zendesk.png';
+            let current_user_email = internalZendeskWebhook.getEventUser(webhook_data, 'email');
+
+            if (current_user_email) {
+                gravatar_url = 'https:' + gravatar.url(current_user_email, {default: gravatar_url});
+            }
+
+            template_data.current_user.gravatar = gravatar_url;
+        }
+
+        // Gravatar url for latest_comment email if it exists
+        if (typeof template_data.ticket.latest_comment !== 'undefined') {
+            let author_gravatar_url = 'https://public.jc21.com/juxtapose/icons/zendesk.png';
+
+            if (typeof template_data.ticket.latest_comment.author_email !== 'undefined' && template_data.ticket.latest_comment.author_email) {
+                author_gravatar_url = 'https:' + gravatar.url(template_data.ticket.latest_comment.author_email, {default: gravatar_url});
+            }
+
+            template_data.ticket.latest_comment.author_gravatar = author_gravatar_url;
+        }
+
+        // Gravatar url for ticket.requester email if it exists
+        if (typeof template_data.ticket.requester !== 'undefined') {
+            let requester_gravatar_url = 'https://public.jc21.com/juxtapose/icons/zendesk.png';
+
+            if (typeof template_data.ticket.requester.email !== 'undefined' && template_data.ticket.requester.email) {
+                requester_gravatar_url = 'https:' + gravatar.url(template_data.ticket.requester.email, {default: requester_gravatar_url});
+            }
+
+            template_data.ticket.requester.gravatar = requester_gravatar_url;
+        }
 
         return new Promise((resolve, reject) => {
             batchflow(event_types).sequential()

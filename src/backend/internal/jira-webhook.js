@@ -13,6 +13,7 @@ const notificationQueueModel = require('../models/notification_queue');
 const jiraIssueStatusModel   = require('../models/jira_issue_status');
 const jiraIncomingLogModel   = require('../models/jira_incoming_log');
 const Helpers                = require('../lib/helpers');
+const gravatar               = require('gravatar');
 const ALGO                   = 'RS256';
 
 let public_key = null;
@@ -1024,17 +1025,35 @@ const internalJiraWebhook = {
      * @returns {Object}
      */
     getCommonTemplateData: webhook_data => {
+        // Default avatar is a placeholder icon
+        let avatar_url   = 'https://public.jc21.com/juxtapose/icons/jira.png';
+        let gravatar_url = 'https://public.jc21.com/juxtapose/icons/jira.png';
+
+        // determine avatar from jira payload
+        let jira_avatars = internalJiraWebhook.getEventUser(webhook_data, 'avatarUrls');
+        if (jira_avatars && typeof jira_avatars['48x48'] !== 'undefined' && jira_avatars['48x48']) {
+            avatar_url = jira_avatars['48x48'];
+        }
+
+        // determine gravatar url
+        if (internalJiraWebhook.getEventUser(webhook_data, 'emailAddress')) {
+            gravatar_url = 'https:' + gravatar.url(internalJiraWebhook.getEventUser(webhook_data, 'emailAddress'), {default: gravatar_url});
+        }
+
         return {
-            user:        internalJiraWebhook.getEventUser(webhook_data, 'displayName'),
-            issueurl:    internalJiraWebhook.getIssueUrl(webhook_data),
-            issuekey:    internalJiraWebhook.getIssueKey(webhook_data),
-            issuetype:   internalJiraWebhook.getIssueField(webhook_data, 'issuetype', 'name'),
-            issuestatus: internalJiraWebhook.getIssueField(webhook_data, 'status', 'name'),
-            summary:     internalJiraWebhook.getIssueField(webhook_data, 'summary'),
-            assignee:    internalJiraWebhook.getAssigneeName(webhook_data) || 'Unassigned',
-            reporter:    internalJiraWebhook.getReporterName(webhook_data),
-            description: internalJiraWebhook.getDescription(webhook_data),
-            fields:      internalJiraWebhook.getChangelogData(webhook_data)
+            user:          internalJiraWebhook.getEventUser(webhook_data, 'displayName'),
+            user_avatar:   avatar_url,
+            user_gravatar: gravatar_url,
+            issueurl:      internalJiraWebhook.getIssueUrl(webhook_data),
+            issuekey:      internalJiraWebhook.getIssueKey(webhook_data),
+            issuetype:     internalJiraWebhook.getIssueField(webhook_data, 'issuetype', 'name'),
+            issuestatus:   internalJiraWebhook.getIssueField(webhook_data, 'status', 'name'),
+            priority:      internalJiraWebhook.getIssueField(webhook_data, 'priority', 'name'),
+            summary:       internalJiraWebhook.getIssueField(webhook_data, 'summary'),
+            assignee:      internalJiraWebhook.getAssigneeName(webhook_data) || 'Unassigned',
+            reporter:      internalJiraWebhook.getReporterName(webhook_data),
+            description:   internalJiraWebhook.getDescription(webhook_data),
+            fields:        internalJiraWebhook.getChangelogData(webhook_data)
         };
     },
 

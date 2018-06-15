@@ -11,6 +11,7 @@ const ruleModel                 = require('../models/rule');
 const templateRender            = require('../lib/template_render');
 const notificationQueueModel    = require('../models/notification_queue');
 const bitbucketIncomingLogModel = require('../models/bitbucket_incoming_log');
+const gravatar                  = require('gravatar');
 const ALGO                      = 'RS256';
 
 let public_key = null;
@@ -383,9 +384,25 @@ const internalBitbucketWebhook = {
      * @returns {Object}
      */
     getCommonTemplateData: webhook_data => {
+        // User gravatar
+        let user_gravatar = 'https://public.jc21.com/juxtapose/icons/bitbucket.png';
+        if (internalBitbucketWebhook.getEventUser(webhook_data, 'emailAddress')) {
+            user_gravatar = 'https:' + gravatar.url(internalBitbucketWebhook.getEventUser(webhook_data, 'emailAddress'), {default: user_gravatar});
+        }
+
+        // Owner gravatar
+        let owner_gravatar = 'https://public.jc21.com/juxtapose/icons/bitbucket.png';
+        if (internalBitbucketWebhook.getPrOwner(webhook_data, 'emailAddress')) {
+            owner_gravatar = 'https:' + gravatar.url(internalBitbucketWebhook.getPrOwner(webhook_data, 'emailAddress'), {default: owner_gravatar});
+        }
+
         return {
             user:           internalBitbucketWebhook.getEventUser(webhook_data, 'displayName'),
+            user_email:     internalBitbucketWebhook.getEventUser(webhook_data, 'emailAddress'),
+            user_gravatar:  user_gravatar,
             owner:          internalBitbucketWebhook.getPrOwner(webhook_data, 'displayName'),
+            owner_email:    internalBitbucketWebhook.getPrOwner(webhook_data, 'emailAddress'),
+            owner_gravatar: owner_gravatar,
             title:          internalBitbucketWebhook.getPrField(webhook_data, 'title'),
             description:    internalBitbucketWebhook.getPrField(webhook_data, 'description'),
             project:        internalBitbucketWebhook.getToProjectField(webhook_data, 'key'),
@@ -496,9 +513,18 @@ const internalBitbucketWebhook = {
      */
     getCommentData: webhook_data => {
         if (typeof webhook_data.comment !== 'undefined' && typeof webhook_data.comment.text !== 'undefined') {
+
+            // commenter gravatar
+            let commenter_gravatar = 'https://public.jc21.com/juxtapose/icons/bitbucket.png';
+            if (webhook_data.comment.author.emailAddress) {
+                commenter_gravatar = 'https:' + gravatar.url(webhook_data.comment.author.emailAddress, {default: commenter_gravatar});
+            }
+
             return {
-                text:   webhook_data.comment.text,
-                author: webhook_data.comment.author.displayName
+                text:            webhook_data.comment.text,
+                author:          webhook_data.comment.author.displayName,
+                author_email:    webhook_data.comment.author.emailAddress,
+                author_gravatar: commenter_gravatar
             };
         }
 
