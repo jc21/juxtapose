@@ -77,10 +77,10 @@ module.exports = Mn.View.extend({
 
                     view.trigger('loaded');
                 }
-            })/*
+            })
             .catch(err => {
                 Controller.showError(err, 'Could not fetch Templates');
                 view.trigger('loaded');
-            })*/;
+            });
     }
 });
