@@ -5,7 +5,8 @@
 .muuri-item {
   display: block;
   position: absolute;
-  width: 25%;
+  min-width: 396px;
+  width: 396px;
   margin: 0;
   z-index: 1;
 
