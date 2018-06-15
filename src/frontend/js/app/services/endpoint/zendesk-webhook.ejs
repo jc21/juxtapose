@@ -81,6 +81,7 @@
     "latest_comment": {% if ticket.latest_comment %}{
       "id": {{ticket.latest_comment.id | default: 0}},
       "author_name": "{{ticket.latest_comment.author.name}}",
+      "author_email": "{{ticket.latest_comment.author.email | default: null}}",
       "created_at": "{{ticket.latest_comment.created_at}}",
       "created_at_with_timestamp": "{{ticket.latest_comment.created_at_with_timestamp}}",
       "is_public": {% if ticket.latest_comment.is_public %}{{ticket.latest_comment.is_public | default: null}}{% else %}null{% endif %},
