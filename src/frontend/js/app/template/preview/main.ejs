@@ -179,7 +179,7 @@ if (service_type === 'slack' ) {
                                 %>
                                 <div class="card-header<%- typeof card.header.imageUrl !== 'undefined' ? ' has-icon' : '' %>">
                                     <% if (typeof card.header.imageUrl !== 'undefined') { %>
-                                        <img src="<%- card.header.imageUrl %>">
+                                        <img src="<%- card.header.imageUrl %>" class="image-style-<%- typeof card.header.imageStyle !== 'undefined' ? card.header.imageStyle : 'none' %>">
                                     <% } %>
                                     <% if (typeof card.header.title !== 'undefined') { %>
                                         <h3><%- card.header.title %></h3>
@@ -195,76 +195,118 @@ if (service_type === 'slack' ) {
                                 %>
                                 <div class="card-section">
                                     <%
-                                    _.map(section.widgets, function (widget) {
 
-                                        if (typeof widget.keyValue !== 'undefined') {
-                                            var kv = widget.keyValue;
-                                            %>
-                                            <div class="widget widget-keyvalue<%- typeof kv.icon !== 'undefined' || typeof kv.iconUrl !== 'undefined' ? ' has-icon' : '' %>">
-                                                <%
-                                                if (typeof kv.iconUrl !== 'undefined') {
-                                                    %>
-                                                    <div class="icon"><img src="<%- kv.iconUrl %>"></div>
-                                                    <%
-                                                } else if (typeof kv.icon !== 'undefined') {
-                                                    %>
-                                                    <div class="icon"><img src="/images/gchat-icons/<%- kv.icon.toLowerCase() %>.png" class="icon"></div>
-                                                    <%
-                                                }
+                                    if (typeof section.header !== 'undefined') {
+                                        %>
+                                        <div class="section-header"><%- section.header %></div>
+                                        <%
+                                    }
 
-                                                if (typeof kv.content !== 'undefined') {
-                                                    %>
-                                                    <div class="kv">
-                                                        <% if (typeof kv.topLabel !== 'undefined') { %>
-                                                            <div class="kv-toplabel"><%- kv.topLabel %></div>
-                                                        <% } %>
-                                                        <div class="kv-content<%- typeof kv.contentMultiline !== 'undefined' && kv.contentMultiline ? ' multiline' : '' %>"><%- kv.content %></div>
-                                                        <% if (typeof kv.bottomLabel !== 'undefined') { %>
-                                                            <div class="kv-bottomlabel"><%- kv.bottomLabel %></div>
-                                                        <% } %>
-                                                    </div>
+                                    if (typeof section.widgets !== 'undefined' && section.widgets.length) {
+                                        _.map(section.widgets, function (widget) {
+                                            if (typeof widget.keyValue !== 'undefined') {
+                                                var kv = widget.keyValue;
+                                                %>
+                                                <div class="widget widget-keyvalue<%- typeof kv.icon !== 'undefined' || typeof kv.iconUrl !== 'undefined' ? ' has-icon' : '' %>">
                                                     <%
-                                                }
-
-                                                if (typeof kv.button !== 'undefined') {
-                                                    %>
-                                                    <div class="kv-button">
-                                                        <%
-                                                        if (typeof kv.button.textButton !== 'undefined' && typeof kv.button.textButton.text !== 'undefined') {
-                                                            %>
-                                                            <%- kv.button.textButton.text %>
-                                                            <%
-                                                        }
+                                                    if (typeof kv.iconUrl !== 'undefined') {
                                                         %>
-                                                    </div>
-                                                    <%
+                                                        <div class="icon"><img src="<%- kv.iconUrl %>"></div>
+                                                        <%
+                                                    } else if (typeof kv.icon !== 'undefined') {
+                                                        %>
+                                                        <div class="icon"><img src="/images/gchat-icons/<%- kv.icon.toLowerCase() %>.png" class="icon"></div>
+                                                        <%
+                                                    }
+
+                                                    if (typeof kv.content !== 'undefined') {
+                                                        %>
+                                                        <div class="kv">
+                                                            <% if (typeof kv.topLabel !== 'undefined') { %>
+                                                                <div class="kv-toplabel"><%- kv.topLabel %></div>
+                                                            <% } %>
+                                                            <div class="kv-content<%- typeof kv.contentMultiline !== 'undefined' && kv.contentMultiline ? ' multiline' : '' %>"><%- kv.content %></div>
+                                                            <% if (typeof kv.bottomLabel !== 'undefined') { %>
+                                                                <div class="kv-bottomlabel"><%- kv.bottomLabel %></div>
+                                                            <% } %>
+                                                        </div>
+                                                        <%
+                                                    }
+
+                                                    if (typeof kv.button !== 'undefined') {
+                                                        %>
+                                                        <div class="kv-button">
+                                                            <%
+                                                            if (typeof kv.button.textButton !== 'undefined' && typeof kv.button.textButton.text !== 'undefined') {
+                                                                %>
+                                                                <%- kv.button.textButton.text %>
+                                                                <%
+                                                            }
+                                                            %>
+                                                        </div>
+                                                        <%
+                                                    }
+                                                    %>
+                                                </div>
+                                                <%
+                                            } else if (typeof widget.textParagraph !== 'undefined') {
+                                                if (typeof widget.textParagraph.text === 'undefined') {
+                                                    widget.textParagraph.text = 'undefined';
                                                 }
                                                 %>
-                                            </div>
-                                            <%
-                                        } else if (typeof widget.textParagraph !== 'undefined') {
-                                            if (typeof widget.textParagraph.text === 'undefined') {
-                                                widget.textParagraph.text = 'undefined';
+                                                <div class="widget">
+                                                    <%= codeFormatter(widget.textParagraph.text) %>
+                                                </div>
+                                                <%
+                                            } else if (typeof widget.image !== 'undefined' && typeof widget.image.imageUrl !== 'undefined') {
+                                                %>
+                                                <div class="widget widget-image">
+                                                    <img src="<%- widget.image.imageUrl %>">
+                                                </div>
+                                                <%
+                                            } else if (typeof widget.buttons !== 'undefined' && widget.buttons.length) {
+                                                %>
+                                                <div class="widget widget-buttons">
+                                                    <%
+                                                    _.map(widget.buttons, function (button) {
+                                                        if (typeof button.imageButton !== 'undefined' && typeof button.imageButton.iconUrl !== 'undefined') {
+                                                            %>
+                                                            <div class="widget-button">
+                                                                <img src="<%- button.imageButton.iconUrl %>">
+                                                            </div>
+                                                            <%
+                                                        } else if (typeof button.imageButton !== 'undefined' && typeof button.imageButton.icon !== 'undefined') {
+                                                            %>
+                                                            <div class="widget-button">
+                                                                <img src="/images/gchat-icons/<%- button.imageButton.icon.toLowerCase() %>.png" class="icon">
+                                                            </div>
+                                                            <%
+                                                        } else if (typeof button.textButton !== 'undefined' && typeof button.textButton.text !== 'undefined') {
+                                                            %>
+                                                            <div class="widget-button text">
+                                                                <%- button.textButton.text %>
+                                                            </div>
+                                                            <%
+                                                        } else {
+                                                            %>
+                                                            <div class="widget-button text">
+                                                                <%= codeFormatter('```' + JSON.stringify(button, null, 2) + '```') %>
+                                                            </div>
+                                                            <%
+                                                        }
+                                                    });
+                                                    %>
+                                                </div>
+                                                <%
+                                            } else {
+                                                %>
+                                                <div class="widget">
+                                                    <%= codeFormatter('```' + JSON.stringify(widget, null, 2) + '```') %>
+                                                </div>
+                                                <%
                                             }
-                                            %>
-                                            <div class="widget">
-                                                <%= codeFormatter(widget.textParagraph.text) %>
-                                            </div>
-                                            <%
-                                        } else if (typeof widget.image !== 'undefined' && typeof widget.image.imageUrl !== 'undefined') {
-                                            %>
-                                            <div class="widget widget-image">
-                                                <img src="<%- widget.image.imageUrl %>">
-                                            </div>
-                                            <%
-                                        } else {
-                                            %>
-                                            <div class="widget">
-                                                <%= codeFormatter('```' + JSON.stringify(widget, null, 2) + '```') %>
-                                            </div>
-                                            <%
-                                        }
-                                    });
+                                        });
+                                    }
                                     %>
                                 </div>
                                 <%
