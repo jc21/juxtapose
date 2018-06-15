@@ -318,6 +318,20 @@ const internalServiceWorker = {
     },
 
     /**
+     * @param {Integer}  service_id
+     */
+    syncData: service_id => {
+        let service = internalServiceWorker.getService(service_id);
+
+        if (service && service.type === 'gchat') {
+            logger.info('Service #' + service.id + ' (' + service.type + ') Syncing');
+            internalServiceWorker.gchatIntervalFire(service);
+        } else {
+            logger.warn('Service #' + service.id + ' (' + service.type + ') does not support syncing');
+        }
+    },
+
+    /**
      * @param   {Integer}  service_id
      * @returns {null}
      */

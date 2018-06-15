@@ -64,9 +64,7 @@ module.exports = Mn.View.extend({
 
             method(data)
                 .then((result) => {
-
                     view.model.set(result);
-                    //App.UI.closeModal();
 
                     if (is_new) {
                         Controller.showServices();

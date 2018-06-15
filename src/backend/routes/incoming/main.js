@@ -13,5 +13,6 @@ router.use('/bitbucket-webhook', require('./bitbucket-webhook'));
 router.use('/dockerhub-webhook', require('./dockerhub-webhook'));
 router.use('/zendesk-webhook',   require('./zendesk-webhook'));
 router.use('/jenkins-webhook',   require('./jenkins-webhook'));
+router.use('/gchat',             require('./gchat-bot'));
 
 module.exports = router;

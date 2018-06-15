@@ -48,7 +48,8 @@ module.exports = Mn.View.extend({
                 type: 'gchat',
                 name: form_data.name,
                 data: {
-                    credentials_json: form_data.credentials_json
+                    credentials_json: form_data.credentials_json,
+                    validation_key:   form_data.validation_key
                 }
             };
 

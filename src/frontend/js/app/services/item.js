@@ -61,7 +61,8 @@ module.exports = Mn.View.extend({
 
         'click @ui.endpoint': function (e) {
             e.preventDefault();
-            if (this.model.get('type').match(/(.|\n)*-webhook$/im)) {
+            let type = this.model.get('type');
+            if (type.match(/(.|\n)*-webhook$/im) || type === 'gchat') {
                 Controller.showServiceEndpoint(this.model);
             }
         }

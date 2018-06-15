@@ -5,10 +5,10 @@
         <h4 class="m-b-none"><%- name %></h4>
         <div>
             <a href="#" class="edit">Edit</a>
-            <% if (type.match(/^(slack|jabber|gchat)$/im)) { %>
+            <% if (type.match(/^(slack|jabber)$/im)) { %>
                 &mdash;
                 <a href="#" class="test">Test</a>
-            <% } else if (type.match(/(.|\n)*-webhook$/im)) { %>
+            <% } else if (type.match(/(.|\n)*-webhook$/im) || type === 'gchat') { %>
                 &mdash;
                 <a href="#" class="endpoint">View Endpoint</a>
             <% } %>

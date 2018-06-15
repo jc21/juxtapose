@@ -1,9 +1,9 @@
 'use strict';
 
-const express             = require('express');
-const validator           = require('../../lib/validator');
-const jwtdecode           = require('../../lib/express/jwt-decode');
-const internalJiraWebhook = require('../../internal/jira-webhook');
+const express          = require('express');
+const validator        = require('../../lib/validator');
+const jwtdecode        = require('../../lib/express/jwt-decode');
+const internalGchatBot = require('../../internal/gchat-bot');
 
 let router = express.Router({
     caseSensitive: true,
@@ -12,7 +12,7 @@ let router = express.Router({
 });
 
 /**
- * /incoming/jira-webhook
+ * /incoming/gchat-bot
  */
 router
     .route('/')
@@ -22,7 +22,9 @@ router
     .all(jwtdecode())
 
     /**
-     * POST /incoming/jira-webhook
+     * POST /incoming/gchat-bot
+     *
+     * Incoming endpoint for Google chat bot
      */
     .post((req, res, next) => {
         validator({
@@ -33,7 +35,7 @@ router
                     $ref: 'definitions#/definitions/token'
                 },
                 webhook: {
-                    $ref: 'definitions#/definitions/jira_webhook_data'
+                    $ref: 'definitions#/definitions/gchat_bot_data'
                 }
             }
         }, {
@@ -41,7 +43,7 @@ router
             webhook: req.body
         })
             .then(data => {
-                return internalJiraWebhook.processIncoming(data.token, data.webhook);
+                return internalGchatBot.processIncoming(data.token, data.webhook);
             })
             .then(result => {
                 res.status(200)

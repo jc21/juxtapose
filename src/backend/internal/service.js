@@ -35,7 +35,9 @@ const internalService = {
                 if (service.type === 'slack' || service.type === 'jabber' || service.type === 'gchat') {
                     const internalServiceWorker = require('./service_worker');
                     internalServiceWorker.restart();
-                } else if (service.type.match(/(.|\n)*-webhook$/im)) {
+                }
+
+                if (service.type.match(/(.|\n)*-webhook$/im) || service.type === 'gchat') {
                     return internalService.generateEndpointToken(service)
                         .then(token => {
                             service.data.token = token;
@@ -62,7 +64,7 @@ const internalService = {
     update: (access, data) => {
         return access.can('services', data.id)
             .then(() => {
-                if (data.type.match(/(.|\n)*-webhook$/im)) {
+                if (data.type.match(/(.|\n)*-webhook$/im) || data.type === 'gchat') {
                     return internalService.generateEndpointToken(data)
                         .then(token => {
                             data.data.token = token;
@@ -300,8 +302,6 @@ const internalService = {
 
     /**
      * Internal service worker use only
-     *
-     * TODO: Active state on services?
      */
     getActiveServices: () => {
         return serviceModel

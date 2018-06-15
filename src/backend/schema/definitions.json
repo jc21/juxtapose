@@ -239,6 +239,37 @@
         }
       }
     },
+    "gchat_bot_data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "eventTime",
+        "token",
+        "user",
+        "space"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "eventTime": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "user": {
+          "type": "object"
+        },
+        "space": {
+          "type": "object"
+        },
+        "message": {
+          "type": "object"
+        }
+      }
+    },
     "service_type": {
       "description": "Service Type",
       "example": "slack",

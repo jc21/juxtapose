@@ -23,8 +23,6 @@ router
 
     /**
      * POST /incoming/zendesk-webhook
-     *
-     * Retrieve all services
      */
     .post((req, res, next) => {
         validator({

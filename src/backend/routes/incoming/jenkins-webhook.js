@@ -23,8 +23,6 @@ router
 
     /**
      * POST /incoming/bitbucket-webhook
-     *
-     * Retrieve all services
      */
     .post((req, res, next) => {
         validator({
