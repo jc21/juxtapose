@@ -252,7 +252,10 @@
             "type": "integer",
             "minimum": 1
           },
-          "service_type": {
+          "in_service_type": {
+            "$ref": "../definitions.json#/definitions/service_type"
+          },
+          "out_service_type": {
             "$ref": "../definitions.json#/definitions/service_type"
           }
         }

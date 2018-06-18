@@ -234,7 +234,8 @@ const internalRule = {
      * @param {Object}   data
      * @param {Integer}  data.from
      * @param {Integer}  data.to
-     * @param {String}   [data.service_type]
+     * @param {String}   [data.in_service_type]
+     * @param {String}   [data.out_service_type]
      */
     copy: (access, data) => {
         return access.can('rules:copy')
@@ -249,9 +250,14 @@ const internalRule = {
                     .where('rule.is_deleted', 0)
                     .andWhere('rule.user_id', data.from);
 
-                if (typeof data.service_type !== 'undefined' && data.service_type) {
-                    query.join('service', 'rule.in_service_id', 'service.id')
-                        .andWhere('service.type', data.service_type);
+                if (typeof data.in_service_type !== 'undefined' && data.in_service_type) {
+                    query.join('service as in_service', 'rule.in_service_id', 'in_service.id')
+                        .andWhere('in_service.type', data.in_service_type);
+                }
+
+                if (typeof data.out_service_type !== 'undefined' && data.out_service_type) {
+                    query.join('service as out_service', 'rule.out_service_id', 'out_service.id')
+                        .andWhere('out_service.type', data.out_service_type);
                 }
 
                 return query;

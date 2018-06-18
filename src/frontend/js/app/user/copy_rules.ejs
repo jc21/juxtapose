@@ -9,8 +9,8 @@
                 <p>This will NOT overwrite or remove any existing rules for the user, who currently has <strong><%- rule_count %></strong> rules.</p>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Copy rules from</label>
-                    <div class="col-sm-9">
+                    <label class="col-sm-5 control-label">Copy rules from</label>
+                    <div class="col-sm-7">
                         <select name="from_user_id" class="form-control" required>
                             <option value="">Select...</option>
                             <%
@@ -27,14 +27,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Rules for Services</label>
-                    <div class="col-sm-9">
-                        <select name="service_type" class="form-control">
-                            <option value="">All Services</option>
+                    <label class="col-sm-5 control-label">Rules for Incoming Services</label>
+                    <div class="col-sm-7">
+                        <select name="in_service_type" class="form-control">
+                            <option value="">All Incoming Services</option>
                             <option value="bitbucket-webhook">Bitbucket Rules</option>
                             <option value="dockerhub-webhook">Docker Hub Rules</option>
+                            <option value="jenkins-webhook">Jenkins</option>
                             <option value="jira-webhook">Jira Rules</option>
                             <option value="zendesk-webhook">Zendesk Rules</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Rules for Outgoing Services</label>
+                    <div class="col-sm-7">
+                        <select name="out_service_type" class="form-control">
+                            <option value="">All Outgoing Services</option>
+                            <option value="gchat">Google Chat Rules</option>
+                            <option value="jabber">Jabber Rules</option>
+                            <option value="slack">Slack Rules</option>
                         </select>
                     </div>
                 </div>
