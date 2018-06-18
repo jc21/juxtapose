@@ -150,6 +150,10 @@ const internalServiceWorker = {
                 logger.success('Service #' + service.id + ' (slack) Connected');
             });
 
+            obj.handler.on('error', function (err) {
+                logger.error('Service #' + service.id + ' (slack) ' + err);
+            });
+
             obj.handler.on('close', function () {
                 obj.online = false;
                 logger.info('Service #' + service.id + ' (slack) Closed');
