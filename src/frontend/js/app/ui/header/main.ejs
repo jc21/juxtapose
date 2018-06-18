@@ -23,6 +23,11 @@
             <h2>Juxtapose</h2>
 
             <ul class="nav navbar-nav navbar-right">
+                <% if (hasOtherLogin()) { %>
+                <li class="logout-link-item">
+                    <a href="#" class="logout-link"><i class="fa fa-sign-in" aria-hidden="true" title="<%- getLogoutText() %>"></i></a>
+                </li>
+                <% } %>
                 <li class="dropdown profil-link">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span class="profile-address"><%- getName() %></span>
@@ -33,7 +38,7 @@
                         <li><a href="#" class="services-link">Service Settings</a></li>
                         <li><a href="#" class="password-link">Change Password</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" class="logout-link">Logout</a></li>
+                        <li><a href="#" class="logout-link"><%- getLogoutText() %></a></li>
                     </ul>
                 </li>
             </ul>

@@ -32,7 +32,7 @@ module.exports = Mn.View.extend({
                     App.UI.closeModal();
                     Controller.showUsers();
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });
@@ -73,17 +73,19 @@ module.exports = Mn.View.extend({
             }
 
             method(data)
-                .then((result) => {
+                .then(result => {
                     if (result.id === Cache.User.get('id')) {
                         Cache.User.set(result);
                     }
 
                     view.model.set(result);
-
                     App.UI.closeModal();
-                    //Controller.showUsers();
+
+                    if (view.model.get('id') !== Cache.User.get('id')) {
+                        Controller.showUsers();
+                    }
                 })
-                .catch((err) => {
+                .catch(err => {
                     alert(err.message);
                     this.ui.buttons.prop('disabled', false).removeClass('btn-disabled');
                 });

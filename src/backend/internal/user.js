@@ -156,7 +156,7 @@ const internalUser = {
 
                 return query;
             })
-            .then((row) => {
+            .then(row => {
                 if (row) {
                     return _.omit(row, omissions());
                 } else {
@@ -428,6 +428,21 @@ const internalUser = {
             })
             .then(() => {
                 return internalUser.get(access, {id: data.id, expand: ['services']});
+            });
+    },
+
+    /**
+     * @param {Access}   access
+     * @param {Object}   data
+     * @param {Integer}  data.id
+     */
+    loginAs: (access, data) => {
+        return access.can('users:loginas', data.id)
+            .then(() => {
+                return internalUser.get(access, data);
+            })
+            .then(user => {
+                return internalToken.getTokenFromUser(user);
             });
     }
 };

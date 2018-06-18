@@ -2,7 +2,8 @@
 
 import Backbone from 'backbone';
 
-const Cache = require('./cache');
+const Cache  = require('./cache');
+const Tokens = require('./tokens');
 
 module.exports = {
 
@@ -477,7 +478,7 @@ module.exports = {
      * Logout
      */
     logout: function () {
-        window.localStorage.removeItem('juxtapose-token');
+        Tokens.dropTopToken();
         this.navigate('/');
         window.location = '/';
         window.location.reload();

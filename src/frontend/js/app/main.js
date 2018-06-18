@@ -10,6 +10,7 @@ const Controller = require('./controller');
 const Router     = require('./router');
 const UI         = require('./ui/main');
 const Api        = require('./api');
+const Tokens     = require('./tokens');
 
 const App = Mn.Application.extend({
 
@@ -27,11 +28,7 @@ const App = Mn.Application.extend({
 
         // Check if token is coming through
         if (this.getParam('token')) {
-            window.localStorage.setItem('juxtapose-token', this.getParam('token'));
-
-            if (this.getParam('expires')) {
-                window.localStorage.setItem('juxtapose-expires', this.getParam('expires'));
-            }
+            Tokens.addToken(this.getParam('token'))
         }
 
         // Check if we are still logged in by refreshing the token
@@ -126,8 +123,9 @@ const App = Mn.Application.extend({
      */
     bootstrap: function () {
         return Api.Users.getById('me', ['services'])
-            .then((response) => {
+            .then(response => {
                 Cache.User.set(response);
+                Tokens.setCurrentName(response.nickname || response.name);
             });
     },
 

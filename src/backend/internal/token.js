@@ -65,7 +65,7 @@ module.exports = {
                                             }, {
                                                 expiresIn: expiry.unix()
                                             })
-                                                .then((signed) => {
+                                                .then(signed => {
                                                     return {
                                                         token:   signed.token,
                                                         expires: expiry.toISOString()
@@ -136,5 +136,31 @@ module.exports = {
         } else {
             throw new error.AssertionFailedError('Existing token contained invalid user data');
         }
+    },
+
+    /**
+     * @param   {Object} user
+     * @returns {Promise}
+     */
+    getTokenFromUser: user => {
+        let Token  = new TokenModel();
+        let expiry = helpers.parseDatePeriod('1d');
+
+        return Token.create({
+            iss:   'api',
+            attrs: {
+                id: user.id
+            },
+            scope: ['user']
+        }, {
+            expiresIn: expiry.unix()
+        })
+            .then(signed => {
+                return {
+                    token:   signed.token,
+                    expires: expiry.toISOString(),
+                    user:    user
+                };
+            });
     }
 };

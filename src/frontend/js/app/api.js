@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import Tokens from './tokens';
 
 /**
  * @param {String} message
@@ -39,7 +40,7 @@ function fetch (verb, path, data, options) {
     return new Promise(function (resolve, reject) {
         let api_url = '/api/';
         let url     = api_url + path;
-        let token   = window.localStorage.getItem('juxtapose-token') || null;
+        let token   = Tokens.getTopToken();
 
         $.ajax({
             url:         url,
@@ -54,7 +55,7 @@ function fetch (verb, path, data, options) {
             },
 
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                xhr.setRequestHeader('Authorization', 'Bearer ' + (token ? token.t : null));
             },
 
             success: function (data, textStatus, response) {
@@ -115,16 +116,15 @@ module.exports = {
          */
         login: function (identity, secret) {
             return fetch('post', 'tokens', {identity: identity, secret: secret})
-                .then(function (response) {
+                .then(response => {
                     if (response.token) {
                         // Set storage token
-                        window.localStorage.setItem('juxtapose-token', response.token);
+                        Tokens.addToken(response.token);
                         return response.token;
                     } else {
-                        window.localStorage.removeItem('juxtapose-token');
+                        Tokens.clearTokens();
+                        throw(new Error('No token returned'));
                     }
-
-                    throw(new Error('No token returned'));
                 });
         },
 
@@ -133,15 +133,14 @@ module.exports = {
          */
         refresh: function () {
             return fetch('get', 'tokens')
-                .then(function (response) {
+                .then(response => {
                     if (response.token) {
-                        window.localStorage.setItem('juxtapose-token', response.token);
+                        Tokens.setCurrentToken(response.token);
                         return response.token;
                     } else {
-                        window.localStorage.removeItem('juxtapose-token');
+                        Tokens.clearTokens();
+                        throw(new Error('No token returned'));
                     }
-
-                    throw(new Error('No token returned'));
                 });
         }
     },
@@ -215,6 +214,14 @@ module.exports = {
          */
         saveServiceSettings: function (id, settings) {
             return fetch('post', 'users/' + id + '/services', {settings: settings});
+        },
+
+        /**
+         * @param   {Integer}  id
+         * @returns {Promise}
+         */
+        loginAs: function (id) {
+            return fetch('post', 'users/' + id + '/login');
         }
     },
 
@@ -345,17 +352,22 @@ module.exports = {
          *
          * @param   {Integer}  from_user_id
          * @param   {Integer}  to_user_id
-         * @param   {String}   [service_type]
+         * @param   {String}   [in_service_type]
+         * @param   {String}   [out_service_type]
          * @returns {Promise}
          */
-        copy: function (from_user_id, to_user_id, service_type) {
+        copy: function (from_user_id, to_user_id, in_service_type, out_service_type) {
             let data = {
                 from: from_user_id,
                 to:   to_user_id
             };
 
-            if (service_type) {
-                data.service_type = service_type;
+            if (in_service_type) {
+                data.in_service_type = in_service_type;
+            }
+
+            if (out_service_type) {
+                data.out_service_type = out_service_type;
             }
 
             return fetch('post', 'rules/copy', data);

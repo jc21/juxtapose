@@ -228,4 +228,30 @@ router
             .catch(next);
     });
 
+/**
+ * Specific user login as
+ *
+ * /api/users/123/login
+ */
+router
+    .route('/:user_id/login')
+    .options((req, res) => {
+        res.sendStatus(204);
+    })
+    .all(jwtdecode()) // preferred so it doesn't apply to nonexistent routes
+
+    /**
+     * POST /api/users/123/login
+     *
+     * Log in as a user
+     */
+    .post((req, res, next) => {
+        internalUser.loginAs(res.locals.access, {id: parseInt(req.params.user_id, 10)})
+            .then(result => {
+                res.status(201)
+                    .send(result);
+            })
+            .catch(next);
+    });
+
 module.exports = router;

@@ -6,6 +6,7 @@ const template   = require('./main.ejs');
 const Controller = require('../../controller');
 const Cache      = require('../../cache');
 const Api        = require('../../api');
+const Tokens     = require('../../tokens');
 
 module.exports = Mn.View.extend({
     template: template,
@@ -64,6 +65,18 @@ module.exports = Mn.View.extend({
 
             getName: function () {
                 return Cache.User.get('nickname') || Cache.User.get('name');
+            },
+
+            hasOtherLogin: function () {
+                return Tokens.getTokenCount() > 1;
+            },
+
+            getLogoutText: function () {
+                if (Tokens.getTokenCount() > 1) {
+                    return 'Log back in as ' + Tokens.getNextTokenName();
+                }
+
+                return 'Logout';
             }
         };
     },
