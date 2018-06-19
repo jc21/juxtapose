@@ -27,9 +27,9 @@ Follow these instructions in order:
     8. The private key will be downloaded
         1. The ID of this private key will also appear in APIs & services > Credentials
         2. This is the only copy of the key. Do not lose it!
-5. Create a Juxtapose Google Chat Bot
+5. Create a Google Chat service in your Juxtapose App UI
     1. Enter the verification code you copied earlier
-    2. Open the downloaded credentials JSON file an enter the contents in the textarea
+    2. Open the downloaded credentials JSON file and paste the contents into the textarea
     3. Save
     4. View the Endpoint for your new Service, copy the URL
 6. Optional but helpful step if your endpoint is SSL enabled
@@ -42,6 +42,6 @@ with Juxtapose. You can either start a Direct message or invite Juxtapose bot to
 If you configured step 5 correctly, Juxtapose will send a message to you or the room as soon
 as you add him/her/it.
 
-Before any users can receive Juxtapose event notifications from any configured rules,
-the user must select with DM/Room they want their notifications to go to.
- 
+Before you or any other user can receive Juxtapose event notifications from any configured rules,
+you have to configure the Service Settings for yourself or other users and select the Google Chat DM/Room you want notifications to go to.
+
