@@ -99,7 +99,6 @@ const Tokens = {
         let tokens = getStorageTokens();
         if (tokens.length) {
             tokens[0].n = name;
-            console.log('SET CURRENT NAME:', name);
             setStorageTokens(tokens);
             return true;
         }

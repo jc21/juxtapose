@@ -16,29 +16,33 @@ if (config.has('port')) {
     port = config.get('port');
 }
 
-migrate.latest()
-    .then(() => {
-        return setup();
-    })
-    .then(() => {
-        return apiValidator.loadSchemas;
-    })
-    .then(() => {
-        const server = app.listen(port, () => {
-            logger.info('PID ' + process.pid + ' listening on port ' + port + ' ...');
+function appStart() {
+    return migrate.latest()
+        .then(() => {
+            return setup();
+        })
+        .then(() => {
+            return apiValidator.loadSchemas;
+        })
+        .then(() => {
+            const server = app.listen(port, () => {
+                logger.info('PID ' + process.pid + ' listening on port ' + port + ' ...');
 
-            serviceWorker.start();
+                serviceWorker.start();
 
-            process.on('SIGTERM', () => {
-                logger.info('PID ' + process.pid + ' received SIGTERM');
-                server.close(() => {
-                    logger.info('Stopping.');
-                    process.exit(0);
+                process.on('SIGTERM', () => {
+                    logger.info('PID ' + process.pid + ' received SIGTERM');
+                    server.close(() => {
+                        logger.info('Stopping.');
+                        process.exit(0);
+                    });
                 });
             });
+        })
+        .catch(err => {
+            logger.error(err.message);
+            setTimeout(appStart, 1000);
         });
-    })
-    .catch((err) => {
-        logger.error(err);
-        process.exit(1);
-    });
+}
+
+appStart();
