@@ -125,6 +125,7 @@ const internalBitbucketWebhook = {
     process: (service_id, webhook_data) => {
         if (typeof webhook_data.eventKey === 'undefined') {
             // This is probably a test from Bitbucket webhook UI
+            logger.info('  ❯ Event:                          Webhook Test');
             return {
                 result: 'Test OK'
             };
