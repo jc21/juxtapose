@@ -160,28 +160,36 @@
       }
     },
     "bitbucket_webhook_data": {
-      "type": "object",
-      "additionalProperties": true,
-      "required": [
-        "eventKey",
-        "date"
-      ],
-      "properties": {
-        "eventKey": {
-          "type": "string",
-          "minLength": 2
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "eventKey",
+            "date"
+          ],
+          "properties": {
+            "eventKey": {
+              "type": "string",
+              "minLength": 2
+            },
+            "date": {
+              "type": "string",
+              "minimum": 19
+            },
+            "actor": {
+              "type": "object"
+            },
+            "pullRequest": {
+              "type": "object"
+            }
+          }
         },
-        "date": {
-          "type": "string",
-          "minimum": 19
-        },
-        "actor": {
-          "type": "object"
-        },
-        "pullRequest": {
-          "type": "object"
+        {
+          "type": "object",
+          "additionalProperties": false
         }
-      }
+      ]
     },
     "dockerhub_webhook_data": {
       "type": "object",

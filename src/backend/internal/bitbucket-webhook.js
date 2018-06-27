@@ -123,7 +123,13 @@ const internalBitbucketWebhook = {
      * @returns {Promise|Object}
      */
     process: (service_id, webhook_data) => {
-        if (typeof webhook_data.eventKey === 'string') {
+        if (typeof webhook_data.eventKey === 'undefined') {
+            // This is probably a test from Bitbucket webhook UI
+            return {
+                result: 'Test OK'
+            };
+
+        } else if (typeof webhook_data.eventKey === 'string') {
             logger.info('  ❯ Event:                          ', webhook_data.eventKey);
             logger.info('  ❯ From:                           ', internalBitbucketWebhook.getFromProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getFromRepoField(webhook_data, 'slug'));
             logger.info('  ❯ To:                             ', internalBitbucketWebhook.getToProjectField(webhook_data, 'key') + '/' + internalBitbucketWebhook.getToRepoField(webhook_data, 'slug'));
