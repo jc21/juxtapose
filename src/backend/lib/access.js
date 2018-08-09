@@ -29,7 +29,7 @@ module.exports = function (token_string) {
                 reject(new error.PermissionError('Permission Denied'));
             } else {
                 resolve(Token.load(token_string)
-                    .then((data) => {
+                    .then(data => {
                         token_data = data;
 
                         // At this point we need to load the user from the DB and make sure they:
@@ -45,7 +45,7 @@ module.exports = function (token_string) {
                                 .andWhere('is_deleted', 0)
                                 .andWhere('is_disabled', 0)
                                 .first('id')
-                                .then((user) => {
+                                .then(user => {
                                     if (user) {
                                         // make sure user has all scopes of the token
                                         // The `user` role is not added against the user row, so we have to just add it here to get past this check.

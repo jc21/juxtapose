@@ -354,7 +354,7 @@ const internalZendeskWebhook = {
             let author_gravatar_url = 'https://public.jc21.com/juxtapose/icons/zendesk.png';
 
             if (typeof template_data.ticket.latest_comment.author_email !== 'undefined' && template_data.ticket.latest_comment.author_email) {
-                author_gravatar_url = 'https:' + gravatar.url(template_data.ticket.latest_comment.author_email, {default: gravatar_url});
+                author_gravatar_url = 'https:' + gravatar.url(template_data.ticket.latest_comment.author_email, {default: author_gravatar_url});
             }
 
             template_data.ticket.latest_comment.author_gravatar = author_gravatar_url;
