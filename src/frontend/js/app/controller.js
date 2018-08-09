@@ -21,8 +21,9 @@ module.exports = {
      * Login
      */
     showLogin: function () {
+        let controller = this;
         require(['./main', './login/main'], (App, View) => {
-            this.navigate('/login');
+            controller.navigate('/login');
             App.UI.showChildView('main_region', new View());
         });
     },
@@ -32,8 +33,9 @@ module.exports = {
      */
     showServices: function () {
         if (Cache.User.isAdmin()) {
+            let controller = this;
             require(['./main', './services/main'], (App, View) => {
-                this.navigate('/services');
+                controller.navigate('/services');
                 App.UI.showChildView('main_region', new View());
             });
         } else {
@@ -187,8 +189,9 @@ module.exports = {
      */
     showTemplates: function () {
         if (Cache.User.isAdmin()) {
+            let controller = this;
             require(['./main', './templates/main'], (App, View) => {
-                this.navigate('/templates');
+                controller.navigate('/templates');
                 App.UI.showChildView('main_region', new View());
             });
         } else {
@@ -241,8 +244,9 @@ module.exports = {
      * @param {String}  [sort]
      */
     showRules: function (offset, limit, sort) {
+        let controller = this;
         require(['./main', './rules/main'], (App, View) => {
-            this.navigate('/rules');
+            controller.navigate('/rules');
             App.UI.showMainLoading();
 
             let view = new View({
@@ -366,8 +370,9 @@ module.exports = {
      */
     showUsers: function (offset, limit, sort) {
         if (Cache.User.isAdmin()) {
+            let controller = this;
             require(['./main', './users/main'], (App, View) => {
-                this.navigate('/users');
+                controller.navigate('/users');
                 App.UI.showMainLoading();
                 let view = new View({
                     sort:   (typeof sort !== 'undefined' && sort ? sort : Cache.Session.Users.sort),
@@ -459,8 +464,9 @@ module.exports = {
      * Dashboard
      */
     showDashboard: function () {
+        let controller = this;
         require(['./main', './dashboard/main'], (App, View) => {
-            this.navigate('/');
+            controller.navigate('/');
             App.UI.showMainLoading();
 
             let view = new View();
