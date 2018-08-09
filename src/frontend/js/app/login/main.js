@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const Api        = require('../api');
 const Cache      = require('../cache');
 const Controller = require('../controller');
@@ -12,11 +11,11 @@ module.exports = Mn.View.extend({
     template: template,
 
     ui: {
-        form:        'form',
-        identity:    'input[name=identity]',
-        secret:      'input[name=secret]',
-        submit:      'button',
-        error:       'div.error'
+        form:     'form',
+        identity: 'input[name=identity]',
+        secret:   'input[name=secret]',
+        submit:   'button',
+        error:    'div.error'
     },
 
     events: {

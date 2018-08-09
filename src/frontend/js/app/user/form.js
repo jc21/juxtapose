@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const template   = require('./form.ejs');
 const Controller = require('../controller');
 const Cache      = require('../cache');
@@ -47,8 +46,7 @@ module.exports = Mn.View.extend({
             data.roles = [];
             if (
                 (this.model.get('id') === Cache.User.get('id') && this.model.isAdmin()) ||
-                (typeof data.is_admin !== 'undefined' && data.is_admin))
-            {
+                (typeof data.is_admin !== 'undefined' && data.is_admin)) {
                 data.roles.push('admin');
                 delete data.is_admin;
             }

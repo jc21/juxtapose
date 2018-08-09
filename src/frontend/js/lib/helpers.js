@@ -1,7 +1,7 @@
 'use strict';
 
-import numeral from 'numeral';
-import moment from 'moment';
+const numeral = require('numeral');
+const moment  = require('moment');
 
 module.exports = {
 
@@ -30,7 +30,7 @@ module.exports = {
     },
 
     replaceSlackLinks: function (content) {
-        return content.replace(/<(http[^|>]+)\|([^>]+)>/gi, "<a href=\"$1\" target=\"_blank\">$2</a>");
+        return content.replace(/<(http[^|>]+)\|([^>]+)>/gi, '<a href="$1" target="_blank">$2</a>');
     }
 
 };

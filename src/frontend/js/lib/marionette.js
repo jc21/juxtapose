@@ -5,7 +5,8 @@ const Mn      = require('backbone.marionette');
 const moment  = require('moment');
 const numeral = require('numeral');
 
-let render         = Mn.Renderer.render;
+let render = Mn.Renderer.render;
+
 Mn.Renderer.render = function (template, data, view) {
 
     data = _.clone(data);

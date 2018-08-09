@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn       = require('backbone.marionette');
 const ItemView = require('./item');
 
 module.exports = Mn.CollectionView.extend({

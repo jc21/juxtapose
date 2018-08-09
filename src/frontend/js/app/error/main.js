@@ -1,15 +1,14 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn       = require('backbone.marionette');
 const template = require('./main.ejs');
 
 module.exports = Mn.View.extend({
-    id: 'error',
+    id:       'error',
     template: template,
 
     options: {
-        err: null,
+        err:      null,
         nice_msg: 'Unknown error'
     },
 

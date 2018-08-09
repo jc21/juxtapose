@@ -1,9 +1,8 @@
 'use strict';
 
-import Backbone from 'backbone';
-
-const Cache  = require('./cache');
-const Tokens = require('./tokens');
+const Backbone = require('backbone');
+const Cache    = require('./cache');
+const Tokens   = require('./tokens');
 
 module.exports = {
 

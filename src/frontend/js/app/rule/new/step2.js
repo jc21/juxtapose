@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const template   = require('./step2.ejs');
 const Controller = require('../../controller');
 

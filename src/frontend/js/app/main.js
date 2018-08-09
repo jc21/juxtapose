@@ -1,9 +1,8 @@
 'use strict';
 
-import $ from 'jquery';
-import _ from 'underscore';
-import Backbone from 'backbone';
-
+const $          = require('jquery');
+const _          = require('underscore');
+const Backbone   = require('backbone');
 const Mn         = require('../lib/marionette');
 const Cache      = require('./cache');
 const Controller = require('./controller');
@@ -28,7 +27,7 @@ const App = Mn.Application.extend({
 
         // Check if token is coming through
         if (this.getParam('token')) {
-            Tokens.addToken(this.getParam('token'))
+            Tokens.addToken(this.getParam('token'));
         }
 
         // Check if we are still logged in by refreshing the token
@@ -81,8 +80,8 @@ const App = Mn.Application.extend({
     },
 
     Error: function (code, message, debug) {
-        let temp     = Error.call(this, message);
-        temp.name    = this.name = 'AppError';
+        let temp  = Error.call(this, message);
+        temp.name = this.name = 'AppError';
         this.stack   = temp.stack;
         this.message = temp.message;
         this.code    = code;
@@ -100,9 +99,9 @@ const App = Mn.Application.extend({
     },
 
     getParam: function (name) {
-        name = name.replace(/[\[\]]/g, '\\$&');
-        let url = window.location.href;
-        let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        name        = name.replace(/[\[\]]/g, '\\$&');
+        let url     = window.location.href;
+        let regex   = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
         let results = regex.exec(url);
 
         if (!results) {
@@ -179,5 +178,5 @@ const App = Mn.Application.extend({
     }
 });
 
-const app = new App();
+const app      = new App();
 module.exports = app;

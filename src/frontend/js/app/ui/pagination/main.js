@@ -1,8 +1,7 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-import $ from 'jquery';
-
+const Mn       = require('backbone.marionette');
+const $        = require('jquery');
 const template = require('./main.ejs');
 
 module.exports = Mn.View.extend({

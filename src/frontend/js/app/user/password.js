@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const template   = require('./password.ejs');
 const Controller = require('../controller');
 const Api        = require('../api');

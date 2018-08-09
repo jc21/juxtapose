@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const template   = require('./item.ejs');
 const Controller = require('../controller');
 
@@ -69,6 +68,6 @@ module.exports = Mn.View.extend({
     },
 
     initialize: function () {
-        this.listenTo(this.model, 'change', this.render)
+        this.listenTo(this.model, 'change', this.render);
     }
 });

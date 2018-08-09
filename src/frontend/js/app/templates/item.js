@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn               = require('backbone.marionette');
 const template         = require('./item.ejs');
 const preview_template = require('../template/preview/main.ejs');
 const Controller       = require('../controller');
@@ -27,7 +26,7 @@ module.exports = Mn.View.extend({
 
         return {
             getPreview: function () {
-                let data = view.model.attributes;
+                let data       = view.model.attributes;
                 data.shortTime = Helpers.shortTime;
                 return preview_template(data);
             }

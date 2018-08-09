@@ -1,8 +1,7 @@
 'use strict';
 
-import _ from 'underscore';
-import Mn from 'backbone.marionette';
-
+const _                = require('underscore');
+const Mn               = require('backbone.marionette');
 const template         = require('./item.ejs');
 const Controller       = require('../controller');
 const Api              = require('../api');

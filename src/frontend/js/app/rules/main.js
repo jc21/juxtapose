@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn         = require('backbone.marionette');
 const Api        = require('../api');
 const Cache      = require('../cache');
 const Controller = require('../controller');

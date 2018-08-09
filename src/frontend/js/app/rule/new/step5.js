@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn            = require('backbone.marionette');
 const template      = require('./step5.ejs');
 const ListView      = require('./step5-items');
 const TemplateModel = require('../../../models/template');

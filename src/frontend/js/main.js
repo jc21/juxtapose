@@ -1,10 +1,10 @@
 'use strict';
 
-import promise from 'es6-promise';
-import $ from 'jquery';
+const promise = require('es6-promise');
+const $       = require('jquery');
 
 global.jQuery = $;
-global.$ = $;
+global.$      = $;
 
 const App = require('./app/main');
 

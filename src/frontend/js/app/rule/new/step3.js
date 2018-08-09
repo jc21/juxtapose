@@ -1,8 +1,7 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
-const template = require('./step3.ejs');
+const Mn         = require('backbone.marionette');
+const template   = require('./step3.ejs');
 const Controller = require('../../controller');
 
 require('jquery-serializejson');

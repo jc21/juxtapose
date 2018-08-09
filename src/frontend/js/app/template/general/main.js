@@ -1,8 +1,7 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
-const _          = require('lodash');
+const Mn         = require('backbone.marionette');
+const _          = require('underscore');
 const template   = require('./main.ejs');
 const Controller = require('../../controller');
 const Api        = require('../../api');

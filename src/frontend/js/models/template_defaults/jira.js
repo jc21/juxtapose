@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
+const _ = require('underscore');
 
 /**
  * @returns {{content: string, default_options: {icon_url: string, panel_color: string}}}

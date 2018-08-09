@@ -1,7 +1,7 @@
 'use strict';
 
-import _ from 'underscore';
-import Backbone from 'backbone';
+const _        = require('underscore');
+const Backbone = require('backbone');
 
 const trigger_groups = {
     'jira-webhook':      {

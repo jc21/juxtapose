@@ -1,6 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
+const Mn = require('backbone.marionette');
 
 module.exports = Mn.View.extend({
     template: function () {

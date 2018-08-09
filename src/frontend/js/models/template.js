@@ -1,7 +1,6 @@
 'use strict';
 
-import Backbone from 'backbone';
-
+const Backbone                  = require('backbone');
 const jiraTemplateDefaults      = require('./template_defaults/jira');
 const bitbucketTemplateDefaults = require('./template_defaults/bitbucket');
 const zendeskTemplateDefaults   = require('./template_defaults/zendesk');

@@ -1,7 +1,6 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
+const Mn               = require('backbone.marionette');
 const template         = require('./item.ejs');
 const preview_template = require('../../template/preview/main.ejs');
 const RuleModel        = require('../../../models/rule');

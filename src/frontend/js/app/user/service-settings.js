@@ -1,12 +1,11 @@
 'use strict';
 
-import Mn from 'backbone.marionette';
-
-const _          = require('underscore');
-const template   = require('./service-settings.ejs');
-const Api        = require('../api');
-const App        = require('../main');
-const UserModel  = require('../../models/user');
+const Mn        = require('backbone.marionette');
+const _         = require('underscore');
+const template  = require('./service-settings.ejs');
+const Api       = require('../api');
+const App       = require('../main');
+const UserModel = require('../../models/user');
 
 require('jquery-serializejson');
 

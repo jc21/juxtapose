@@ -1,8 +1,8 @@
 'use strict';
 
-import $ from 'jquery';
-import _ from 'underscore';
-import Tokens from './tokens';
+const $      = require('jquery');
+const _      = require('underscore');
+const Tokens = require('./tokens');
 
 /**
  * @param {String} message
