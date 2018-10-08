@@ -96,6 +96,24 @@ let getGoogleChatDefaults = () => {
 };
 
 /**
+ * @returns {object}
+ */
+let getPushoverDefaults = () => {
+    return {
+        content: JSON.stringify({
+            title:   '{{ project.full_name }}',
+            message: 'SUCCESS: #{{ build.number }}',
+            url:     '{{ project.url }}/{{ build.number }}/'
+        }, null, 2),
+
+        default_options: {
+            priority: 'normal',
+            sound:    'default'
+        }
+    };
+};
+
+/**
  * @returns {{content: string, default_options: {}}}
  */
 let getOtherDefaults = () => {
@@ -118,6 +136,10 @@ module.exports = function (service_type) {
 
         case 'gchat':
             specifics = getGoogleChatDefaults();
+            break;
+
+        case 'pushover':
+            specifics = getPushoverDefaults();
             break;
     }
 

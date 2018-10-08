@@ -43,11 +43,10 @@ module.exports = Mn.View.extend({
 
             let form_data = this.ui.form.serializeJSON();
             let data      = {
-                type: 'gchat',
+                type: 'pushover',
                 name: form_data.name,
                 data: {
-                    credentials_json: form_data.credentials_json,
-                    validation_key:   form_data.validation_key
+                    app_token: form_data.app_token
                 }
             };
 

@@ -31,6 +31,10 @@ module.exports = Mn.View.extend({
                     Controller.showGoogleChatConfig(this.model);
                     break;
 
+                case 'pushover':
+                    Controller.showPushoverConfig(this.model);
+                    break;
+
                 case 'jira-webhook':
                     Controller.showJiraWebhookConfig(this.model);
                     break;

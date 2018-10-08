@@ -241,7 +241,7 @@ const internalService = {
 
                     batchflow(services).parallel()
                         .each((i, service, done) => {
-                            if (service.type.match(/(.|\n)*-webhook$/im)) {
+                            if (service.type.match(/(.|\n)*-webhook$/im) || service.type === 'pushover') {
                                 service.online = true;
                             } else {
                                 service.online = internalServiceWorker.isOnline(service.id);

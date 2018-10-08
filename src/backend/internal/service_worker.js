@@ -8,6 +8,7 @@ const slackBots              = require('slackbots');
 const notificationQueueModel = require('../models/notification_queue');
 const xmpp                   = require('../lib/xmpp');
 const GoogleChatBot          = require('../lib/gchat');
+const Pushover               = require('../lib/pushover');
 
 const internalServiceWorker = {
 
@@ -94,6 +95,17 @@ const internalServiceWorker = {
 
                             } else if (service.type === 'gchat') {
                                 internalServiceWorker.initGchat(service)
+                                    .then(() => {
+                                        started++;
+                                        next();
+                                    })
+                                    .catch(err => {
+                                        logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+                                        next(err);
+                                    });
+
+                            } else if (service.type === 'pushover') {
+                                internalServiceWorker.initPushover(service)
                                     .then(() => {
                                         started++;
                                         next();
@@ -322,6 +334,22 @@ const internalServiceWorker = {
     },
 
     /**
+     * @param   {Object}  service
+     * @returns {Promise}
+     */
+    initPushover: service => {
+        return new Promise((resolve, reject) => {
+            logger.info('Starting Service #' + service.id + ' (pushover): ' + service.name);
+
+            // Set global
+            let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+            obj.online  = true;
+            obj.handler = new Pushover(service.data.app_token);
+
+        });
+    },
+
+    /**
      * @param {Integer}  service_id
      */
     syncData: service_id => {
@@ -455,9 +483,9 @@ const internalServiceWorker = {
     },
 
     /**
-     * @param   {Integer} service_id
-     * @param   {String}  username
-     * @param   {String}  message
+     * @param   {Integer}        service_id
+     * @param   {String}         username
+     * @param   {String|Object}  message
      * @returns {Promise}
      */
     sendMessage: (service_id, username, message) => {
@@ -502,6 +530,18 @@ const internalServiceWorker = {
                         service.handler.createMessage(username, message)
                             .then(sent_message => {
                                 resolve(sent_message || true);
+                            })
+                            .catch(err => {
+                                reject(err);
+                            });
+                        break;
+
+                    // ===========================
+                    // Pushover
+                    case 'pushover':
+                        service.handler.sendMessage(username, message)
+                            .then(result => {
+                                resolve(result || true);
                             })
                             .catch(err => {
                                 reject(err);

@@ -7,7 +7,7 @@
             <div class="modal-body has-tabs">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Message Template</a></li>
-                    <% if (service_type === 'slack') { %>
+                    <% if (service_type === 'slack' || service_type === 'pushover') { %>
                     <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Default Options</a></li>
                     <% } %>
                     <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Example Data</a></li>
@@ -26,7 +26,7 @@
                             <small>Tip: Use the <a href="https://api.slack.com/docs/messages/builder" target="_blank">Slack Message Builder</a></small>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="tab2"<%- service_type === 'slack' ? '' : ' style="display:none;"' %>>
+                    <div role="tabpanel" class="tab-pane" id="tab2"<%- service_type === 'slack' || service_type === 'pushover' ? '' : ' style="display:none;"' %>>
                         <div class="form-group">
                             <label>Default Options</label>
                             <textarea name="default_options" class="form-control text-code" rows="20" required><%- JSON.stringify(default_options, null, 2) %></textarea>

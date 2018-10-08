@@ -30,6 +30,7 @@ swamped in noise, thus improving productivity.
 - Slack (via Slack Bot)
 - Jabber / XMPP
 - Google Chat
+- Pushover
 
  
 ## Features
@@ -239,6 +240,8 @@ In addition to the functionality provided in the base Liquid engine, this projec
 ### Proxy
 
 Should you be running behind a HTTP Proxy, just specify the `HTTP_PROXY` environment variable. Note: Proxy support was added in v1.0.1
+
+Google Hangouts Chat does not work behind a proxy, due to Google NodeJS Libraries lack of support.
 
 ```bash
 version: "2"

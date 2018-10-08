@@ -1,11 +1,11 @@
 <div class="panel panel-filled">
     <div class="panel-body">
         <div class="status status-<%- online ? 'on' : 'off' %>line" title="<%- online ? 'On' : 'Off' %>line"></div>
-        <img src="images/services/<%- type %>.png" alt="<%- type %>" border="0">
+        <img src="images/services/<%- type %>.png" alt="<%- type %>" border="0"<%= type === 'pushover' ? ' class="round"' : '' %>>
         <h4 class="m-b-none"><%- name %></h4>
         <div>
             <a href="#" class="edit">Edit</a>
-            <% if (type.match(/^(slack|jabber)$/im)) { %>
+            <% if (type.match(/^(slack|jabber|pushover)$/im)) { %>
                 &mdash;
                 <a href="#" class="test">Test</a>
             <% } else if (type.match(/(.|\n)*-webhook$/im) || type === 'gchat') { %>

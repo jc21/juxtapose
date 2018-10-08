@@ -96,6 +96,19 @@ module.exports = {
     },
 
     /**
+     * Pushover Config
+     *
+     * @param model
+     */
+    showPushoverConfig: function (model) {
+        if (Cache.User.isAdmin()) {
+            require(['./main', './services/pushover/main'], function (App, View) {
+                App.UI.showModalDialog(new View({model: model}));
+            });
+        }
+    },
+
+    /**
      * Jira Webhook Config
      *
      * @param model
