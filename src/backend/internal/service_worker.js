@@ -439,6 +439,7 @@ const internalServiceWorker = {
                                                         .where('id', notification.id);
                                                 })
                                                 .catch(err => {
+                                                    logger.error(err);
                                                     // update row with error
                                                     return notificationQueueModel
                                                         .query()
