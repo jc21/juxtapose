@@ -3,6 +3,7 @@
 const _                      = require('lodash');
 const config                 = require('config');
 const batchflow              = require('batchflow');
+const moment                 = require('moment');
 const logger                 = require('../logger').jira;
 const error                  = require('../lib/error');
 const serviceModel           = require('../models/service');
@@ -1053,7 +1054,8 @@ const internalJiraWebhook = {
             assignee:      internalJiraWebhook.getAssigneeName(webhook_data) || 'Unassigned',
             reporter:      internalJiraWebhook.getReporterName(webhook_data),
             description:   internalJiraWebhook.getDescription(webhook_data),
-            fields:        internalJiraWebhook.getChangelogData(webhook_data)
+            fields:        internalJiraWebhook.getChangelogData(webhook_data),
+            timestamp:     typeof webhook_data.timestamp !== 'undefined' && webhook_data.timestamp ? Math.abs(webhook_data.timestamp / 1000) : moment().unix()
         };
     },
 
