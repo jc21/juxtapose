@@ -2,7 +2,7 @@
     <div class="message-source-duo">
         <img src="images/services/<%- in_service_type %>.png" alt="<%- in_service_type %>" title="<%- in_service_type %>" border="0">
         <span class="divider"></span>
-        <img src="images/services/<%- service_type %>.png" alt="<%- service_type %>" title="<%- service_type %>" border="0">
+        <img src="images/services/<%- service_type %>.png" alt="<%- service_type %>" title="<%- service_type %>" border="0"<%= service_type === 'pushover' ? ' class="round"' : '' %>>
     </div>
     <div class="message-title">
         <a href="#" class="edit-link pull-right" title="Edit Template"><i class="fa fa-pencil" aria-hidden="true"></i></a>

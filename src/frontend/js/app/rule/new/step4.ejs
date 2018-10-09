@@ -12,7 +12,7 @@
                         if (!services[i].type.match(/(.|\n)*-webhook$/im)) {
                             %>
                             <div class="col-lg-3 col-md-3 col-sm-2 service-item selectable" data-service_id="<%- services[i].id %>" data-service_type="<%- services[i].type %>">
-                                <img src="images/services/<%- services[i].type %>.png" alt="<%- services[i].name %>" border="0">
+                                <img src="images/services/<%- services[i].type %>.png" alt="<%- services[i].name %>" border="0"<%= services[i].type === 'pushover' ? ' class="round"' : '' %>>
                                 <p><%- services[i].name %></p>
                             </div>
                             <%

@@ -2,6 +2,7 @@
 
 const Push       = require('pushover-notifications');
 const ProxyAgent = require('proxy-agent');
+const moment     = require('moment');
 
 class Pushover {
 
@@ -45,12 +46,13 @@ class Pushover {
             }
 
             let msg = {
-                user:    user_token,
-                title:   content.title || 'Juxtapose',
-                message: content.message
+                user:      user_token,
+                title:     content.title || 'Juxtapose',
+                message:   content.message,
+                timestamp: typeof content.timestamp !== 'undefined' && content.timestamp ? content.timestamp : moment().unix()
             };
 
-            if (typeof content.sound !== 'undefined' && content.sound) {
+            if (typeof content.sound !== 'undefined' && content.sound && content.sound !== 'default') {
                 msg.sound = content.sound;
             }
 
@@ -62,6 +64,7 @@ class Pushover {
                     case 'low':
                         content.priority = -1;
                         break;
+                    case 'normal':
                     case 'default':
                         content.priority = 0;
                         break;
@@ -74,6 +77,14 @@ class Pushover {
                 }
 
                 msg.priority = content.priority;
+            }
+
+            if (typeof content.url !== 'undefined' && content.url) {
+                msg.url = content.url;
+
+                if (typeof content.url_title !== 'undefined' && content.url_title) {
+                    msg.url_title = content.url_title;
+                }
             }
 
             this.api.send(msg, function (err, result) {

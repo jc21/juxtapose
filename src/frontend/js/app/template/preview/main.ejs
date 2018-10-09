@@ -347,6 +347,40 @@ if (service_type === 'slack' ) {
         </div>
     </div>
     <%
+} else if (service_type === 'pushover' ) {
+    var _title = typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose';
+    var _message = preview;
+
+    if (typeof preview === 'object') {
+        _message = preview.message;
+        _title   = preview.title || _title;
+    } else if (typeof preview === 'string') {
+        try {
+            _content = JSON.parse(preview);
+            _message = _content.message;
+            _title   = _content.title || _title;
+        } catch (ex) {
+            // do nothing
+        }
+    }
+
+    %>
+    <div class="template-pushover-preview">
+        <div class="message-content">
+            <div class="message-content-header">
+                <div class="message-content-header-left">
+                    <span class="message-sender">
+                        <a class="app_preview_link"><%- _title %></a>
+                    </span>
+                    <span class="time-star-and-extra-metadata">
+                        <a class="timestamp"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></a>
+                    </span>
+                </div>
+            </div>
+            <div class="message-content_body"><%- _message %></div>
+        </div>
+    </div>
+    <%
 } else { %>
     <div>Error: Rendering template for service type "<%- service_type %>" is not yet implemented</div>
 <% } %>

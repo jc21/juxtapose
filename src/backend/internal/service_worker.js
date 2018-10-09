@@ -346,6 +346,9 @@ const internalServiceWorker = {
             obj.online  = true;
             obj.handler = new Pushover(service.data.app_token);
 
+            logger.success('Service #' + service.id + ' (pushover) Ready');
+
+            resolve();
         });
     },
 
@@ -476,7 +479,7 @@ const internalServiceWorker = {
                     internalServiceWorker.interval_processing = false;
                 })
                 .catch(err => {
-                    console.error(err);
+                    logger.error(err);
                     internalServiceWorker.interval_processing = false;
                 });
         }

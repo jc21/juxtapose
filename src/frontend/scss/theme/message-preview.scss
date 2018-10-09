@@ -492,3 +492,77 @@
     }
   }
 }
+
+/* Pushover */
+
+/* JABBER */
+
+.template-pushover-preview {
+  position: relative;
+  color: #212121;
+  line-height: 22px;
+  word-wrap: break-word;
+  padding: .5rem;
+
+  .message-content {
+    margin: 1px 0 0 8px;
+
+    .message-content-header {
+      display: flex;
+      align-items: baseline;
+
+      .message-content-header-left {
+        flex: 1 1 auto;
+
+        .message-sender {
+          margin-right: .25rem;
+          display: inline;
+          font-weight: 900;
+          color: #2c2d30;
+          line-height: 18px;
+
+          a {
+            color: #2c2d30;
+            font-weight: 900;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .bot-label {
+            color: #a3a3a3;
+            font-weight: normal;
+            font-size: 12px;
+            margin: 0 .15rem;
+            padding: 0 .1rem;
+            display: inline;
+          }
+        }
+
+        .time-star-and-extra-metadata {
+          float: right;
+
+          a {
+            text-decoration: none;
+            cursor: default;
+            margin-right: .25rem;
+            opacity: 1;
+            display: inline;
+            line-height: 18px;
+            color: #717274;
+            font-size: 12px;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    .text {
+      padding: 1px 0 3px 0;
+    }
+  }
+
+  a, & a:link, & a:visited {
+    color: #0576b9;
+    text-decoration: none;
+  }
+}
