@@ -838,10 +838,15 @@ const internalJiraWebhook = {
 
         // This complex query should only get the rules for users where the event type is requested and the incoming service username is defined
         // and where a notification hasn't already been sent to a user for this webhook
+        // and where a notification hasn't already been sent to a user for this webhook
+        // and where the user is not disabled, and the services are not deleted
 
         let query = ruleModel
             .query()
             .select('rule.*', 'in_sd.service_username AS in_service_username')
+            .joinRaw('INNER JOIN user ON user.id = rule.user_id AND user.is_disabled = 0 AND user.is_deleted = 0')
+            .joinRaw('INNER JOIN service AS in_service ON in_service.id = rule.in_service_id AND in_service.is_deleted = 0')
+            .joinRaw('INNER JOIN service AS out_service ON out_service.id = rule.out_service_id AND out_service.is_deleted = 0')
             .joinRaw('INNER JOIN user_has_service_data AS in_sd ON in_sd.user_id = rule.user_id AND in_sd.service_id = rule.in_service_id')
             .where('rule.is_deleted', 0)
             .andWhere('rule.in_service_id', data.service_id)
