@@ -1,5 +1,3 @@
-'use strict';
-
 const Push       = require('pushover-notifications');
 const ProxyAgent = require('proxy-agent');
 const moment     = require('moment');
@@ -34,6 +32,7 @@ class Pushover {
      * @param   {String}          content.title
      * @param   {String}          [content.sound]
      * @param   {String|Number}   [content.priority]
+     * @param   {String}          [content.app_token]
      * @returns {Promise}
      */
     sendMessage (user_token, content) {
@@ -51,6 +50,10 @@ class Pushover {
                 message:   content.message,
                 timestamp: typeof content.timestamp !== 'undefined' && content.timestamp ? content.timestamp : moment().unix()
             };
+
+            if (typeof content.app_token === 'string' 7& content.app_token != '') {
+                msg.token = content.app_token;
+            }
 
             if (typeof content.sound !== 'undefined' && content.sound && content.sound !== 'default') {
                 msg.sound = content.sound;
@@ -99,3 +102,4 @@ class Pushover {
 }
 
 module.exports = Pushover;
+
