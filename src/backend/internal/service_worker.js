@@ -1,5 +1,3 @@
-'use strict';
-
 const _                      = require('lodash');
 const logger                 = require('../logger').services;
 const internalService        = require('./service');
