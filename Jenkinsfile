@@ -36,15 +36,15 @@ pipeline {
       }
       steps {
         ansiColor('xterm') {
-          sh 'docker tag $TEMP_IMAGE docker.io/jc21/$IMAGE:${IMAGE}:github-${BRANCH_LOWER}'
+          sh 'docker tag $TEMP_IMAGE docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}'
           withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
             sh "docker login -u '${duser}' -p '${dpass}'"
-            sh 'docker push docker.io/jc21/$IMAGE:${IMAGE}:github-${BRANCH_LOWER}'
+            sh 'docker push docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}'
           }
           script {
             def comment = pullRequest.comment("Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as `jc21/${IMAGE}:github-${BRANCH_LOWER}`")
           }
-          sh 'docker rmi docker.io/jc21/$IMAGE:${IMAGE}:github-${BRANCH_LOWER}'
+          sh 'docker rmi docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}'
         }
       }
     }
@@ -54,12 +54,12 @@ pipeline {
       }
       steps {
         ansiColor('xterm') {
-          sh 'docker tag $TEMP_IMAGE docker.io/jc21/$IMAGE:${IMAGE}:develop'
+          sh 'docker tag $TEMP_IMAGE docker.io/jc21/${IMAGE}:develop'
           withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
             sh "docker login -u '${duser}' -p '${dpass}'"
-            sh 'docker push docker.io/jc21/$IMAGE:${IMAGE}:develop'
+            sh 'docker push docker.io/jc21/${IMAGE}:develop'
           }
-          sh 'docker rmi docker.io/jc21/$IMAGE:${IMAGE}:develop'
+          sh 'docker rmi docker.io/jc21/${IMAGE}:develop'
         }
       }
     }
