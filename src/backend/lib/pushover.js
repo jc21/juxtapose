@@ -32,7 +32,6 @@ class Pushover {
      * @param   {String}          content.title
      * @param   {String}          [content.sound]
      * @param   {String|Number}   [content.priority]
-     * @param   {String}          [content.app_token]
      * @returns {Promise}
      */
     sendMessage (user_token, content) {
@@ -50,10 +49,6 @@ class Pushover {
                 message:   content.message,
                 timestamp: typeof content.timestamp !== 'undefined' && content.timestamp ? content.timestamp : moment().unix()
             };
-
-            if (typeof content.app_token === 'string' && content.app_token != '') {
-                msg.token = content.app_token;
-            }
 
             if (typeof content.sound !== 'undefined' && content.sound && content.sound !== 'default') {
                 msg.sound = content.sound;
