@@ -5,3 +5,5 @@ node_modules
 data/mysql
 dist/*
 webpack_stats.html
+config/development.json
+yarn-error.log

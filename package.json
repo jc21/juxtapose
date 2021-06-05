@@ -1,6 +1,6 @@
 {
   "name": "juxtapose",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Self hosted glue for internal tools",
   "main": "src/backend/index.js",
   "directories": {
@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "@slack/web-api": "^6.2.4",
     "ajv": "^5.5.1",
     "batchflow": "^0.4.0",
     "bcrypt": "^3.0.0",
@@ -34,7 +35,6 @@
     "proxy-agent": "^3.0.3",
     "pushover-notifications": "^1.0.0",
     "signale": "^1.1.0",
-    "slackbots": "git://github.com/jc21/slack-bot-api.git#juxtapose",
     "winston": "^2.3.1"
   },
   "devDependencies": {
@@ -52,8 +52,8 @@
     "ejs-loader": "^0.3.0",
     "font-awesome": "^4.7.0",
     "form-serializer": "^2.5.0",
-    "gulp": "^3.9.1",
-    "gulp-bump": "^2.7.0",
+    "gulp": "^4.0.2",
+    "gulp-bump": "^3.2.0",
     "gulp-concat-util": "^0.5.5",
     "gulp-ejs": "^3.0.1",
     "gulp-imagemin": "^3.3.0",
