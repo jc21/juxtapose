@@ -1,44 +1,48 @@
 <div id="video_wrapper">
-    <div id="wrap">
-        <div class="container-center">
-            <div class="view-header">
-                <div class="header-icon">
-                    <img src="images/favicons/apple-icon.png" border="0" alt="" width="40">
-                </div>
-                <div class="header-title">
-                    <h3>Juxtapose Login</h3>
-                    <br>
-                </div>
-            </div>
+	<div id="wrap">
+		<div class="container-center">
+			<div class="view-header">
+				<div class="header-icon">
+					<img src="images/favicons/apple-icon.png" border="0" alt="" width="40">
+				</div>
+				<div class="header-title">
+					<h3>Juxtapose Login</h3>
+					<br>
+				</div>
+			</div>
 
-            <form method="post">
-                <div class="panel panel-filled">
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label">Email</label>
-                            <input type="email" placeholder="" title="Please enter your email" required value="" name="identity" class="form-control" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Password</label>
-                            <input type="password" title="Please enter your password" placeholder="" required value="" name="secret" class="form-control">
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-accent btn-block btn-light-text">Login</button>
-                        </div>
-                        <div class="error"></div>
-                    </div>
-                    <input type="hidden" name="type" value="password">
-                </div>
-            </form>
-            <p class="text-center text-faded">
-                <small><a href="https://github.com/jc21/juxtapose" target="_blank">v<%- getVersion() %></a></small>
-            </p>
+			<form method="post">
+				<div class="panel panel-filled">
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label"><% if (hasLdap()) { %>LDAP User<% } else { %>Email<% } %></label>
+							<% if (hasLdap()) { %>
+								<input type="text" placeholder="" title="Please enter your LDAP username" required value="" name="identity" class="form-control" autofocus>
+							<% } else { %>
+								<input type="email" placeholder="" title="Please enter your email" required value="" name="identity" class="form-control" autofocus>
+							<% } %>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Password</label>
+							<input type="password" title="Please enter your password" placeholder="" required value="" name="secret" class="form-control">
+						</div>
+						<div>
+							<button type="submit" class="btn btn-accent btn-block btn-light-text">Login</button>
+						</div>
+						<div class="error"></div>
+					</div>
+					<input type="hidden" name="type" value="password">
+				</div>
+			</form>
+			<p class="text-center text-faded">
+				<small><a href="https://github.com/jc21/juxtapose" target="_blank">v<%- getVersion() %></a></small>
+			</p>
 
-            <div class="dictionary">
-                <h4>juxtapose</h4>
-                <p>[<strong>juhk</strong>-st<em>uh</em>-pohz, juhk-st<em>uh</em>-<strong>pohz</strong>]</p>
-                <p><em>to place close together or side by side, especially for comparison or contrast</em></p>
-            </div>
-        </div>
-    </div>
+			<div class="dictionary">
+				<h4>juxtapose</h4>
+				<p>[<strong>juhk</strong>-st<em>uh</em>-pohz, juhk-st<em>uh</em>-<strong>pohz</strong>]</p>
+				<p><em>to place close together or side by side, especially for comparison or contrast</em></p>
+			</div>
+		</div>
+	</div>
 </div>

@@ -1,21 +1,23 @@
 version: "2"
 services:
+
   app:
     image: node:12-slim
     ports:
-      - ${HTTP_PORT}:80
+      - ${HTTP_PORT:-3000}:80
     environment:
       - FORCE_COLOR=1
-      - DEBUG=${DEBUG}
-      - NODE_ENV=${NODE_ENV}
+      - DEBUG=${DEBUG:-}
+      - NODE_ENV=${NODE_ENV:-development}
     volumes:
-      - .:/srv/app
+      - .:/app
     depends_on:
       - db
     links:
       - db
-    working_dir: /srv/app
+    working_dir: /app
     command: yarn nodemon
+
   db:
     image: mariadb
     environment:
@@ -27,4 +29,3 @@ services:
       - ./config/my.cnf:/etc/mysql/conf.d/juxtapose.cnf
       - ./data/mysql:/var/lib/mysql
       - ./data/initial-sql:/docker-entrypoint-initdb.d
-

@@ -1,12 +1,13 @@
 'use strict';
 
 const express = require('express');
+const config  = require('config');
 const pjson   = require('../../../../package.json');
 
 let router = express.Router({
-    caseSensitive: true,
-    strict:        true,
-    mergeParams:   true
+	caseSensitive: true,
+	strict:        true,
+	mergeParams:   true
 });
 
 /**
@@ -14,16 +15,19 @@ let router = express.Router({
  * GET /api
  */
 router.get('/', (req, res/*, next*/) => {
-    let version = pjson.version.split('-').shift().split('.');
+	let version = pjson.version.split('-').shift().split('.');
 
-    res.status(200).send({
-        status:  'OK',
-        version: {
-            major:    parseInt(version.shift(), 10),
-            minor:    parseInt(version.shift(), 10),
-            revision: parseInt(version.shift(), 10)
-        }
-    });
+	res.status(200).send({
+		status:  'OK',
+		version: {
+			major:    parseInt(version.shift(), 10),
+			minor:    parseInt(version.shift(), 10),
+			revision: parseInt(version.shift(), 10),
+		},
+		config: {
+			hasLdap: !!config.ldap,
+		}
+	});
 });
 
 router.use('/tokens',        require('./tokens'));

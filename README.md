@@ -32,7 +32,7 @@ swamped in noise, thus improving productivity.
 - Google Chat
 - Pushover
 
- 
+
 ## Features
 
 - Easy to use interface to configure your services, templates and rules
@@ -66,7 +66,7 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - ./default.json:/srv/app/config/default.json
+      - ./default.json:/app/config/default.json
     depends_on:
       - db
     links:
@@ -120,7 +120,7 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - ./default.json:/srv/app/config/default.json
+      - ./default.json:/app/config/default.json
     restart: on-failure
 ```
 
@@ -142,38 +142,12 @@ And observe the output.
 Run this:
 
 ```bash
-docker run --name juxtapose -p 80:80 -e NODE_ENV=production -v "./default.json:/srv/app/config/default.json" jc21/juxtapose
+docker run --name juxtapose -p 80:80 -e NODE_ENV=production -v "./default.json:/app/config/default.json" jc21/juxtapose
 ```
 
 For this example, your Juxtapose config file should be named `default.json` and should exist in the current directory.
 
 Make sure your config database settings are correct! Juxtapose only needs a new, empty database to get started.
-
-
-### Method 4: Run pre-built package using Node
-
-For when you don't know Docker and don't want to know. You'll need node version 6+ and a database ready to go.
-
-
-### Method 5: Run for development, yes using Docker
-
-If you intend on developing and extending this app, this is how you'll want to get started. You'll need docker-compose installed.
-
-```bash
-git clone https://github.com/jc21/juxtapose.git
-cd juxtapose
-bin/npm install
-bin/gulp build
-docker-compose up
-```
-
-This will start a nodemon container to monitor for changes in files and restart the node app.
-
-To start monitoring for frontend files that need to be built with gulp:
-
-```bash
-bin/gulp
-```
 
 
 ## Default User
@@ -202,15 +176,18 @@ UPDATE `service` SET `data` = '{"api_token":"NEWTOKEN"}' WHERE `type` = "slack";
 
 ## Advanced Topics
 
-### Change the Port that the app runs on
+### LDAP Authentication setup
 
-It's as easy as adding this to your config file:
+Add the following configuration to the config file in order to use LDAP:
 
 ```json
-{
-  "port": 1234
+"ldap": {
+    "server": "ldap.example.com",
+    "userSearchBase": "cn=users,dc=com",
+    "usernameAttribute": "uid"
 }
 ```
+
 
 ### Template Language Tips
 
@@ -250,7 +227,7 @@ services:
       - NODE_ENV=production
       - HTTP_PROXY=http://10.60.10.1:3128
     volumes:
-      - ./default.json:/srv/app/config/default.json
+      - ./default.json:/app/config/default.json
     depends_on:
       - db
     links:
@@ -271,7 +248,7 @@ services:
 or
 
 ```bash
-docker run --name juxtapose -p 80:80 -e NODE_ENV=production -e HTTP_PROXY=http://10.60.10.1:3128 -v "./default.json:/srv/app/config/default.json" jc21/juxtapose
+docker run --name juxtapose -p 80:80 -e NODE_ENV=production -e HTTP_PROXY=http://10.60.10.1:3128 -v "./default.json:/app/config/default.json" jc21/juxtapose
 ```
 
 
