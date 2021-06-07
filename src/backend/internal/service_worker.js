@@ -576,11 +576,16 @@ const internalServiceWorker = {
 								const result = await service.handler.users.list();
 								if (typeof result.members !== 'undefined') {
 									const real_users = _.filter(result.members, function (m) {
-										return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT';
+										return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT' && !m.deleted && m.name.indexOf('disabled') === -1;
 									});
 
 									let users = [];
-									_.map(real_users, real_user => {
+									_.map(real_users, (real_user) => {
+
+										if (real_user.name.indexOf('daniel') !== -1) {
+											console.log(real_user);
+										}
+
 										users.push({
 											id:           real_user.id,
 											name:         real_user.name,
