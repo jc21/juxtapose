@@ -1,6 +1,6 @@
 'use strict';
 
-const migrate_name = 'jenkins';
+const migrate_name = 'gerrit';
 const logger       = require('../logger').migrate;
 
 /**
@@ -15,7 +15,7 @@ const logger       = require('../logger').migrate;
 exports.up = function (knex/*, Promise*/) {
 	logger.info('[' + migrate_name + '] Migrating Up...');
 
-	return knex.schema.createTable('jenkins_incoming_log', table => {
+	return knex.schema.createTable('gerrit_incoming_log', table => {
 		table.increments().primary();
 		table.dateTime('created_on').notNull();
 		table.dateTime('modified_on').notNull();
@@ -23,7 +23,7 @@ exports.up = function (knex/*, Promise*/) {
 		table.json('data').notNull();
 	})
 		.then(() => {
-			logger.info('[' + migrate_name + '] jenkins_incoming_log Table created');
+			logger.info('[' + migrate_name + '] gerrit_incoming_log Table created');
 		});
 
 };

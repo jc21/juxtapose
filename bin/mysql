@@ -1,5 +1,4 @@
 #!/bin/bash
+set -e
 
-/usr/local/bin/docker-compose exec db mysql -u juxtapose --password=juxtapose juxtapose
-exit $?
-
+docker-compose exec db mysql -u juxtapose --password=juxtapose juxtapose

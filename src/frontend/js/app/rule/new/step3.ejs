@@ -1,71 +1,78 @@
 <div class="modal-dialog">
-    <div class="modal-content">
-        <form class="form-horizontal">
-            <div class="modal-header text-left">
-                <h4 class="modal-title"><%- getTriggerName() %></h4>
-            </div>
-            <div class="modal-body">
-                <p class="text-center">You can optionally specify other incoming criteria for this rule.</p>
-                    <% if (in_service_type === 'jira-webhook') { %>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Jira Project Key</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="eg: PROJ" name="project" value="">
-                            </div>
-                        </div>
-                    <% } else if (in_service_type === 'bitbucket-webhook') { %>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Bitbucket Project Key</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: V6" name="project" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Bitbucket Repository Key</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: businessbuilder" name="repo" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Minimum Approvals</label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" placeholder="0" name="minimum_approval_count" value="" min="0" max="100" step="1">
-                            </div>
-                        </div>
-                    <% } else if (in_service_type === 'dockerhub-webhook') { %>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Repo Name</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: jc21/juxtapose" name="repo" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Tag</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: latest" name="tag" value="">
-                            </div>
-                        </div>
-                    <% } else if (in_service_type === 'zendesk-webhook') { %>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Status</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: Open" name="status" value="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Group Name</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="eg: Support" name="group_name" value="">
-                            </div>
-                        </div>
-                    <% } else { %>
-                        <p class="text-center">There are no options for this service.</p>
-                    <% } %>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-accent next">Next</button>
-            </div>
-        </form>
-    </div>
+	<div class="modal-content">
+		<form class="form-horizontal">
+			<div class="modal-header text-left">
+				<h4 class="modal-title"><%- getTriggerName() %></h4>
+			</div>
+			<div class="modal-body">
+				<p class="text-center">You can optionally specify other incoming criteria for this rule.</p>
+					<% if (in_service_type === 'jira-webhook') { %>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Jira Project Key</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" placeholder="eg: PROJ" name="project" value="">
+							</div>
+						</div>
+					<% } else if (in_service_type === 'bitbucket-webhook') { %>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Bitbucket Project Key</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: V6" name="project" value="">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Bitbucket Repository Key</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: businessbuilder" name="repo" value="">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Minimum Approvals</label>
+							<div class="col-sm-8">
+								<input type="number" class="form-control" placeholder="0" name="minimum_approval_count" value="" min="0" max="100" step="1">
+							</div>
+						</div>
+					<% } else if (in_service_type === 'dockerhub-webhook') { %>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Repo Name</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: jc21/juxtapose" name="repo" value="">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Tag</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: latest" name="tag" value="">
+							</div>
+						</div>
+					<% } else if (in_service_type === 'zendesk-webhook') { %>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Status</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: Open" name="status" value="">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Group Name</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" placeholder="eg: Support" name="group_name" value="">
+							</div>
+						</div>
+					<% } else if (in_service_type === 'gerrit-webhook') { %>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Gerrit Project</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" placeholder="eg: example-project" name="project" value="">
+							</div>
+						</div>
+					<% } else { %>
+						<p class="text-center">There are no options for this service.</p>
+					<% } %>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-accent next">Next</button>
+			</div>
+		</form>
+	</div>
 </div>

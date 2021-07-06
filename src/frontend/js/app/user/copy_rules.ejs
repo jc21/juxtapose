@@ -1,61 +1,62 @@
 <div class="modal-dialog">
-    <div class="modal-content">
-        <form class="form-horizontal">
-            <div class="modal-header text-left">
-                <h4 class="modal-title">Copy Rules to <%- name %></h4>
-            </div>
-            <div class="modal-body">
-                <p>This procedure will copy the current rules from the selected user below in to <%- name %>'s account.</p>
-                <p>This will NOT overwrite or remove any existing rules for the user, who currently has <strong><%- rule_count %></strong> rules.</p>
+	<div class="modal-content">
+		<form class="form-horizontal">
+			<div class="modal-header text-left">
+				<h4 class="modal-title">Copy Rules to <%- name %></h4>
+			</div>
+			<div class="modal-body">
+				<p>This procedure will copy the current rules from the selected user below in to <%- name %>'s account.</p>
+				<p>This will NOT overwrite or remove any existing rules for the user, who currently has <strong><%- rule_count %></strong> rules.</p>
 
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Copy rules from</label>
-                    <div class="col-sm-7">
-                        <select name="from_user_id" class="form-control" required>
-                            <option value="">Select...</option>
-                            <%
-                            var users = getUsers();
-                            _.each(users, function (user) {
-                                if (user.id !== id && user.rule_count > 0) {
-                                    %>
-                                    <option value="<%- user.id %>"><%- user.name %> (<%- user.rule_count %> rules)</option>
-                                    <%
-                                }
-                            });
-                            %>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Rules for Incoming Services</label>
-                    <div class="col-sm-7">
-                        <select name="in_service_type" class="form-control">
-                            <option value="">All Incoming Services</option>
-                            <option value="bitbucket-webhook">Bitbucket Rules</option>
-                            <option value="dockerhub-webhook">Docker Hub Rules</option>
-                            <option value="jenkins-webhook">Jenkins</option>
-                            <option value="jira-webhook">Jira Rules</option>
-                            <option value="zendesk-webhook">Zendesk Rules</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Rules for Outgoing Services</label>
-                    <div class="col-sm-7">
-                        <select name="out_service_type" class="form-control">
-                            <option value="">All Outgoing Services</option>
-                            <option value="gchat">Google Chat Rules</option>
-                            <option value="pushover">Pushover Rules</option>
-                            <option value="jabber">Jabber Rules</option>
-                            <option value="slack">Slack Rules</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-accent save">Copy</button>
-            </div>
-        </form>
-    </div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">Copy rules from</label>
+					<div class="col-sm-7">
+						<select name="from_user_id" class="form-control" required>
+							<option value="">Select...</option>
+							<%
+							var users = getUsers();
+							_.each(users, function (user) {
+								if (user.id !== id && user.rule_count > 0) {
+									%>
+									<option value="<%- user.id %>"><%- user.name %> (<%- user.rule_count %> rules)</option>
+									<%
+								}
+							});
+							%>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">Rules for Incoming Services</label>
+					<div class="col-sm-7">
+						<select name="in_service_type" class="form-control">
+							<option value="">All Incoming Services</option>
+							<option value="bitbucket-webhook">Bitbucket Rules</option>
+							<option value="dockerhub-webhook">Docker Hub Rules</option>
+							<option value="gerrit-webhook">Gerrit Rules</option>
+							<option value="jenkins-webhook">Jenkins Rules</option>
+							<option value="jira-webhook">Jira Rules</option>
+							<option value="zendesk-webhook">Zendesk Rules</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">Rules for Outgoing Services</label>
+					<div class="col-sm-7">
+						<select name="out_service_type" class="form-control">
+							<option value="">All Outgoing Services</option>
+							<option value="gchat">Google Chat Rules</option>
+							<option value="pushover">Pushover Rules</option>
+							<option value="jabber">Jabber Rules</option>
+							<option value="slack">Slack Rules</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-accent save">Copy</button>
+			</div>
+		</form>
+	</div>
 </div>

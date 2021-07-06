@@ -31,7 +31,7 @@ let getSlackDefaults = () => {
 		}, null, 2),
 
 		default_options: {
-			icon_url:    'https://public.jc21.com/juxtapose/icons/jenkins.png',
+			icon_url:    'https://public.jc21.com/juxtapose/icons/gerrit.png',
 			panel_color: '#18ce00'
 		}
 	};
@@ -48,7 +48,7 @@ let getGoogleChatDefaults = () => {
 					header:   {
 						title:      'A build has Succeeded',
 						subtitle:   '{{ project.full_name }} #{{ build.number }}',
-						imageUrl:   'https://public.jc21.com/juxtapose/icons/jenkins.png',
+						imageUrl:   'https://public.jc21.com/juxtapose/icons/gerrit.png',
 						imageStyle: 'IMAGE'
 					},
 					sections: [

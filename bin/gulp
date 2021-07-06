@@ -1,4 +1,4 @@
 #!/bin/bash
+set -e
 
-sudo /usr/local/bin/docker-compose run --no-deps --rm app gulp $@
-exit $?
+docker-compose run --no-deps --rm app yarn gulp $@

@@ -1,4 +1,4 @@
 #!/bin/bash
+set -e
 
-/usr/local/bin/docker-compose run --no-deps --rm app npm $@
-exit $?
+docker-compose run --no-deps --rm app npm $@

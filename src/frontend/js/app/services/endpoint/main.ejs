@@ -1,52 +1,57 @@
 <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header text-left">
-            <h4 class="modal-title"><%- name %> Endpoint</h4>
-        </div>
-        <div class="modal-body">
+	<div class="modal-content">
+		<div class="modal-header text-left">
+			<h4 class="modal-title"><%- name %> Endpoint</h4>
+		</div>
+		<div class="modal-body">
 
-            <% if (type === 'jira-webhook') { %>
-                <p>Put this in Jira:</p>
-            <% } else if (type === 'bitbucket-webhook') { %>
-                <p>Put this in your Bitbucket Repository Webhook Settings:</p>
-            <% } %>
+			<% if (type === 'jira-webhook') { %>
+				<p>Put this in Jira:</p>
+			<% } else if (type === 'bitbucket-webhook') { %>
+				<p>Put this in your Bitbucket Repository Webhook Settings:</p>
+			<% } else if (type === 'gerrit-webhook') { %>
+				<p>Add this file to your Gerrit Project's <strong>webhooks.config</strong> file:</p>
+			<% } %>
 
-            <% if (type !== 'zendesk-webhook') { %>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
-                </div>
-            <% } else { %>
+			<% if (type === 'gerrit-webhook') { %>
+				<div class="form-group">
+					<textarea rows="10" class="form-control" name="zendesk-content" readonly>[remote "juxtapose"]
+    url = <%- getEndpoint() %>
+    maxTries = 3
+</textarea>
+				</div>
+			<% } else if (type === 'zendesk-webhook') { %>
 
-            <ol style="list-style-type: lower-alpha;">
-                <li>
-                    Follow <a href="https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#ariaid-title2" target="_blank">this guide</a>
-                    to create your Zendesk incoming Webhook
-                    <ol>
-                        <li>
-                            Enter the following in to the <strong>URL</strong> field:
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
-                            </div>
-                        </li>
-                        <li>
-                            Select <strong>POST</strong> for the Method and <stong>JSON</stong> for the Content type
-                        </li>
-                    </ol>
-                </li>
-                <li>
-                    Next, <a href="https://support.zendesk.com/hc/en-us/articles/203662136#topic_hvf_eoa_vb" target="_blank">create a Trigger</a> for this Target
-                    <ol>
-                        <li>
-                            Create your conditions for this trigger. If you want all events, create 2 conditions in the <strong>ANY</strong> section, one with
-                            something like "Status is Open" and another with "Status is not Open". It's weird, but it works.
-                        </li>
-                        <li>
-                            In the Actions, select the HTTP Target for Juxtapose you just created
-                        </li>
-                        <li>
-                            Enter the following in the Message:
-                            <div class="form-group">
-                                <textarea rows="10" class="form-control" name="zendesk-content" readonly>{
+			<ol style="list-style-type: lower-alpha;">
+				<li>
+					Follow <a href="https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#ariaid-title2" target="_blank">this guide</a>
+					to create your Zendesk incoming Webhook
+					<ol>
+						<li>
+							Enter the following in to the <strong>URL</strong> field:
+							<div class="form-group">
+								<input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
+							</div>
+						</li>
+						<li>
+							Select <strong>POST</strong> for the Method and <stong>JSON</stong> for the Content type
+						</li>
+					</ol>
+				</li>
+				<li>
+					Next, <a href="https://support.zendesk.com/hc/en-us/articles/203662136#topic_hvf_eoa_vb" target="_blank">create a Trigger</a> for this Target
+					<ol>
+						<li>
+							Create your conditions for this trigger. If you want all events, create 2 conditions in the <strong>ANY</strong> section, one with
+							something like "Status is Open" and another with "Status is not Open". It's weird, but it works.
+						</li>
+						<li>
+							In the Actions, select the HTTP Target for Juxtapose you just created
+						</li>
+						<li>
+							Enter the following in the Message:
+							<div class="form-group">
+								<textarea rows="10" class="form-control" name="zendesk-content" readonly>{
   "juxtapose_payload_version": 1,
   "ticket": {
     "id": {{ticket.id | default: 0}},
@@ -77,8 +82,8 @@
       "name": "{{ticket.assignee.name}}"
     }{% else %}null{% endif %},
     "requester": {% if ticket.requester.id %}{
-      "id": {{ticket.requester.id | default: 0}},
-      "email": "{{ticket.requester.email}}",
+    "id": {{ticket.requester.id | default: 0}},
+    "email": "{{ticket.requester.email}}",
       "name": "{{ticket.requester.name}}",
       "first_name": "{{ticket.requester.first_name}}",
       "last_name": "{{ticket.requester.last_name}}",
@@ -110,22 +115,20 @@
     "current_comment": {% if satisfaction.current_rating %}"{{satisfaction.current_comment}}"{% else %}null{% endif %}
   }
 }</textarea>
-                            </div>
-                        </li>
-                        <li>Save</li>
-                    </ol>
-                </li>
-            </ol>
-
-
-
-
-
-
-            <% } %>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-    </div>
+							</div>
+						</li>
+						<li>Save</li>
+					</ol>
+				</li>
+			</ol>
+			<% } else { %>
+				<div class="form-group">
+					<input type="text" class="form-control" name="endpoint" value="<%- getEndpoint() %>" readonly>
+				</div>
+			<% } %>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	</div>
 </div>

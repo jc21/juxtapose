@@ -1,9 +1,9 @@
 'use strict';
 
-const express                  = require('express');
-const validator                = require('../../lib/validator');
-const jwtdecode                = require('../../lib/express/jwt-decode');
-const internalBitbucketWebhook = require('../../internal/bitbucket-webhook');
+const express               = require('express');
+const validator             = require('../../lib/validator');
+const jwtdecode             = require('../../lib/express/jwt-decode');
+const internalGerritWebhook = require('../../internal/gerrit-webhook');
 
 let router = express.Router({
 	caseSensitive: true,
@@ -12,7 +12,7 @@ let router = express.Router({
 });
 
 /**
- * /incoming/bitbucket-webhook
+ * /incoming/gerrit-webhook
  */
 router
 	.route('/')
@@ -22,7 +22,7 @@ router
 	.all(jwtdecode())
 
 	/**
-	 * POST /incoming/bitbucket-webhook
+	 * POST /incoming/gerrit-webhook
 	 */
 	.post((req, res, next) => {
 		validator({
@@ -32,8 +32,8 @@ router
 				token:   {
 					$ref: 'definitions#/definitions/token'
 				},
-				webhook: {
-					$ref: 'definitions#/definitions/bitbucket_webhook_data'
+				webhook:    {
+					$ref: 'definitions#/definitions/gerrit_webhook_data'
 				}
 			}
 		}, {
@@ -41,7 +41,7 @@ router
 			webhook: req.body
 		})
 			.then(data => {
-				return internalBitbucketWebhook.processIncoming(data.token, data.webhook);
+				return internalGerritWebhook.processIncoming(data.token, data.webhook);
 			})
 			.then(result => {
 				res.status(200)

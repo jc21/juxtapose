@@ -174,6 +174,19 @@ module.exports = {
 	},
 
 	/**
+	 * Gerrit Webhook Config
+	 *
+	 * @param model
+	 */
+	 showGerritWebhookConfig: function (model) {
+		if (Cache.User.isAdmin()) {
+			require(['./main', './services/gerrit-webhook/main'], function (App, View) {
+				App.UI.showModalDialog(new View({model: model}));
+			});
+		}
+	},
+
+	/**
 	 * Service Test Dialog
 	 *
 	 * @param model
