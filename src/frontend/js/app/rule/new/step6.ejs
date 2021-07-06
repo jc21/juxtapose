@@ -1,79 +1,79 @@
 <div class="modal-dialog">
-    <div class="modal-content">
-        <form class="form-horizontal">
-            <div class="modal-header text-left">
-                <h4 class="modal-title">Template Options</h4>
-            </div>
-            <div class="modal-body">
-                <%
-                var template = getTemplate();
-                if (template.default_options && !_.isEmpty(template.default_options)) { %>
-                    <p class="text-center">You can optionally customise your notification.</p>
-                    <%
-                    _.map(template.default_options, function (val, key) {
-                        %>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"><%- niceVarName(key) %></label>
-                            <div class="col-sm-9">
-                                <%
-                                if (template.service_type === 'pushover' && key === 'sound') {
-                                    %>
-                                    <select class="form-control" name="<%- key %>">
-                                        <option value="" selected>Default</option>
-                                        <option value="bike">Bike</option>
-                                        <option value="bugle">Bugle</option>
-                                        <option value="cashregister">Cash Register</option>
-                                        <option value="classical">Classical</option>
-                                        <option value="cosmic">Cosmic</option>
-                                        <option value="falling">Falling</option>
-                                        <option value="gamelan">Gamelan</option>
-                                        <option value="incoming">Incoming</option>
-                                        <option value="intermission">Intermission</option>
-                                        <option value="magic">Magic</option>
-                                        <option value="mechanical">Mechanical</option>
-                                        <option value="pianobar">Piano Bar</option>
-                                        <option value="siren">Siren</option>
-                                        <option value="spacealarm">Space Alarm</option>
-                                        <option value="tugboat">Tug Boat</option>
-                                        <option value="alien">Alien Alarm (long)</option>
-                                        <option value="climb">Climb (long)</option>
-                                        <option value="persistent">Persistent (long)</option>
-                                        <option value="echo">Pushover Echo (long)</option>
-                                        <option value="updown">Up Down (long)</option>
-                                        <option value="none">None (silent)</option>
-                                    </select>
-                                    <%
-                                } else if (template.service_type === 'pushover' && key === 'priority') {
-                                    %>
-                                    <select class="form-control" name="<%- key %>">
-                                        <option value="lowest">Lowest</option>
-                                        <option value="low">low</option>
-                                        <option value="" selected>Normal</option>
-                                        <option value="high">High</option>
-                                        <option value="emergency">Emergency</option>
-                                    </select>
-                                    <%
-                                } else {
-                                    %>
-                                    <input type="text" class="form-control" placeholder="<%- val %>" name="<%- key %>" value="">
-                                    <%
-                                }
-                                %>
-                            </div>
-                        </div>
-                        <%
-                    });
-                } else {
-                    %>
-                    <p class="text-center">There are no customisable options for this Service.</p>
-                    <%
-                }
-                %>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-accent save">Save</button>
-            </div>
-        </form>
-    </div>
+	<div class="modal-content">
+		<form class="form-horizontal">
+			<div class="modal-header text-left">
+				<h4 class="modal-title">Template Options</h4>
+			</div>
+			<div class="modal-body">
+				<%
+				var template = getTemplate();
+				if (template.default_options && !_.isEmpty(template.default_options)) { %>
+					<p class="text-center">You can optionally customise your notification.</p>
+					<%
+					_.map(template.default_options, function (val, key) {
+						%>
+						<div class="form-group">
+							<label class="col-sm-3 control-label"><%- niceVarName(key) %></label>
+							<div class="col-sm-9">
+								<%
+								if (template.service_type === 'pushover' && key === 'sound') {
+									%>
+									<select class="form-control" name="<%- key %>">
+										<option value="" selected>Default</option>
+										<option value="bike">Bike</option>
+										<option value="bugle">Bugle</option>
+										<option value="cashregister">Cash Register</option>
+										<option value="classical">Classical</option>
+										<option value="cosmic">Cosmic</option>
+										<option value="falling">Falling</option>
+										<option value="gamelan">Gamelan</option>
+										<option value="incoming">Incoming</option>
+										<option value="intermission">Intermission</option>
+										<option value="magic">Magic</option>
+										<option value="mechanical">Mechanical</option>
+										<option value="pianobar">Piano Bar</option>
+										<option value="siren">Siren</option>
+										<option value="spacealarm">Space Alarm</option>
+										<option value="tugboat">Tug Boat</option>
+										<option value="alien">Alien Alarm (long)</option>
+										<option value="climb">Climb (long)</option>
+										<option value="persistent">Persistent (long)</option>
+										<option value="echo">Pushover Echo (long)</option>
+										<option value="updown">Up Down (long)</option>
+										<option value="none">None (silent)</option>
+									</select>
+									<%
+								} else if (template.service_type === 'pushover' && key === 'priority') {
+									%>
+									<select class="form-control" name="<%- key %>">
+										<option value="lowest">Lowest</option>
+										<option value="low">low</option>
+										<option value="" selected>Normal</option>
+										<option value="high">High</option>
+										<option value="emergency">Emergency</option>
+									</select>
+									<%
+								} else {
+									%>
+									<input type="text" class="form-control" placeholder="<%- val %>" name="<%- key %>" value="">
+									<%
+								}
+								%>
+							</div>
+						</div>
+						<%
+					});
+				} else {
+					%>
+					<p class="text-center">There are no customisable options for this Service.</p>
+					<%
+				}
+				%>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-accent save">Save</button>
+			</div>
+		</form>
+	</div>
 </div>

@@ -11,6 +11,7 @@ const notificationQueueModel  = require('../models/notification_queue');
 const gerritIncomingLogModel  = require('../models/gerrit_incoming_log');
 const jwt                     = require('jsonwebtoken');
 const error                   = require('../lib/error');
+const gravatar                = require('gravatar');
 const ALGO                    = 'RS256';
 
 let public_key = null;
@@ -22,9 +23,9 @@ const internalGerritWebhook = {
 	 *
 	 * @param   {String}  token
 	 * @param   {Object}  webhook_data
-	 * @param   {String}  webhook_data.event
+	 * @param   {String}  webhook_data.type
+	 * @param   {Object}  webhook_data.eventCreatedOn
 	 * @param   {Object}  webhook_data.project
-	 * @param   {Object}  webhook_data.build
 	 * @returns {Promise}
 	 */
 	processIncoming: (token, webhook_data) => {
@@ -114,22 +115,69 @@ const internalGerritWebhook = {
 		});
 	},
 
+	getProjectName: (webhook_data) => {
+		if (typeof webhook_data['project'] !== 'undefined' && typeof webhook_data.project.name !== 'undefined') {
+			return webhook_data.project.name;
+		}
+		return '(unknown project)';
+	},
+
 	/**
 	 * Internal use
 	 * First method to handle webhook data processing
 	 *
 	 * @param   {Integer} service_id
 	 * @param   {Object}  webhook_data
-	 * @param   {String}  webhook_data.event
+	 * @param   {String}  webhook_data.type
+	 * @param   {Object}  webhook_data.eventCreatedOn
 	 * @param   {Object}  webhook_data.project
-	 * @param   {Object}  webhook_data.build
 	 * @returns {Promise|Object}
 	 */
-	process: (service_id, webhook_data) => {
-		if (typeof webhook_data.build === 'object') {
-			logger.info('  ❯ Project:                           ', webhook_data.project.full_name);
+	 process: (service_id, webhook_data) => {
+		if (typeof webhook_data.type === 'string') {
+			logger.info('  ❯ Event Type:                     ', webhook_data.type);
+			logger.info('  ❯ Project:                        ', internalGerritWebhook.getProjectName(webhook_data));
 
-			let event_types = [['build_' + webhook_data.event]];
+			let event_types = [];
+
+			switch (webhook_data.type) {
+				case 'change-abandoned':
+					// event_types.push(['pr_review_requested', 'pr_opened']);
+					break;
+				case 'change-deleted':
+					// event_types.push(['my_pr_merged', 'pr_merged']);
+					break;
+				case 'change-merged':
+					// event_types.push(['my_pr_merged', 'pr_merged']);
+					break;
+				case 'change-restored':
+					// event_types.push(['my_pr_approved']);
+					break;
+				case 'comment-added':
+					// event_types.push(['my_pr_declined']);
+					break;
+				case 'patchset-created':
+					event_types.push(['patch_created']);
+					break;
+				case 'private-state-changed':
+					// event_types.push(['my_pr_comment']);
+					break;
+				case 'ref-updated':
+					// event_types.push(['my_pr_needs_work']);
+					break;
+				case 'reviewer-added':
+					event_types.push(['added_as_reviewer']);
+					break;
+				case 'reviewer-deleted':
+					// event_types.push(['my_pr_comment']);
+					break;
+				case 'vote-deleted':
+					// event_types.push(['my_pr_comment']);
+					break;
+				case 'wip-state-changed':
+					// event_types.push(['my_pr_comment']);
+					break;
+			}
 
 			if (event_types.length) {
 				return new Promise((resolve, reject) => {
@@ -138,7 +186,7 @@ const internalGerritWebhook = {
 					batchflow(event_types).sequential()
 						.each((i, event_type, next) => {
 							internalGerritWebhook.processTheseEventTypes(event_type, service_id, webhook_data, already_notified_user_ids)
-								.then(notified_user_ids => {
+								.then((notified_user_ids) => {
 									if (notified_user_ids && notified_user_ids.length) {
 										already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
 
@@ -148,15 +196,15 @@ const internalGerritWebhook = {
 
 									next(notified_user_ids.length);
 								})
-								.catch(err => {
+								.catch((err) => {
 									console.error(err.message);
 									next(err);
 								});
 						})
-						.error(err => {
+						.error((err) => {
 							reject(err);
 						})
-						.end(results => {
+						.end((results) => {
 							let total = 0;
 
 							_.map(results, (this_count) => {
@@ -171,7 +219,7 @@ const internalGerritWebhook = {
 		}
 
 		return {
-			error: 'Unsupported payload'
+			error: 'Unsupported event: ' + webhook_data.type
 		};
 	},
 
@@ -179,14 +227,14 @@ const internalGerritWebhook = {
 	 * @param   {Array}   event_types
 	 * @param   {Integer} service_id
 	 * @param   {Object}  webhook_data
-	 * @param   {String}  webhook_data.event
-	 * @param   {Object}  webhook_data.project
-	 * @param   {Object}  webhook_data.build
+	 * @param   {String}  webhook_data.eventKey
+	 * @param   {Object}  webhook_data.actor
+	 * @param   {Object}  webhook_data.pullRequest
 	 * @param   {Array}   already_notified_user_ids
 	 * @returns {Promise}
 	 */
 	processTheseEventTypes: (event_types, service_id, webhook_data, already_notified_user_ids) => {
-		let template_data = _.assign({service_id: service_id}, internalGerritWebhook.getCommonTemplateData(webhook_data));
+		const template_data = _.assign({service_id: service_id}, internalGerritWebhook.getCommonTemplateData(webhook_data));
 
 		return new Promise((resolve, reject) => {
 			batchflow(event_types).sequential()
@@ -200,12 +248,12 @@ const internalGerritWebhook = {
 
 							next();
 						})
-						.catch(err => {
+						.catch((err) => {
 							console.error(err);
 							next();
 						});
 				})
-				.error(err => {
+				.error((err) => {
 					reject(err);
 				})
 				.end(() => {
@@ -216,51 +264,155 @@ const internalGerritWebhook = {
 
 	/**
 	 * @param   {Object}  webhook_data
-	 * @param   {String}  webhook_data.event
-	 * @param   {Object}  webhook_data.project
-	 * @param   {Object}  webhook_data.build
+	 * @param   {Object}  webhook_data.pullRequest
+	 * @param   {Object}  webhook_data.actor
 	 * @returns {Object}
 	 */
-	getCommonTemplateData: webhook_data => {
-		// change the log to a full string
-		webhook_data.build.log             = webhook_data.build.log.join('\n');
-		webhook_data.build.duration_string = webhook_data.build.duration_string.replace(' and counting', '');
-		webhook_data.timestamp             = Math.abs(webhook_data.build.time_ms / 1000);
-		return webhook_data;
+	getCommonTemplateData: (webhook_data) => {
+		return {
+			project:        internalGerritWebhook.getProjectName(webhook_data),
+			event_user:     internalGerritWebhook.getEventUser(webhook_data),
+			change:         internalGerritWebhook.getChange(webhook_data),
+			patchset:       internalGerritWebhook.getPatchset(webhook_data),
+			timestamp:      webhook_data.eventCreatedOn,
+
+			/*
+			owner:          internalGerritWebhook.getPrOwner(webhook_data, 'displayName'),
+			owner_email:    internalGerritWebhook.getPrOwner(webhook_data, 'emailAddress'),
+			owner_gravatar: owner_gravatar,
+			title:          internalGerritWebhook.getPrField(webhook_data, 'title'),
+			description:    internalGerritWebhook.getPrField(webhook_data, 'description'),
+			project:        internalGerritWebhook.getToProjectField(webhook_data, 'key'),
+			repo:           internalGerritWebhook.getToRepoField(webhook_data, 'slug'),
+			branch:         internalGerritWebhook.getToRefField(webhook_data, 'displayId'),
+			approval_count: internalGerritWebhook.getApprovalCount(webhook_data),
+			from:           {
+				project: internalGerritWebhook.getFromProjectField(webhook_data, 'key'),
+				repo:    internalGerritWebhook.getFromRepoField(webhook_data, 'slug'),
+				branch:  internalGerritWebhook.getFromRefField(webhook_data, 'displayId')
+			},
+			comment:        internalGerritWebhook.getCommentData(webhook_data)
+			*/
+		};
+	},
+
+	/**
+	 * @param   {Object}  webhook_data
+	 * @param   {String}  [field]
+	 * @returns {*}
+	 */
+	getEventUser: (webhook_data, field) => {
+		switch (webhook_data.type) {
+			case 'patchset-created':
+				return internalGerritWebhook.getUploader(webhook_data, field);
+			case 'reviewer-added':
+				return internalGerritWebhook.getUserItem(webhook_data, 'adder', field);
+		}
+		return null;
+	},
+
+	/**
+	 * @param   {Object}  webhook_data
+	 * @param   {String}  [field]
+	 * @returns {*}
+	 */
+	getReviewer: (webhook_data, field) => {
+		return internalGerritWebhook.getUserItem(webhook_data, 'reviewer', field);
+	},
+
+	/**
+	 * @param   {Object}  webhook_data
+	 * @param   {String}  [field]
+	 * @returns {*}
+	 */
+	getUploader: (webhook_data, field) => {
+		return internalGerritWebhook.getUserItem(webhook_data, 'uploader', field);
+	},
+
+	/**
+	 * @param   {Object}  webhook_data
+	 * @param   {String}  rootObject
+	 * @param   {String}  [field]
+	 * @returns {*}
+	 */
+	getUserItem: (webhook_data, rootObject, field) => {
+		let user = null;
+		if (typeof webhook_data[rootObject] !== 'undefined') {
+			user = webhook_data[rootObject];
+		}
+
+		if (user) {
+			// gravatar
+			user.gravatar = 'https://public.jc21.com/juxtapose/icons/gerrit.png';
+			if (typeof user.email !== 'undefined' && user.email) {
+				user.gravatar = 'https:' + gravatar.url(user.email, {default: user.gravatar});
+			}
+		}
+
+		if (user && field && typeof user[field] !== 'undefined') {
+			return user[field];
+		}
+
+		return user;
+	},
+
+	getChange: (webhook_data) => {
+		if (typeof webhook_data.change !== 'undefined') {
+			return webhook_data.change;
+		}
+		return null;
+	},
+
+	getPatchset: (webhook_data) => {
+		if (typeof webhook_data.patchSet !== 'undefined') {
+			return webhook_data.patchSet;
+		}
+		return null;
+	},
+
+	/**
+	 * Note, the following events are not handled because they are known not to have a destination user:
+	 * - pr_opened
+	 * - pr_merged
+	 *
+	 * @param   {String}  event_type
+	 * @param   {Object}  webhook_data
+	 * @returns {String|Array}
+	 */
+	getIncomingServiceUsernameBasedOnEvent: (event_type, webhook_data) => {
+		switch (event_type) {
+			case 'added_as_reviewer':
+				return internalGerritWebhook.getReviewer(webhook_data, 'username');
+
+			default:
+				return null;
+		}
 	},
 
 	/**
 	 * @param   {Object}  conditions
 	 * @param   {Object}  webhook_data
-	 * @param   {Object}  webhook_data.push_data
-	 * @param   {Object}  webhook_data.repository
 	 * @returns {Boolean}
 	 */
 	extraConditionsMatch: (conditions, webhook_data) => {
 		// default or no conditions means it's ok to go through
 		let is_ok = true;
-		/*
-				if (conditions !== {}) {
-					_.map(conditions, (value, name) => {
-						switch (name) {
-							case 'repo':
-								let repo = webhook_data.repository.repo_name;
-								if (repo && repo !== value) {
-									// Repo key doesn't match
-									is_ok = false;
-								}
-								break;
-							case 'tag':
-								let tag = webhook_data.push_data.tag;
-								if (tag && tag !== value) {
-									// Tag doesn't match
-									is_ok = false;
-								}
-								break;
-						}
-					});
+
+		if (conditions !== {}) {
+			_.map(conditions, (value, name) => {
+				switch (name) {
+					case 'project':
+						const project = internalGerritWebhook.getProjectName(webhook_data);
+						is_ok = !(project && project.toLowerCase() !== value.toLowerCase());
+						break;
+					case 'branch':
+						const change = internalGerritWebhook.getChange(webhook_data);
+						is_ok = !(change && change.branch.toLowerCase() === value.toLowerCase());
+						break;
 				}
-		*/
+			});
+		}
+
 		return is_ok;
 	},
 
@@ -269,9 +421,6 @@ const internalGerritWebhook = {
 	 * @param   {Object}  data
 	 * @param   {Integer} data.service_id
 	 * @param   {Object}  webhook_data
-	 * @param   {String}  webhook_data.event
-	 * @param   {Object}  webhook_data.project
-	 * @param   {Object}  webhook_data.build
 	 * @param   {Array}   already_notified_user_ids
 	 * @returns {Promise} with array of user_ids who have been notified, so that they don't get notified again
 	 */
@@ -280,22 +429,57 @@ const internalGerritWebhook = {
 
 		logger.info('  ❯ Processing Rules for:           ', event_type);
 
-		// This complex query should only get the rules for users
-		// where a notification hasn't already been sent to a user for this webhook
+		let incoming_destination_username = internalGerritWebhook.getIncomingServiceUsernameBasedOnEvent(event_type, webhook_data);
+		logger.info('    ❯ incoming_destination_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);
+
+		let incoming_trigger_username = internalGerritWebhook.getEventUser(webhook_data, 'username');
+		logger.info('    ❯ incoming_trigger_username:    ', incoming_trigger_username);
+
+		if (incoming_destination_username && incoming_trigger_username) {
+			if (typeof incoming_destination_username === 'string' && incoming_destination_username === incoming_trigger_username) {
+				// bail, as the event user and the destination are the same, we don't want to annoy user with their own actions
+				return Promise.resolve([]);
+			} else if (typeof incoming_destination_username === 'object' && incoming_destination_username !== null && incoming_destination_username.length) {
+				// remove trigger user from array if present
+				_.pull(incoming_destination_username, incoming_trigger_username);
+
+				if (!incoming_destination_username.length) {
+					incoming_destination_username = null;
+				}
+			}
+		}
+
+		// A list of event types that are allowed to fire without having anyone specific to fire to.
+		let anon_event_types = [
+			'patch_created'
+		];
+
+		// This complex query should only get the rules for users where the event type is requested and the incoming service username is defined
 		// and where a notification hasn't already been sent to a user for this webhook
 		// and where the user is not disabled, and the services are not deleted
 
 		let query = ruleModel
 			.query()
-			.select('rule.*')
+			.select('rule.*', 'in_sd.service_username AS in_service_username')
 			.joinRaw('INNER JOIN user ON user.id = rule.user_id AND user.is_disabled = 0 AND user.is_deleted = 0')
 			.joinRaw('INNER JOIN service AS in_service ON in_service.id = rule.in_service_id AND in_service.is_deleted = 0')
 			.joinRaw('INNER JOIN service AS out_service ON out_service.id = rule.out_service_id AND out_service.is_deleted = 0')
+			.joinRaw('INNER JOIN user_has_service_data AS in_sd ON in_sd.user_id = rule.user_id AND in_sd.service_id = rule.in_service_id')
 			.where('rule.is_deleted', 0)
 			.andWhere('rule.in_service_id', data.service_id)
+			.andWhere('in_sd.service_username', '!=', '')
 			.andWhere('rule.trigger', event_type)
 			.eager('[template, in_service_data]')
 			.orderBy('rule.priority_order');
+
+		if (typeof incoming_destination_username === 'string' && incoming_destination_username) {
+			query.andWhere('in_sd.service_username', '=', incoming_destination_username);
+		} else if (typeof incoming_destination_username === 'object' && incoming_destination_username !== null && incoming_destination_username.length) {
+			query.whereIn('in_sd.service_username', incoming_destination_username);
+		} else if (anon_event_types.indexOf(event_type) === -1) {
+			logger.info('    ❯ No valid recipients for this event type');
+			return Promise.resolve(already_notified_user_ids);
+		}
 
 		if (already_notified_user_ids.length) {
 			query.whereNotIn('rule.user_id', already_notified_user_ids);

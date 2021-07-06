@@ -8,31 +8,31 @@ const _ = require('underscore');
 let getSlackDefaults = () => {
 	return {
 		content: JSON.stringify({
-			icon_url:    '{{ icon_url }}',
-			text:        'A build has succeeded',
+			icon_url: "{{ icon_url }}",
+			text: "You were added as a reviewer by {{ event_user.name }}",
 			attachments: [
-				{
-					color:  '{{ panel_color }}',
-					text:   '<{{ project.url }}/{{ build.number }}/|{{ project.full_name }} #{{ build.number }}>',
-					fields: [
-						{
-							title: 'Cause',
-							value: '{{ build.cause | jsonescape }}',
-							short: true
-						},
-						{
-							title: 'Duration',
-							value: '{{ build.duration_string }}',
-							short: true
-						}
-					]
-				}
-			]
+					{
+						title: "<{{ change.url }}|{{ change.subject | jsonescape }}>",
+						color: "{{ panel_color }}",
+						fields: [
+							{
+								"title": "Project",
+								"value": "{{ project }}",
+								"short": true
+							},
+							{
+								"title": "Branch",
+								"value": "{{ change.branch }}",
+								"short": true
+							}
+						]
+					}
+				]
 		}, null, 2),
 
 		default_options: {
 			icon_url:    'https://public.jc21.com/juxtapose/icons/gerrit.png',
-			panel_color: '#18ce00'
+			panel_color: '#AAFFAA'
 		}
 	};
 };
@@ -145,25 +145,30 @@ module.exports = function (service_type) {
 
 	return _.assign({}, specifics, {
 		example_data: {
-			project:   {
-				url:          'https://ci.example.com/job/Docker/job/docker-node/job/master/',
-				name:         'master',
-				full_name:    'Docker/docker-node/master',
-				display_name: 'master'
+			project: "nginx",
+			event_user: {
+				name: "Bobby Tables",
+				email: "bobbyt@example.com",
+				username: "bobbyt",
+				gravatar: "https://public.jc21.com/juxtapose/icons/gerrit.png"
 			},
-			build:     {
-				number:          5,
-				display_name:    '#5',
-				url:             'job/Docker/job/docker-node/job/master/5/',
-				duration:        0,
-				duration_string: '30 min',
-				start_time_ms:   1527776303554,
-				time_ms:         1527776303542,
-				has_artifacts:   false,
-				cause:           'Push event to branch master',
-				log:             '[...truncated 56.79 KB...]\n2c78bad31e9c: Pushed\n145b89be85f1: Pushed\n18cabbd35713: Pushed\n3c93376a81c2: Pushed'
+			change: {
+				project: "nginx",
+				branch: "master",
+				id: "Ibc67b37eceb73105cf9dc439d3930b332733eb83",
+				number: 95557,
+				subject: "Added new rules for the router",
+				owner: {
+					name: "Bobby Tables",
+					email: "bobbyt@example.com",
+					username: "bobbyt"
+				},
+				url: "http://gerrit.local/c/nginx/+/95557",
+				commitMessage: "Added new rules for the router\n\nChange-Id: Ibc67b37eceb73105cf9dc439d3930b332733eb83\n",
+				createdOn: 1625552862,
+				status: "NEW"
 			},
-			timestamp: 1526602255
+			timestamp: 1625552863
 		}
 	});
 };

@@ -11,5 +11,6 @@ module.exports = {
     dockerhub: new Signale({scope: 'DockerHub '}),
     zendesk:   new Signale({scope: 'Zendesk   '}),
     jenkins:   new Signale({scope: 'Jenkins   '}),
-    gchat:     new Signale({scope: 'GoogleChat'})
+    gchat:     new Signale({scope: 'GoogleChat'}),
+    gerrit:    new Signale({scope: 'Gerrit'})
 };

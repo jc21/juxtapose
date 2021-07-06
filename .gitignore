@@ -7,3 +7,4 @@ dist/*
 webpack_stats.html
 config/development.json
 yarn-error.log
+test

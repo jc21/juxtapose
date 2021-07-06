@@ -278,6 +278,35 @@
         }
       }
     },
+    "gerrit_webhook_data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "eventCreatedOn",
+        "project"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "eventCreatedOn": {
+          "type": "integer"
+        },
+        "project": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
     "service_type": {
       "description": "Service Type",
       "example": "slack",

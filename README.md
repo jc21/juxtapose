@@ -22,6 +22,7 @@ swamped in noise, thus improving productivity.
 - Jira
 - Bitbucket
 - Docker Hub
+- Gerrit
 - Zendesk
 - Jenkins - [requires plugin](https://github.com/jc21/juxtapose-jenkins-plugin/releases)
 

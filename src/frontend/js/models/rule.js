@@ -221,12 +221,12 @@ const trigger_types = {
 	},
 
 	'gerrit-webhook': {
-		todo_1:    {
-			name:  'TODO 1',
+		added_as_reviewer:    {
+			name:  'You were added as a reviewer on a patch',
 			group: 'all'
 		},
-		todo_2:    {
-			name:  'TODO 2',
+		patch_created:    {
+			name:  'A patch was created',
 			group: 'all'
 		}
 	}
