@@ -6,6 +6,7 @@ const batchflow               = require('batchflow');
 const logger                  = require('../logger').gerrit;
 const serviceModel            = require('../models/service');
 const ruleModel               = require('../models/rule');
+const helpers                 = require('../lib/helpers');
 const templateRender          = require('../lib/template_render');
 const notificationQueueModel  = require('../models/notification_queue');
 const gerritIncomingLogModel  = require('../models/gerrit_incoming_log');
@@ -400,15 +401,28 @@ const internalGerritWebhook = {
 
 		if (conditions !== {}) {
 			_.map(conditions, (value, name) => {
-				switch (name) {
-					case 'project':
-						const project = internalGerritWebhook.getProjectName(webhook_data);
-						is_ok = !(project && project.toLowerCase() !== value.toLowerCase());
-						break;
-					case 'branch':
-						const change = internalGerritWebhook.getChange(webhook_data);
-						is_ok = !(change && change.branch.toLowerCase() === value.toLowerCase());
-						break;
+				if (value) {
+					// Values can be comma separated
+					const values = helpers.splitByComma(value, true);
+					if (values.length) {
+						switch (name) {
+							case 'project':
+								const project = internalGerritWebhook.getProjectName(webhook_data);
+								if (project && !values.includes(project.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Project "' + project.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+								}
+								break;
+
+							case 'branch':
+								const change = internalGerritWebhook.getChange(webhook_data);
+								if (change && !values.includes(change.branch.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Branch "' + change.branch.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+								}
+								break;
+						}
+					}
 				}
 			});
 		}
@@ -528,7 +542,6 @@ const internalGerritWebhook = {
 									.then(() => {
 										logger.info('      ❯ Notification queue item added');
 										this_already_notified_user_ids.push(rule.user_id);
-
 									})
 									.then(() => {
 										// Update rule fire count
