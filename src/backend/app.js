@@ -10,8 +10,8 @@ const logger      = loggers.default;
  * App
  */
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({extended: true, limit: '100mb'}));
 
 // Gzip
 app.use(compression());
@@ -26,7 +26,7 @@ app.enable('strict routing');
 
 // pretty print JSON when not live
 if (process.env.NODE_ENV !== 'production') {
-    app.set('json spaces', 2);
+	app.set('json spaces', 2);
 }
 
 // set the view engine to ejs
@@ -37,16 +37,16 @@ app.use(require('./lib/express/cors'));
 
 // General security/cache related headers + server header
 app.use(function (req, res, next) {
-    res.set({
-        'Strict-Transport-Security': 'includeSubDomains; max-age=631138519; preload',
-        'X-XSS-Protection':          '0',
-        'X-Content-Type-Options':    'nosniff',
-        'X-Frame-Options':           'DENY',
-        'Cache-Control':             'no-cache, no-store, max-age=0, must-revalidate',
-        Pragma:                      'no-cache',
-        Expires:                     0
-    });
-    next();
+	res.set({
+		'Strict-Transport-Security': 'includeSubDomains; max-age=631138519; preload',
+		'X-XSS-Protection':          '0',
+		'X-Content-Type-Options':    'nosniff',
+		'X-Frame-Options':           'DENY',
+		'Cache-Control':             'no-cache, no-store, max-age=0, must-revalidate',
+		Pragma:                      'no-cache',
+		Expires:                     0
+	});
+	next();
 });
 
 // ATTACH JWT value - FOR ANY RATE LIMITERS and JWT DECODE
@@ -67,28 +67,28 @@ app.use('/', require('./routes/main'));
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
 
-    let payload = {
-        error: {
-            code:    err.status,
-            message: err.public ? err.message : 'Internal Error'
-        }
-    };
+	let payload = {
+		error: {
+			code:    err.status,
+			message: err.public ? err.message : 'Internal Error'
+		}
+	};
 
-    if (process.env.NODE_ENV === 'development') {
-        payload.debug = {
-            stack:    typeof err.stack !== 'undefined' && err.stack ? err.stack.split('\n') : null,
-            previous: err.previous
-        };
-    }
+	if (process.env.NODE_ENV === 'development') {
+		payload.debug = {
+			stack:    typeof err.stack !== 'undefined' && err.stack ? err.stack.split('\n') : null,
+			previous: err.previous
+		};
+	}
 
-    // Not every error is worth logging - but this is good for now until it gets annoying.
-    if (typeof err.stack !== 'undefined' && err.stack) {
-        logger.warn(err.stack);
-    }
+	// Not every error is worth logging - but this is good for now until it gets annoying.
+	if (typeof err.stack !== 'undefined' && err.stack) {
+		logger.warn(err.stack);
+	}
 
-    res
-        .status(err.status || 500)
-        .send(payload);
+	res
+		.status(err.status || 500)
+		.send(payload);
 });
 
 module.exports = app;
