@@ -400,14 +400,17 @@ const internalGerritWebhook = {
 		let is_ok = true;
 
 		if (conditions !== {}) {
+			const project = internalGerritWebhook.getProjectName(webhook_data);
+			const change = internalGerritWebhook.getChange(webhook_data);
+
 			_.map(conditions, (value, name) => {
 				if (value) {
 					// Values can be comma separated
 					const values = helpers.splitByComma(value, true);
 					if (values.length) {
 						switch (name) {
+
 							case 'project':
-								const project = internalGerritWebhook.getProjectName(webhook_data);
 								if (project && !values.includes(project.toLowerCase())) {
 									is_ok = false;
 									logger.info('      ❯ Project "' + project.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
@@ -415,10 +418,18 @@ const internalGerritWebhook = {
 								break;
 
 							case 'branch':
-								const change = internalGerritWebhook.getChange(webhook_data);
 								if (change && !values.includes(change.branch.toLowerCase())) {
 									is_ok = false;
 									logger.info('      ❯ Branch "' + change.branch.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+								}
+								break;
+
+							case 'owners':
+								// Change owners
+								const changeOwnerUsername = internalGerritWebhook.getUserItem(change, 'owner', 'username');
+								if (changeOwnerUsername && !values.includes(changeOwnerUsername.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Owner "' + changeOwnerUsername.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
 								}
 								break;
 						}
@@ -464,7 +475,7 @@ const internalGerritWebhook = {
 		}
 
 		// A list of event types that are allowed to fire without having anyone specific to fire to.
-		let anon_event_types = [
+		let anon_rule_types = [
 			'patch_created'
 		];
 
@@ -490,7 +501,7 @@ const internalGerritWebhook = {
 			query.andWhere('in_sd.service_username', '=', incoming_destination_username);
 		} else if (typeof incoming_destination_username === 'object' && incoming_destination_username !== null && incoming_destination_username.length) {
 			query.whereIn('in_sd.service_username', incoming_destination_username);
-		} else if (anon_event_types.indexOf(event_type) === -1) {
+		} else if (!anon_rule_types.includes(event_type)) {
 			logger.info('    ❯ No valid recipients for this event type');
 			return Promise.resolve(already_notified_user_ids);
 		}
@@ -508,7 +519,7 @@ const internalGerritWebhook = {
 						.each((i, rule, next) => {
 							logger.info('    ❯ Processing Rule #' + rule.id);
 
-							if (this_already_notified_user_ids.indexOf(rule.id) !== -1) {
+							if (this_already_notified_user_ids.includes(rule.id)) {
 								logger.info('      ❯ We have already processed a notification for this user_id:', rule.user_id);
 								next(0);
 							} else if (!internalGerritWebhook.extraConditionsMatch(rule.extra_conditions, webhook_data)) {

@@ -43,41 +43,35 @@ let getSlackDefaults = () => {
 let getGoogleChatDefaults = () => {
 	return {
 		content: JSON.stringify({
-			cards: [
+			"cards": [
 				{
-					header:   {
-						title:      'A build has Succeeded',
-						subtitle:   '{{ project.full_name }} #{{ build.number }}',
-						imageUrl:   'https://public.jc21.com/juxtapose/icons/gerrit.png',
-						imageStyle: 'IMAGE'
+					"header": {
+						"title": "You were added as a reviewer",
+						"subtitle": "{{ project }}:{{ change.branch }}",
+						"imageUrl": "https://public.jc21.com/juxtapose/icons/gerrit.png",
+						"imageStyle": "IMAGE"
 					},
-					sections: [
+					"sections": [
 						{
-							widgets: [
+							"widgets": [
 								{
-									keyValue: {
-										topLabel: 'Cause',
-										content:  '{{ build.cause | jsonescape }}'
-									}
-								},
-								{
-									keyValue: {
-										topLabel: 'Duration',
-										content:  '{{ build.duration_string }}'
+									"keyValue": {
+										"topLabel": "Subject",
+										"content": "{{ change.subject }}"
 									}
 								}
 							]
 						},
 						{
-							widgets: [
+							"widgets": [
 								{
-									buttons: [
+									"buttons": [
 										{
-											textButton: {
-												text:    'View Build',
-												onClick: {
-													openLink: {
-														url: '{{ project.url }}/{{ build.number }}/'
+											"textButton": {
+												"text": "View Change",
+												"onClick": {
+													"openLink": {
+														"url": "{{ project.url }}"
 													}
 												}
 											}
@@ -101,9 +95,9 @@ let getGoogleChatDefaults = () => {
 let getPushoverDefaults = () => {
 	return {
 		content: JSON.stringify({
-			title:   '{{ project.full_name }}',
-			message: 'SUCCESS: #{{ build.number }}',
-			url:     '{{ project.url }}/{{ build.number }}/'
+			title: "Added as reviewer by {{ event_user.name }}",
+			message: "{{ project }}:{{ change.branch }} - {{ change.subject }}",
+			url: "{{ change.url }}"
 		}, null, 2),
 
 		default_options: {
@@ -118,7 +112,7 @@ let getPushoverDefaults = () => {
  */
 let getOtherDefaults = () => {
 	return {
-		content:         'SUCCESS: {{ project.full_name }} #{{ build.number }}' + '\n' + '{{ project.url }}/{{ build.number }}/',
+		content:         "You were added as a reviewer by {{ event_user.name }}:\n{{ change.subject }}\n{{ change.url }}",
 		default_options: {}
 	};
 };

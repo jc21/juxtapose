@@ -60,15 +60,21 @@
 						</div>
 					<% } else if (in_service_type === 'gerrit-webhook') { %>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Gerrit Project</label>
+							<label class="col-sm-3 control-label">Gerrit Projects</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" placeholder="eg: example-project" name="project" value="">
+								<input type="text" class="form-control" placeholder="eg: nginx,terraform" name="project" value="">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Git Branch</label>
+							<label class="col-sm-3 control-label">Git Branches</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" placeholder="eg: master" name="branch" value="">
+								<input type="text" class="form-control" placeholder="eg: master,develop" name="branch" value="">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Change Owner Usernames</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" placeholder="eg: jamiec,bobbyt" name="owners" value="">
 							</div>
 						</div>
 					<% } else { %>

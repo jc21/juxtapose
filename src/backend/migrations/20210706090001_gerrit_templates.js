@@ -286,7 +286,7 @@ const templates = [
 		service_type:    common_values.service_type_jabber,
 		in_service_type: common_values.service_type_gerrit,
 		name:            'A patch was created',
-		content:         'A patch was created by {{ event_user.name }}:\n{{ change.subject }}\n{{ change.url }}',
+		content:         "A patch was created by {{ event_user.name }}:\n{{ change.subject }}\n{{ change.url }}",
 		default_options: {},
 		example_data:    example_data,
 		event_types:     ['patch_created'],
