@@ -283,8 +283,7 @@
       "additionalProperties": true,
       "required": [
         "type",
-        "eventCreatedOn",
-        "project"
+        "eventCreatedOn"
       ],
       "properties": {
         "type": {
