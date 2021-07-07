@@ -156,18 +156,34 @@ module.exports = {
 	 * @param {Boolean} toLower
 	 * @returns array
 	 */
-	splitByComma: function (str, toLower) {
+	explodeConditions: function (str, toLower) {
 		const arr = str.split(',');
-		let ret = [];
+		let ret = {
+			in: [],
+			not: [],
+			count: 0
+		};
+
 		_.map(arr, (val) => {
 			val = val.trim();
 			if (val !== '') {
 				if (toLower) {
 					val = val.toLowerCase();
 				}
-				ret.push(val);
+
+				if (val.substr(0,1) === '!' && val.length > 1) {
+					// Not in
+					ret.not.push(val.substr(1, val.length));
+					ret.count++;
+				} else if (val.substr(0,1) !== '!') {
+					// In
+					ret.in.push(val);
+					ret.count++;
+				}
+				// else: it would just be "!" which is not a valid value.
 			}
-		})
+		});
+
 		return ret;
 	}
 

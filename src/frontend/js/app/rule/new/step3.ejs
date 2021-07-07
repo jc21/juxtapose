@@ -62,21 +62,44 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label">Gerrit Projects</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" placeholder="eg: nginx,terraform" name="project" value="">
+								<input type="text" class="form-control" placeholder="eg: nginx,terraform,!jiratools" name="project" value="">
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label">Git Branches</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" placeholder="eg: master,develop" name="branch" value="">
+								<input type="text" class="form-control" placeholder="eg: master,!develop" name="branch" value="">
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Change Owner Usernames</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control" placeholder="eg: jamiec,bobbyt" name="owners" value="">
+
+						<% if (trigger.substr(0, 9) !== 'my_change') { %>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Change Owners</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="eg: jamiec,bobbyt,!larry" name="owner" value="">
+								</div>
 							</div>
-						</div>
+						<% } %>
+						<% if (trigger === 'my_change_reviewed') { %>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Authors</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="eg: jamiec,bobbyt,!bot" name="author" value="">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Review Sentiment</label>
+								<div class="col-sm-9">
+									<select class="form-control" name="sentiment">
+										<option value="">All</option>
+										<option value="positive">Positive</option>
+										<option value="neutral">Neutral</option>
+										<option value="negative">Negative</option>
+									</select>
+								</div>
+							</div>
+						<% } %>
+
 					<% } else { %>
 						<p class="text-center">There are no options for this service.</p>
 					<% } %>

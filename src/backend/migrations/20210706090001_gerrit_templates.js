@@ -98,7 +98,7 @@ const templates = [
 		name:            'Added as reviewer',
 		content:         '{\n' +
 			'  "title": "Added as reviewer by {{ event_user.name }}",\n' +
-			'  "message": "{{ project }}:{{ change.branch }} - {{ change.subject }}",\n' +
+			'  "message": "{{ project }}:{{ change.branch }} - {{ change.subject | jsonescape }}",\n' +
 			'  "url": "{{ change.url }}"\n' +
 			'}',
 		default_options: common_values.pushover_defaults,
@@ -219,7 +219,7 @@ const templates = [
 		name:            'A patch was created',
 		content:         '{\n' +
 			'  "title": "A patch was created by {{ event_user.name }}",\n' +
-			'  "message": "{{ project }}:{{ change.branch }} - {{ change.subject }}",\n' +
+			'  "message": "{{ project }}:{{ change.branch }} - {{ change.subject | jsonescape}}",\n' +
 			'  "url": "{{ change.url }}"\n' +
 			'}',
 		default_options: common_values.pushover_defaults,

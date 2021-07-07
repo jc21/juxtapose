@@ -120,6 +120,10 @@ const internalGerritWebhook = {
 		if (typeof webhook_data['project'] !== 'undefined' && typeof webhook_data.project.name !== 'undefined') {
 			return webhook_data.project.name;
 		}
+		const change = internalGerritWebhook.getChange(webhook_data);
+		if (change) {
+			return change.project;
+		}
 		return '(unknown project)';
 	},
 
@@ -149,13 +153,13 @@ const internalGerritWebhook = {
 					// event_types.push(['my_pr_merged', 'pr_merged']);
 					break;
 				case 'change-merged':
-					// event_types.push(['my_pr_merged', 'pr_merged']);
+					event_types.push(['my_change_merged', 'change_merged']);
 					break;
 				case 'change-restored':
 					// event_types.push(['my_pr_approved']);
 					break;
 				case 'comment-added':
-					// event_types.push(['my_pr_declined']);
+					event_types.push(['my_change_reviewed']);
 					break;
 				case 'patchset-created':
 					event_types.push(['patch_created']);
@@ -270,11 +274,15 @@ const internalGerritWebhook = {
 	 * @returns {Object}
 	 */
 	getCommonTemplateData: (webhook_data) => {
+		const diffs = internalGerritWebhook.getApprovalDiffStates(webhook_data);
+
 		return {
 			project:        internalGerritWebhook.getProjectName(webhook_data),
 			event_user:     internalGerritWebhook.getEventUser(webhook_data),
 			change:         internalGerritWebhook.getChange(webhook_data),
 			patchset:       internalGerritWebhook.getPatchset(webhook_data),
+			comment:        internalGerritWebhook.getComment(webhook_data),
+			reviews:        diffs.diffs,
 			timestamp:      webhook_data.eventCreatedOn,
 
 			/*
@@ -298,16 +306,22 @@ const internalGerritWebhook = {
 	},
 
 	/**
+	 * This is the user whom triggered the event, not necessarily the user who gets the notification
+	 *
 	 * @param   {Object}  webhook_data
 	 * @param   {String}  [field]
 	 * @returns {*}
 	 */
 	getEventUser: (webhook_data, field) => {
 		switch (webhook_data.type) {
+			case 'change-merged':
+				return internalGerritWebhook.getUserItem(webhook_data, 'submitter', field);
 			case 'patchset-created':
 				return internalGerritWebhook.getUploader(webhook_data, field);
 			case 'reviewer-added':
 				return internalGerritWebhook.getUserItem(webhook_data, 'adder', field);
+			case 'comment-added':
+				return internalGerritWebhook.getUserItem(webhook_data, 'author', field);
 		}
 		return null;
 	},
@@ -371,10 +385,50 @@ const internalGerritWebhook = {
 		return null;
 	},
 
+	getComment: (webhook_data) => {
+		if (typeof webhook_data.comment !== 'undefined') {
+			return webhook_data.comment;
+		}
+		return null;
+	},
+
+	getApprovalDiffStates: (webhook_data) => {
+		let diffs = [];
+		let foundAsPositive = false;
+		let foundAsNegative = false;
+
+		if (typeof webhook_data.approvals !== 'undefined' && webhook_data.approvals.length) {
+			_.map(webhook_data.approvals, (approval) => {
+				if (typeof approval.oldValue !== 'undefined') {
+					// This approval was changed yay
+					const v = parseInt(approval.value, 10);
+					approval.positive = false;
+					approval.negative = false;
+					if (v > 0) {
+						approval.value = '+' + approval.value;
+						approval.positive = true;
+						foundAsPositive = true;
+					} else if (v < 0) {
+						approval.negative = true;
+						foundAsNegative = true;
+					}
+					diffs.push(approval);
+				}
+			});
+		}
+		return {
+			positive: foundAsPositive,
+			negative: foundAsNegative,
+			neutral:  !foundAsNegative && !foundAsPositive,
+			diffs:    diffs.length ? diffs : null,
+			sentiment: foundAsNegative ? 'negative' : (foundAsPositive ? 'positive' : 'neutral'),
+		};
+	},
+
 	/**
 	 * Note, the following events are not handled because they are known not to have a destination user:
-	 * - pr_opened
-	 * - pr_merged
+	 * - change_merged
+	 * - patchset_created
 	 *
 	 * @param   {String}  event_type
 	 * @param   {Object}  webhook_data
@@ -385,9 +439,19 @@ const internalGerritWebhook = {
 			case 'added_as_reviewer':
 				return internalGerritWebhook.getReviewer(webhook_data, 'username');
 
+			case 'my_change_reviewed':
+			case 'my_change_merged':
+				const change = internalGerritWebhook.getChange(webhook_data);
+				if (change) {
+					return internalGerritWebhook.getUserItem(change, 'owner', 'username');
+				}
+				break;
+
 			default:
 				return null;
 		}
+
+		return null;
 	},
 
 	/**
@@ -406,30 +470,59 @@ const internalGerritWebhook = {
 			_.map(conditions, (value, name) => {
 				if (value) {
 					// Values can be comma separated
-					const values = helpers.splitByComma(value, true);
-					if (values.length) {
+					const values = helpers.explodeConditions(value, true);
+
+					if (values.count) {
 						switch (name) {
 
 							case 'project':
-								if (project && !values.includes(project.toLowerCase())) {
+								if (project && values.in.length && !values.in.includes(project.toLowerCase())) {
 									is_ok = false;
-									logger.info('      ❯ Project "' + project.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+									logger.info('      ❯ Project "' + project.toLowerCase() + '" NOT IN ' + JSON.stringify(values.in));
+								} else if (values.not.length && values.not.includes(project.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Project "' + project.toLowerCase() + '" EXCLUDED IN ' + JSON.stringify(values.not));
 								}
 								break;
 
 							case 'branch':
-								if (change && !values.includes(change.branch.toLowerCase())) {
+								if (change && values.in.length && !values.in.includes(change.branch.toLowerCase())) {
 									is_ok = false;
-									logger.info('      ❯ Branch "' + change.branch.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+									logger.info('      ❯ Branch "' + change.branch.toLowerCase() + '" NOT IN ' + JSON.stringify(values.in));
+								} else if (values.not.length && values.not.includes(change.branch.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Branch "' + change.branch.toLowerCase() + '" EXCLUDED IN ' + JSON.stringify(values.not));
 								}
 								break;
 
-							case 'owners':
+							case 'owner':
 								// Change owners
 								const changeOwnerUsername = internalGerritWebhook.getUserItem(change, 'owner', 'username');
-								if (changeOwnerUsername && !values.includes(changeOwnerUsername.toLowerCase())) {
+								if (changeOwnerUsername && values.in.length && !values.in.includes(changeOwnerUsername.toLowerCase())) {
 									is_ok = false;
-									logger.info('      ❯ Owner "' + changeOwnerUsername.toLowerCase() + '" NOT IN ' + JSON.stringify(values));
+									logger.info('      ❯ Owner "' + changeOwnerUsername.toLowerCase() + '" NOT IN ' + JSON.stringify(values.in));
+								} else if (values.not.length && values.not.includes(changeOwnerUsername.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Owner "' + changeOwnerUsername.toLowerCase() + '" EXCLUDED IN ' + JSON.stringify(values.not));
+								}
+								break;
+
+							case 'author':
+								const author = internalGerritWebhook.getUserItem(webhook_data, 'author', 'username');
+								if (author && values.in.length && !values.in.includes(author.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Author "' + author.toLowerCase() + '" NOT IN ' + JSON.stringify(values.in));
+								} else if (values.not.length && values.not.includes(author.toLowerCase())) {
+									is_ok = false;
+									logger.info('      ❯ Author "' + author.toLowerCase() + '" EXCLUDED IN ' + JSON.stringify(values.not));
+								}
+								break;
+
+							case 'sentiment':
+								const reviews = internalGerritWebhook.getApprovalDiffStates(webhook_data);
+								if (!values.in.includes(reviews.sentiment)) {
+									is_ok = false;
+									logger.info('      ❯ Sentiment "' + reviews.sentiment + '" NOT IN ' + JSON.stringify(values.in));
 								}
 								break;
 						}
@@ -476,7 +569,8 @@ const internalGerritWebhook = {
 
 		// A list of event types that are allowed to fire without having anyone specific to fire to.
 		let anon_rule_types = [
-			'patch_created'
+			'patch_created',
+			'change_merged'
 		];
 
 		// This complex query should only get the rules for users where the event type is requested and the incoming service username is defined

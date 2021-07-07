@@ -12,5 +12,5 @@ module.exports = {
     zendesk:   new Signale({scope: 'Zendesk   '}),
     jenkins:   new Signale({scope: 'Jenkins   '}),
     gchat:     new Signale({scope: 'GoogleChat'}),
-    gerrit:    new Signale({scope: 'Gerrit'})
+    gerrit:    new Signale({scope: 'Gerrit    '})
 };

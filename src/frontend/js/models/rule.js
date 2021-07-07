@@ -42,8 +42,11 @@ const trigger_groups = {
 		}
 	},
 	'gerrit-webhook': {
-		all: {
-			name: 'All Events'
+		for_you: {
+			name: 'For You'
+		},
+		noisy: {
+			name: 'Noisy Notifications'
 		}
 	}
 };
@@ -221,13 +224,25 @@ const trigger_types = {
 	},
 
 	'gerrit-webhook': {
-		added_as_reviewer:    {
+		added_as_reviewer: {
 			name:  'You were added as a reviewer on a patch',
-			group: 'all'
+			group: 'for_you'
 		},
-		patch_created:    {
+		my_change_reviewed: {
+			name:  'Your change was reviewed',
+			group: 'for_you'
+		},
+		my_change_merged: {
+			name:  'Your change was merged',
+			group: 'for_you'
+		},
+		patch_created: {
 			name:  'A patch was created',
-			group: 'all'
+			group: 'noisy'
+		},
+		change_merged: {
+			name:  'A change was merged',
+			group: 'noisy'
 		}
 	}
 };

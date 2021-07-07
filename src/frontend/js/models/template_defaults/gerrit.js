@@ -162,6 +162,33 @@ module.exports = function (service_type) {
 				createdOn: 1625552862,
 				status: "NEW"
 			},
+			reviews: [
+				{
+					"type": "Code-Review",
+					"description": "Code-Review",
+					"value": "+2",
+					"oldValue": "0",
+					"positive": true,
+					"negative": false
+				},
+				{
+					"type": "Verified",
+					"description": "Verified",
+					"value": "+1",
+					"oldValue": "0",
+					"positive": true,
+					"negative": false
+				},
+				{
+					"type": "Benchmark",
+					"description": "Benchmark",
+					"value": "-1",
+					"oldValue": "0",
+					"positive": false,
+					"negative": true
+				}
+			],
+			comment: "Patch Set 9: Code-Review+1",
 			timestamp: 1625552863
 		}
 	});
