@@ -263,3 +263,15 @@ docker run --name juxtapose -p 80:80 -e NODE_ENV=production -e HTTP_PROXY=http:/
 [![Bitbucket Triggers](https://public.jc21.com/juxtapose/screenshots/small/new_rule_trigger_bitbucket.jpg "Bitbucket Triggers")](https://public.jc21.com/juxtapose/screenshots/new_rule_trigger_bitbucket.jpg)
 [![Jira Triggers](https://public.jc21.com/juxtapose/screenshots/small/new_rule_trigger_jira.jpg "Jira Triggers")](https://public.jc21.com/juxtapose/screenshots/new_rule_trigger_jira.jpg)
 [![Services](https://public.jc21.com/juxtapose/screenshots/small/services.jpg "Services")](https://public.jc21.com/juxtapose/screenshots/services.jpg)
+
+
+## Slack Bot Permissions
+
+In order for this app to work with your Slack bot, it will require the following `OAuth & Permissions` Scopes:
+
+**Bot Token Scopes**
+- `channels:read`
+- `chat:write`
+- `chat:write.customize`
+- `users:read`
+- `users:read.email`
