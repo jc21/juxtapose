@@ -487,6 +487,7 @@ const internalServiceWorker = {
 					case 'slack':
 						let slack_options = {
 							icon_url: service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png',
+							as_user: false,
 							text: '',
 						};
 

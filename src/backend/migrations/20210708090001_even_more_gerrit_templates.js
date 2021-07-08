@@ -69,7 +69,7 @@ const templates = [
 			'      "fields": [\n' +
 			'        {\n' +
 			'          "title": "Comment",\n' +
-			'          "value": "{{ comment }}",\n' +
+			'          "value": "{{ comment | jsonescape }}",\n' +
 			'          "short": false\n' +
 			'        }\n' +
 			'      ]\n' +
