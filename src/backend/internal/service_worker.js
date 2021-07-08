@@ -478,7 +478,7 @@ const internalServiceWorker = {
 	 */
 	sendMessage: (service_id, username, message) => {
 		return new Promise((resolve, reject) => {
-			let service = internalServiceWorker.getService(service_id);
+			const service = internalServiceWorker.getService(service_id);
 			if (service) {
 				switch (service.type) {
 
@@ -486,8 +486,10 @@ const internalServiceWorker = {
 					// Slack
 					case 'slack':
 						let slack_options = {
+							as_user:  false,
 							icon_url: service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png',
-							text: '',
+							username: service.data.name,
+							text:     ''
 						};
 
 						let channel = username;
