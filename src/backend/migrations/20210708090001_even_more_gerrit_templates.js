@@ -1,6 +1,6 @@
 'use strict';
 
-const migrate_name     = 'more_gerrit_templates';
+const migrate_name     = 'even_more_gerrit_templates';
 const logger           = require('../logger').migrate;
 const batchflow        = require('batchflow');
 const internalTemplate = require('../internal/template');
@@ -42,32 +42,6 @@ const example_data = {
 		"createdOn": 1625552862,
 		"status": "NEW"
 	},
-	"reviews": [
-		{
-			"type": "Code-Review",
-			"description": "Code-Review",
-			"value": "2",
-			"oldValue": "0",
-			"positive": true,
-			"negative": false
-		},
-		{
-			"type": "Verified",
-			"description": "Verified",
-			"value": "1",
-			"oldValue": "0",
-			"positive": true,
-			"negative": false
-		},
-		{
-			"type": "Benchmark",
-			"description": "Benchmark",
-			"value": "-1",
-			"oldValue": "0",
-			"positive": false,
-			"negative": true
-		}
-	],
 	"comment": "Patch Set 9: Code-Review+1",
 	"timestamp": 1625552863
 };
@@ -79,27 +53,20 @@ const example_data = {
  */
 const templates = [
 	/**
-	 * 1.1: Your change was reviewed - slack
+	 * 1.1: Your change was commented on - slack
 	 */
 	{
 		service_type:    common_values.service_type_slack,
 		in_service_type: common_values.service_type_gerrit,
-		name:            'Your change was reviewed',
+		name:            'Your change was commented on',
 		content:         '{\n' +
 			'  "icon_url": "{{ icon_url }}",\n' +
-			'  "text": "{{ event_user.name }} reviewed your change",\n' +
+			'  "text": "{{ event_user.name }} commented on your change",\n' +
 			'  "attachments": [\n' +
 			'    {\n' +
 			'      "title": "<{{ change.url }}|{{ change.subject | jsonescape }}>",\n' +
 			'      "color": "{{ panel_color }}",\n' +
 			'      "fields": [\n' +
-			'        {%- for review in reviews %}\n' +
-			'        {\n' +
-			'          "title": "{{ review.type }}",\n' +
-			'          "value": "{{ review.value }}",\n' +
-			'          "short": true\n' +
-			'        },\n' +
-			'        {%- endfor %}\n' +
 			'        {\n' +
 			'          "title": "Comment",\n' +
 			'          "value": "{{ comment }}",\n' +
@@ -114,40 +81,40 @@ const templates = [
 			panel_color: '#AAFFAA'
 		},
 		example_data:    example_data,
-		event_types:     ['my_change_reviewed'],
+		event_types:     ['my_change_commented'],
 		render_engine:   'liquid'
 	},
 
 	/**
-	 * 1.2: Your change was reviewed - pushover
+	 * 1.2: Your change was commented on - pushover
 	 */
 	{
 		service_type:    common_values.service_type_pushover,
 		in_service_type: common_values.service_type_gerrit,
-		name:            'Your change was reviewed',
+		name:            'Your change was commented on',
 		content:         '{\n' +
-			'  "title": "{{ event_user.name }} reviewed your change",\n' +
+			'  "title": "{{ event_user.name }} commented on your change",\n' +
 			'  "message": "{{ project }}:{{ change.branch }} - {{ change.subject | jsonescape }}\\n{{ comment | jsonescape }}",\n' +
 			'  "url": "{{ change.url }}"\n' +
 			'}',
 		default_options: common_values.pushover_defaults,
 		example_data:    example_data,
-		event_types:     ['my_change_reviewed'],
+		event_types:     ['my_change_commented'],
 		render_engine:   'liquid'
 	},
 
 	/**
-	 * 1.3: Your change was reviewed - gchat
+	 * 1.3: Your change was commented on - gchat
 	 */
 	{
 		service_type:    common_values.service_type_gchat,
 		in_service_type: common_values.service_type_gerrit,
-		name:            'Your change was reviewed',
+		name:            'Your change was commented on',
 		content:         '{\n' +
 			'  "cards": [\n' +
 			'    {\n' +
 			'      "header": {\n' +
-			'      "title": "{{ event_user.name }} reviewed your change",\n' +
+			'      "title": "{{ event_user.name }} commented on your change",\n' +
 			'      "subtitle": "{{ project }}:{{ change.branch }} - {{ change.subject }}",\n' +
 			'      "imageUrl": "' + common_values.icon_url_gerrit + '",\n' +
 			'      "imageStyle": "IMAGE"\n' +
@@ -155,14 +122,6 @@ const templates = [
 			'    "sections": [\n' +
 			'      {\n' +
 			'        "widgets": [\n' +
-			'          {%- for review in reviews %}\n' +
-			'            {\n' +
-			'              "keyValue": {\n' +
-			'                "topLabel": "{{ review.type }}",\n' +
-			'                "content": "{{ review.value }}"\n' +
-			'              }\n' +
-			'            },\n' +
-			'          {%- endfor %}\n' +
 			'          {\n' +
 			'            "keyValue": {\n' +
 			'              "topLabel": "Comment",\n' +
@@ -192,21 +151,21 @@ const templates = [
 			'}',
 		default_options: {},
 		example_data:    example_data,
-		event_types:     ['my_change_reviewed'],
+		event_types:     ['my_change_commented'],
 		render_engine:   'liquid'
 	},
 
 	/**
-	 * 1.4: Your change was reviewed - jabber
+	 * 1.4: Your change was commented on - jabber
 	 */
 	{
 		service_type:    common_values.service_type_jabber,
 		in_service_type: common_values.service_type_gerrit,
-		name:            'Your change was reviewed',
-		content:         "{{ event_user.name }} reviewed your change: {{ comment }}\n{{ change.subject }}\n{{ change.url }}",
+		name:            'Your change was commented on',
+		content:         "{{ event_user.name }} commented on your change: {{ comment }}\n{{ change.subject }}\n{{ change.url }}",
 		default_options: {},
 		example_data:    example_data,
-		event_types:     ['my_change_reviewed'],
+		event_types:     ['my_change_commented'],
 		render_engine:   'liquid'
 	},
 

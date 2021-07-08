@@ -79,8 +79,10 @@ const internalGerritWebhook = {
 						return internalGerritWebhook.process(service.id, webhook_data);
 					});
 			})
-			.catch(err => {
-				logger.error(err, webhook_data);
+			.catch((err) => {
+				if (err.message !== 'Invalid Service') {
+					logger.error(err, webhook_data);
+				}
 				throw err;
 			});
 	},
@@ -159,7 +161,7 @@ const internalGerritWebhook = {
 					// event_types.push(['my_pr_approved']);
 					break;
 				case 'comment-added':
-					event_types.push(['my_change_reviewed']);
+					event_types.push(['my_change_reviewed', 'my_change_commented']);
 					break;
 				case 'patchset-created':
 					event_types.push(['patch_created']);
@@ -401,18 +403,22 @@ const internalGerritWebhook = {
 			_.map(webhook_data.approvals, (approval) => {
 				if (typeof approval.oldValue !== 'undefined') {
 					// This approval was changed yay
-					const v = parseInt(approval.value, 10);
-					approval.positive = false;
-					approval.negative = false;
+
+					// copy this item to prevent mutation
+					let this_approval = _.clone(approval);
+
+					const v = parseInt(this_approval.value, 10);
+					this_approval.positive = false;
+					this_approval.negative = false;
 					if (v > 0) {
-						approval.value = '+' + approval.value;
-						approval.positive = true;
+						this_approval.value = '+' + this_approval.value;
+						this_approval.positive = true;
 						foundAsPositive = true;
 					} else if (v < 0) {
-						approval.negative = true;
+						this_approval.negative = true;
 						foundAsNegative = true;
 					}
-					diffs.push(approval);
+					diffs.push(this_approval);
 				}
 			});
 		}
@@ -423,6 +429,19 @@ const internalGerritWebhook = {
 			diffs:    diffs.length ? diffs : null,
 			sentiment: foundAsNegative ? 'negative' : (foundAsPositive ? 'positive' : 'neutral'),
 		};
+	},
+
+	/**
+	 * @param {array} webhook_data
+	 * @returns {boolean}
+	 */
+	isReviewedComment: (webhook_data) => {
+		if (webhook_data.type === 'comment-added') {
+			const reviews = internalGerritWebhook.getApprovalDiffStates(webhook_data);
+			return reviews.diffs !== null && reviews.diffs.length;
+		}
+
+		return false;
 	},
 
 	/**
@@ -439,8 +458,9 @@ const internalGerritWebhook = {
 			case 'added_as_reviewer':
 				return internalGerritWebhook.getReviewer(webhook_data, 'username');
 
-			case 'my_change_reviewed':
+			case 'my_change_commented':
 			case 'my_change_merged':
+			case 'my_change_reviewed':
 				const change = internalGerritWebhook.getChange(webhook_data);
 				if (change) {
 					return internalGerritWebhook.getUserItem(change, 'owner', 'username');
@@ -546,6 +566,14 @@ const internalGerritWebhook = {
 		already_notified_user_ids = already_notified_user_ids || [];
 
 		logger.info('  ❯ Processing Rules for:           ', event_type);
+
+		// The comment event is split into a Review or a Comment based on the approval changes in the comment.
+		// So we make this determination here.
+		if (event_type === 'my_change_reviewed' && !internalGerritWebhook.isReviewedComment(webhook_data)) {
+			// exit now, since this gerrit event and the my_change_reviewed event don't align.
+			logger.info('    ❯ This comment is not a review and is not applicable');
+			return Promise.resolve([]);
+		}
 
 		let incoming_destination_username = internalGerritWebhook.getIncomingServiceUsernameBasedOnEvent(event_type, webhook_data);
 		logger.info('    ❯ incoming_destination_username:', typeof incoming_destination_username === 'object' && incoming_destination_username !== null ? incoming_destination_username.join(', ') : incoming_destination_username);

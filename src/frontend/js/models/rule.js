@@ -232,6 +232,10 @@ const trigger_types = {
 			name:  'Your change was reviewed',
 			group: 'for_you'
 		},
+		my_change_commented: {
+			name:  'Your change was commented on',
+			group: 'for_you'
+		},
 		my_change_merged: {
 			name:  'Your change was merged',
 			group: 'for_you'

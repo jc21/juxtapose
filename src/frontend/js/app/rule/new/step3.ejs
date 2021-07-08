@@ -80,13 +80,15 @@
 								</div>
 							</div>
 						<% } %>
-						<% if (trigger === 'my_change_reviewed') { %>
+						<% if (trigger === 'my_change_reviewed' || trigger === 'my_change_commented') { %>
 							<div class="form-group">
 								<label class="col-sm-3 control-label">Authors</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control" placeholder="eg: jamiec,bobbyt,!bot" name="author" value="">
 								</div>
 							</div>
+						<% } %>
+						<% if (trigger === 'my_change_reviewed') { %>
 							<div class="form-group">
 								<label class="col-sm-3 control-label">Review Sentiment</label>
 								<div class="col-sm-9">
@@ -95,6 +97,7 @@
 										<option value="positive">Positive</option>
 										<option value="neutral">Neutral</option>
 										<option value="negative">Negative</option>
+										<option value="positive,negative">Positive or Negative only</option>
 									</select>
 								</div>
 							</div>

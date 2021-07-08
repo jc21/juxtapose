@@ -81,14 +81,20 @@ app.use(function (err, req, res, next) {
 		};
 	}
 
-	// Not every error is worth logging - but this is good for now until it gets annoying.
-	if (typeof err.stack !== 'undefined' && err.stack) {
-		logger.warn(err.stack);
-	}
+	if (err.message === 'Invalid Service') {
+		payload.error = {
+			code: 400,
+			message: 'Invalid service or token'
+		};
+		res.status(400).send(payload);
+	} else {
+		// Not every error is worth logging - but this is good for now until it gets annoying.
+		if (typeof err.stack !== 'undefined' && err.stack) {
+			logger.warn(err.stack);
+		}
 
-	res
-		.status(err.status || 500)
-		.send(payload);
+		res.status(err.status || 500).send(payload);
+	}
 });
 
 module.exports = app;
