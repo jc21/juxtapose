@@ -9,26 +9,26 @@ const Model = require('objection').Model;
 Model.knex(db);
 
 class BitbucketIncomingLog extends Model {
-    $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
-    }
+	$beforeInsert () {
+		this.created_on  = Model.raw('NOW()');
+		this.modified_on = Model.raw('NOW()');
+	}
 
-    $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
-    }
+	$beforeUpdate () {
+		this.modified_on = Model.raw('NOW()');
+	}
 
-    static get name () {
-        return 'BitbucketIncomingLog';
-    }
+	static get name () {
+		return 'BitbucketIncomingLog';
+	}
 
-    static get tableName () {
-        return 'bitbucket_incoming_log';
-    }
+	static get tableName () {
+		return 'bitbucket_incoming_log';
+	}
 
-    static get jsonAttributes () {
-        return ['data'];
-    }
+	static get jsonAttributes () {
+		return ['data'];
+	}
 
 }
 

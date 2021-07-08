@@ -504,8 +504,6 @@ const internalServiceWorker = {
 
 						slack_options = _.assign({}, {channel: channel}, message);
 
-						logger.info("Slack postMessage:", slack_options);
-
 						(async () => {
 							try {
 								const result = await service.handler.chat.postMessage(slack_options);

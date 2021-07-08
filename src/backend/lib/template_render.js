@@ -7,15 +7,15 @@ const liquid = require('liquidjs')();
 liquid.registerFilter('unescape',   v => _.unescape(v));
 liquid.registerFilter('jsonstring', v => JSON.stringify(v));
 liquid.registerFilter('jsonescape', v => {
-    return JSON.stringify(_.unescape(v))
-        .replace(/\\'/g, "\\'")
-        .replace(/\\"/g, '\\"')
-        .replace(/\\&/g, "\\&")
-        .replace(/\\r/g, "\\r")
-        .replace(/\\t/g, "\\t")
-        .replace(/\\b/g, "\\b")
-        .replace(/\\f/g, "\\f")
-        .replace(/^"|"$/g, '');
+	return JSON.stringify(_.unescape(v))
+		.replace(/\\'/g, "\\'")
+		.replace(/\\"/g, '\\"')
+		.replace(/\\&/g, "\\&")
+		.replace(/\\r/g, "\\r")
+		.replace(/\\t/g, "\\t")
+		.replace(/\\b/g, "\\b")
+		.replace(/\\f/g, "\\f")
+		.replace(/^"|"$/g, '');
 });
 
 /**
@@ -23,7 +23,7 @@ liquid.registerFilter('jsonescape', v => {
  * @returns {String}
  */
 const replacePreviewLinks = function (content) {
-    return content.replace(/<(http[^>|]+)\|([^>]+)>/gim, '<a href=\'$1\'>$2</a>');
+	return content.replace(/<(http[^>|]+)\|([^>]+)>/gim, '<a href=\'$1\'>$2</a>');
 };
 
 /**
@@ -34,27 +34,27 @@ const replacePreviewLinks = function (content) {
  * @returns {Promise}
  */
 module.exports = async function (content, data, engine, for_preview) {
-    if (typeof content === 'object') {
-        content = JSON.stringify(content, null, 2);
-    }
+	if (typeof content === 'object') {
+		content = JSON.stringify(content, null, 2);
+	}
 
-    data.prettyPrint = function (val) {
-        return JSON.stringify(val, null, 2).replace(/\r/gim, '\\r').replace(/\n/gim, '\\n');
-    };
+	data.prettyPrint = function (val) {
+		return JSON.stringify(val, null, 2).replace(/\r/gim, '\\r').replace(/\n/gim, '\\n');
+	};
 
-    if (engine === 'ejs') {
-        content = ejs.render(content, data, {});
-    } else {
-        // Liquid is now the default
-        content = await liquid.parseAndRender(content, data);
-    }
+	if (engine === 'ejs') {
+		content = ejs.render(content, data, {});
+	} else {
+		// Liquid is now the default
+		content = await liquid.parseAndRender(content, data);
+	}
 
-    if (for_preview) {
-        content = replacePreviewLinks(content);
-    } else {
-        // decode html entities while respecting json
-        content = content.replace(/&#34;/gim, '\\"');
-    }
+	if (for_preview) {
+		content = replacePreviewLinks(content);
+	} else {
+		// decode html entities while respecting json
+		content = content.replace(/&#34;/gim, '\\"');
+	}
 
-    return content;
+	return content;
 };

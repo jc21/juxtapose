@@ -10,22 +10,22 @@ const Model   = require('objection').Model;
 Model.knex(db);
 
 class JiraIssueStatus extends Model {
-    $beforeInsert () {
-        this.created_on  = Model.raw('NOW()');
-        this.modified_on = Model.raw('NOW()');
-    }
+	$beforeInsert () {
+		this.created_on  = Model.raw('NOW()');
+		this.modified_on = Model.raw('NOW()');
+	}
 
-    $beforeUpdate () {
-        this.modified_on = Model.raw('NOW()');
-    }
+	$beforeUpdate () {
+		this.modified_on = Model.raw('NOW()');
+	}
 
-    static get name () {
-        return 'JiraIssueStatus';
-    }
+	static get name () {
+		return 'JiraIssueStatus';
+	}
 
-    static get tableName () {
-        return 'jira_issue_status';
-    }
+	static get tableName () {
+		return 'jira_issue_status';
+	}
 
 }
 
