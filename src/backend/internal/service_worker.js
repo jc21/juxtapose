@@ -486,11 +486,14 @@ const internalServiceWorker = {
 					// Slack
 					case 'slack':
 						let slack_options = {
-							as_user:  false,
-							icon_url: service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png',
-							username: service.data.name,
-							text:     ''
+							text: ''
 						};
+
+						if (typeof service.data.post_as !== 'undefined' && service.data.post_as === 'slackbot') {
+							slack_options.as_user  = false;
+							slack_options.icon_url = service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png';
+							slack_options.username = service.data.name;
+						}
 
 						let channel = username;
 						if (username.indexOf('@') === -1 && username.indexOf('#') === -1) {
