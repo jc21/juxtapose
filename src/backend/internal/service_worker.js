@@ -1,24 +1,24 @@
 'use strict';
 
 const _                      = require('lodash');
-const logger                 = require('../logger').services;
-const internalService        = require('./service');
 const batchflow              = require('batchflow');
+const { WebClient }          = require('@slack/web-api');
+const logger                 = require('../logger').services;
 const notificationQueueModel = require('../models/notification_queue');
 const xmpp                   = require('../lib/xmpp');
 const GoogleChatBot          = require('../lib/gchat');
 const Pushover               = require('../lib/pushover');
-const { WebClient }          = require('@slack/web-api');
+const internalService        = require('./service');
 
 const internalServiceWorker = {
 
-	services:            {},
-	interval_timeout:    5000,
-	interval:            null,
-	interval_processing: false,
+	services:           {},
+	intervalTimeout:    5000,
+	interval:           null,
+	intervalProcessing: false,
 
 	/**
-	 *
+	 * Starts the Service Worker
 	 */
 	start: () => {
 		logger.info('Starting');
@@ -26,14 +26,14 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 *
+	 * Restarts the services
 	 */
 	restart: () => {
 		logger.info('Restarting');
 
 		if (internalServiceWorker.interval) {
 			clearInterval(internalServiceWorker.interval);
-			internalServiceWorker.interval_processing = false;
+			internalServiceWorker.intervalProcessing = false;
 		}
 
 		_.map(internalServiceWorker.services, (unused, idx) => {
@@ -129,7 +129,7 @@ const internalServiceWorker = {
 						})
 						.end((/*results*/) => {
 							logger.success(started + ' Services Started');
-							internalServiceWorker.interval = setInterval(internalServiceWorker.checkNotificationQueue, internalServiceWorker.interval_timeout);
+							internalServiceWorker.interval = setInterval(internalServiceWorker.checkNotificationQueue, internalServiceWorker.intervalTimeout);
 							resolve();
 						});
 				});
@@ -140,7 +140,7 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param   {Object}  service
+	 * @param   {object}  service
 	 * @returns {Promise}
 	 */
 	initSlack: (service) => {
@@ -170,7 +170,7 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param   {Object}  service
+	 * @param   {object}  service
 	 * @returns {Promise}
 	 */
 	initJabber: (service) => {
@@ -238,7 +238,7 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param   {Object}  service
+	 * @param   {object}  service
 	 * @returns {Promise}
 	 */
 	initGchat: (service) => {
@@ -273,15 +273,9 @@ const internalServiceWorker = {
 	/**
 	 * Hit when ghat authenticates and also at intervals
 	 *
-	 * @param {Object}  service
-	 * @param {Object}  service.handler
+	 * @param {object} service
 	 */
 	gchatIntervalFire: (service) => {
-		//let gchat_logger = require('../logger').gchat;
-
-		// List spaces
-		//gchat_logger.info('❯ Listing spaces ...');
-
 		service.handler.listSpaces()
 			.then((spaces_result) => {
 				service.spaces = spaces_result.data.spaces;
@@ -290,23 +284,14 @@ const internalServiceWorker = {
 					// Now, for each SPACE, get members sequentially
 					batchflow(service.spaces).sequential()
 						.each((i, space, next) => {
-							//gchat_logger.info('  ❯ Fetching members for space: ' + space.name + ' ...');
-
 							service.handler.listMembers(space.name)
 								.then((members_result) => {
 									service.spaces[i].members = members_result.data.memberships;
-									//gchat_logger.success('    ❯ Found ' + members_result.data.memberships.length + ' members in ' + space.name);
 									next(true);
 								})
-								.catch((err) => {
-									//gchat_logger.error('    ❯ Failed to list members: ', err);
-									next(err);
-								});
-
+								.catch(next);
 						})
-						.error((err) => {
-							reject(err);
-						})
+						.error(reject)
 						.end((/*results*/) => {
 							resolve();
 						});
@@ -318,7 +303,7 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param   {Object}  service
+	 * @param   {object} service
 	 * @returns {Promise}
 	 */
 	initPushover: (service) => {
@@ -337,10 +322,10 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param {Integer}  service_id
+	 * @param {integer} serviceId
 	 */
-	syncData: (service_id) => {
-		const service = internalServiceWorker.getService(service_id);
+	syncData: (serviceId) => {
+		const service = internalServiceWorker.getService(serviceId);
 
 		if (service && service.type === 'gchat') {
 			logger.info('Service #' + service.id + ' (' + service.type + ') Syncing');
@@ -351,23 +336,23 @@ const internalServiceWorker = {
 	},
 
 	/**
-	 * @param   {Integer}  service_id
-	 * @returns {null}
+	 * @param   {integer} serviceId
+	 * @returns {object|null}
 	 */
-	getService: (service_id) => {
-		if (typeof internalServiceWorker.services['service-' + service_id] !== 'undefined') {
-			return internalServiceWorker.services['service-' + service_id];
+	getService: (serviceId) => {
+		if (typeof internalServiceWorker.services['service-' + serviceId] !== 'undefined') {
+			return internalServiceWorker.services['service-' + serviceId];
 		}
 
 		return null;
 	},
 
 	/**
-	 * @param   {Integer}  service_id
+	 * @param   {integer} serviceId
 	 * @returns {boolean}
 	 */
-	isOnline: (service_id) => {
-		const service = internalServiceWorker.getService(service_id);
+	isOnline: (serviceId) => {
+		const service = internalServiceWorker.getService(serviceId);
 		if (service && typeof service.online !== 'undefined') {
 			return service.online;
 		}
@@ -379,8 +364,8 @@ const internalServiceWorker = {
 	 * Checks for queue items ready to process and processes them
 	 */
 	checkNotificationQueue: function () {
-		if (!internalServiceWorker.interval_processing) {
-			internalServiceWorker.interval_processing = true;
+		if (!internalServiceWorker.intervalProcessing) {
+			internalServiceWorker.intervalProcessing = true;
 
 			notificationQueueModel
 				.query()
@@ -400,19 +385,19 @@ const internalServiceWorker = {
 									.where('id', notification.id)
 									.then(() => {
 										// Determine the service username for this notification
-										let service_settings = null;
+										let serviceSettings = null;
 
 										_.map(notification.user.services, (service) => {
 											if (service.id === notification.service_id && service.service_username) {
-												service_settings = _.clone(service);
+												serviceSettings = _.clone(service);
 											}
 										});
 
-										if (service_settings) {
+										if (serviceSettings) {
 											// Send
-											logger.info('Sending notification #' + notification.id + ' to @' + service_settings.service_username + ' at ' + service_settings.type + ' service #' + notification.service_id);
+											logger.info('Sending notification #' + notification.id + ' to @' + serviceSettings.service_username + ' at ' + serviceSettings.type + ' service #' + notification.service_id);
 
-											internalServiceWorker.sendMessage(notification.service_id, service_settings.service_username, notification.content)
+											internalServiceWorker.sendMessage(notification.service_id, serviceSettings.service_username, notification.content)
 												.then(() => {
 													// update row with error
 													return notificationQueueModel
@@ -449,36 +434,33 @@ const internalServiceWorker = {
 													next();
 												});
 										}
-
 									});
 							})
-							.error((err) => {
-								reject(err);
-							})
+							.error(reject)
 							.end((/*results*/) => {
 								resolve();
 							});
 					});
 				})
 				.then(() => {
-					internalServiceWorker.interval_processing = false;
+					internalServiceWorker.intervalProcessing = false;
 				})
 				.catch((err) => {
 					logger.error(err);
-					internalServiceWorker.interval_processing = false;
+					internalServiceWorker.intervalProcessing = false;
 				});
 		}
 	},
 
 	/**
-	 * @param   {Integer}        service_id
+	 * @param   {Integer}        serviceId
 	 * @param   {String}         username
 	 * @param   {String|Object}  message
 	 * @returns {Promise}
 	 */
-	sendMessage: (service_id, username, message) => {
+	sendMessage: (serviceId, username, message) => {
 		return new Promise((resolve, reject) => {
-			const service = internalServiceWorker.getService(service_id);
+			const service = internalServiceWorker.getService(serviceId);
 			if (service) {
 				switch (service.type) {
 
@@ -507,6 +489,11 @@ const internalServiceWorker = {
 						}
 
 						slack_options = _.assign({}, {channel: channel}, message);
+
+						// Remove icon_url if we're not posting as slackbot
+						if (typeof service.data.post_as === 'undefined' || service.data.post_as !== 'slackbot') {
+							delete slack_options.icon_url;
+						}
 
 						(async () => {
 							try {
@@ -557,18 +544,18 @@ const internalServiceWorker = {
 						break;
 				}
 			} else {
-				reject(new Error('Could not find Service for #' + service_id));
+				reject(new Error('Could not find Service for #' + serviceId));
 			}
 		});
 	},
 
 	/**
-	 * @param   {Integer}  service_id
+	 * @param   {Integer}  serviceId
 	 * @returns {Promise}
 	 */
-	getUsers: (service_id) => {
+	getUsers: (serviceId) => {
 		return new Promise((resolve, reject) => {
-			let service = internalServiceWorker.getService(service_id);
+			const service = internalServiceWorker.getService(serviceId);
 			if (service) {
 				switch (service.type) {
 
@@ -657,7 +644,7 @@ const internalServiceWorker = {
 						break;
 				}
 			} else {
-				reject(new Error('Could not find Service for #' + service_id));
+				reject(new Error('Could not find Service for #' + serviceId));
 			}
 		});
 	}
