@@ -67,7 +67,7 @@ const internalServiceWorker = {
 		let started = 0;
 
 		return internalService.getActiveServices()
-			.then(services => {
+			.then((services) => {
 				return new Promise((resolve, reject) => {
 					batchflow(services).sequential()
 						.each((i, service, next) => {
@@ -77,7 +77,7 @@ const internalServiceWorker = {
 										started++;
 										next();
 									})
-									.catch(err => {
+									.catch((err) => {
 										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
 										next(err);
 									});
@@ -88,7 +88,7 @@ const internalServiceWorker = {
 										started++;
 										next();
 									})
-									.catch(err => {
+									.catch((err) => {
 										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
 										next(err);
 									});
@@ -99,7 +99,7 @@ const internalServiceWorker = {
 										started++;
 										next();
 									})
-									.catch(err => {
+									.catch((err) => {
 										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
 										next(err);
 									});
@@ -110,7 +110,7 @@ const internalServiceWorker = {
 										started++;
 										next();
 									})
-									.catch(err => {
+									.catch((err) => {
 										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
 										next(err);
 									});
@@ -124,7 +124,7 @@ const internalServiceWorker = {
 								next();
 							}
 						})
-						.error(err => {
+						.error((err) => {
 							reject(err);
 						})
 						.end((/*results*/) => {
@@ -134,7 +134,7 @@ const internalServiceWorker = {
 						});
 				});
 			})
-			.catch(err => {
+			.catch((err) => {
 				logger.error(err);
 			});
 	},
@@ -143,7 +143,7 @@ const internalServiceWorker = {
 	 * @param   {Object}  service
 	 * @returns {Promise}
 	 */
-	initSlack: service => {
+	initSlack: (service) => {
 		return new Promise((resolve/*, reject*/) => {
 			logger.info('Starting Service #' + service.id + ' (slack): ' + service.name);
 
@@ -173,7 +173,7 @@ const internalServiceWorker = {
 	 * @param   {Object}  service
 	 * @returns {Promise}
 	 */
-	initJabber: service => {
+	initJabber: (service) => {
 		return new Promise((resolve, reject) => {
 			logger.info('Starting Service #' + service.id + ' (jabber): ' + service.name);
 
@@ -188,7 +188,7 @@ const internalServiceWorker = {
 				port:     service.data.port
 			});
 
-			obj.handler.on('online', data => {
+			obj.handler.on('online', (data) => {
 				logger.success('Service #' + service.id + ' (jabber) Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
 				obj.online = true;
 			});
@@ -206,7 +206,7 @@ const internalServiceWorker = {
 					logger.info('Service #' + service.id + ' (jabber) reconnecting ...');
 
 					internalServiceWorker.initJabber(service)
-						.catch(err => {
+						.catch((err) => {
 							logger.error('Service #' + service.id + ' (jabber) ERROR: ' + err.message);
 						});
 				}, 2000);
@@ -217,16 +217,16 @@ const internalServiceWorker = {
 				obj.handler.send(from, 'Hey, it\'s Juxtapose here. You said: ' + message);
 			});
 
-			obj.handler.on('error', err => {
+			obj.handler.on('error', (err) => {
 				logger.error('Service #' + service.id + ' (jabber) ERROR:', err.message);
 			});
 
-			obj.handler.on('subscribe', from => {
+			obj.handler.on('subscribe', (from) => {
 				logger.info('Service #' + service.id + ' (jabber) Accepting subscription from:', from);
 				obj.handler.acceptSubscription(from);
 			});
 
-			obj.handler.on('roster', roster => {
+			obj.handler.on('roster', (roster) => {
 				logger.info('Service #' + service.id + ' (jabber) Received Roster with ' + roster.length + ' people');
 				obj.roster = roster;
 			});
@@ -241,7 +241,7 @@ const internalServiceWorker = {
 	 * @param   {Object}  service
 	 * @returns {Promise}
 	 */
-	initGchat: service => {
+	initGchat: (service) => {
 		return new Promise((resolve, reject) => {
 			logger.info('Starting Service #' + service.id + ' (gchat): ' + service.name);
 
@@ -263,7 +263,7 @@ const internalServiceWorker = {
 						internalServiceWorker.gchatIntervalFire(obj);
 					}, 180000); // 3 mins
 				})
-				.catch(err => {
+				.catch((err) => {
 					logger.error('Service #' + service.id + ' (gchat) Failed to authorize: ', err);
 				})
 			);
@@ -276,14 +276,14 @@ const internalServiceWorker = {
 	 * @param {Object}  service
 	 * @param {Object}  service.handler
 	 */
-	gchatIntervalFire: service => {
+	gchatIntervalFire: (service) => {
 		//let gchat_logger = require('../logger').gchat;
 
 		// List spaces
 		//gchat_logger.info('❯ Listing spaces ...');
 
 		service.handler.listSpaces()
-			.then(spaces_result => {
+			.then((spaces_result) => {
 				service.spaces = spaces_result.data.spaces;
 
 				return new Promise((resolve, reject) => {
@@ -293,18 +293,18 @@ const internalServiceWorker = {
 							//gchat_logger.info('  ❯ Fetching members for space: ' + space.name + ' ...');
 
 							service.handler.listMembers(space.name)
-								.then(members_result => {
+								.then((members_result) => {
 									service.spaces[i].members = members_result.data.memberships;
 									//gchat_logger.success('    ❯ Found ' + members_result.data.memberships.length + ' members in ' + space.name);
 									next(true);
 								})
-								.catch(err => {
+								.catch((err) => {
 									//gchat_logger.error('    ❯ Failed to list members: ', err);
 									next(err);
 								});
 
 						})
-						.error(err => {
+						.error((err) => {
 							reject(err);
 						})
 						.end((/*results*/) => {
@@ -312,7 +312,7 @@ const internalServiceWorker = {
 						});
 				});
 			})
-			.catch(err => {
+			.catch((err) => {
 				logger.error('Service #' + service.id + ' (gchat) Failed to list spaces: ', err);
 			});
 	},
@@ -321,7 +321,7 @@ const internalServiceWorker = {
 	 * @param   {Object}  service
 	 * @returns {Promise}
 	 */
-	initPushover: service => {
+	initPushover: (service) => {
 		return new Promise((resolve, reject) => {
 			logger.info('Starting Service #' + service.id + ' (pushover): ' + service.name);
 
@@ -339,8 +339,8 @@ const internalServiceWorker = {
 	/**
 	 * @param {Integer}  service_id
 	 */
-	syncData: service_id => {
-		let service = internalServiceWorker.getService(service_id);
+	syncData: (service_id) => {
+		const service = internalServiceWorker.getService(service_id);
 
 		if (service && service.type === 'gchat') {
 			logger.info('Service #' + service.id + ' (' + service.type + ') Syncing');
@@ -354,7 +354,7 @@ const internalServiceWorker = {
 	 * @param   {Integer}  service_id
 	 * @returns {null}
 	 */
-	getService: service_id => {
+	getService: (service_id) => {
 		if (typeof internalServiceWorker.services['service-' + service_id] !== 'undefined') {
 			return internalServiceWorker.services['service-' + service_id];
 		}
@@ -366,8 +366,8 @@ const internalServiceWorker = {
 	 * @param   {Integer}  service_id
 	 * @returns {boolean}
 	 */
-	isOnline: service_id => {
-		let service = internalServiceWorker.getService(service_id);
+	isOnline: (service_id) => {
+		const service = internalServiceWorker.getService(service_id);
 		if (service && typeof service.online !== 'undefined') {
 			return service.online;
 		}
@@ -387,7 +387,7 @@ const internalServiceWorker = {
 				.select()
 				.where('status', 'ready')
 				.eager('[user.services]')
-				.then(notifications => {
+				.then((notifications) => {
 					return new Promise((resolve, reject) => {
 						batchflow(notifications).sequential()
 							.each((i, notification, next) => {
@@ -422,7 +422,7 @@ const internalServiceWorker = {
 														})
 														.where('id', notification.id);
 												})
-												.catch(err => {
+												.catch((err) => {
 													logger.error(err);
 													// update row with error
 													return notificationQueueModel
@@ -452,7 +452,7 @@ const internalServiceWorker = {
 
 									});
 							})
-							.error(err => {
+							.error((err) => {
 								reject(err);
 							})
 							.end((/*results*/) => {
@@ -463,7 +463,7 @@ const internalServiceWorker = {
 				.then(() => {
 					internalServiceWorker.interval_processing = false;
 				})
-				.catch(err => {
+				.catch((err) => {
 					logger.error(err);
 					internalServiceWorker.interval_processing = false;
 				});
@@ -510,6 +510,7 @@ const internalServiceWorker = {
 
 						(async () => {
 							try {
+								logger.info("SLACK OPTIONS:", slack_options);
 								const result = await service.handler.chat.postMessage(slack_options);
 								resolve(result || true);
 							} catch (err) {
@@ -531,10 +532,10 @@ const internalServiceWorker = {
 						// The space name is the "username" variable supplied to this function
 
 						service.handler.createMessage(username, message)
-							.then(sent_message => {
+							.then((sent_message) => {
 								resolve(sent_message || true);
 							})
-							.catch(err => {
+							.catch((err) => {
 								reject(err);
 							});
 						break;
@@ -543,10 +544,10 @@ const internalServiceWorker = {
 					// Pushover
 					case 'pushover':
 						service.handler.sendMessage(username, message)
-							.then(result => {
+							.then((result) => {
 								resolve(result || true);
 							})
-							.catch(err => {
+							.catch((err) => {
 								reject(err);
 							});
 						break;
@@ -565,7 +566,7 @@ const internalServiceWorker = {
 	 * @param   {Integer}  service_id
 	 * @returns {Promise}
 	 */
-	getUsers: service_id => {
+	getUsers: (service_id) => {
 		return new Promise((resolve, reject) => {
 			let service = internalServiceWorker.getService(service_id);
 			if (service) {
