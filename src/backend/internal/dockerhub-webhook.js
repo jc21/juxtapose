@@ -95,21 +95,26 @@ const internalDockerhubWebhook = {
 
 					batchflow(event_types).sequential()
 						.each((i, event_type, next) => {
-							internalDockerhubWebhook.processTheseEventTypes(event_type, service_id, webhook_data, already_notified_user_ids)
-								.then(notified_user_ids => {
-									if (notified_user_ids && notified_user_ids.length) {
-										already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
+							// If the push tag is null, then it's probably a multiarch push and we can ignore it.
+							if (event_type === 'repo_updated' && webhook_data.push_data.tag === null) {
+								next(0);
+							} else {
+								internalDockerhubWebhook.processTheseEventTypes(event_type, service_id, webhook_data, already_notified_user_ids)
+									.then(notified_user_ids => {
+										if (notified_user_ids && notified_user_ids.length) {
+											already_notified_user_ids = _.concat(already_notified_user_ids, notified_user_ids);
 
-										// Remove falsy items from the array:
-										already_notified_user_ids = _.compact(already_notified_user_ids);
-									}
+											// Remove falsy items from the array:
+											already_notified_user_ids = _.compact(already_notified_user_ids);
+										}
 
-									next(notified_user_ids.length);
-								})
-								.catch(err => {
-									console.error(err.message);
-									next(err);
-								});
+										next(notified_user_ids.length);
+									})
+									.catch(err => {
+										console.error(err.message);
+										next(err);
+									});
+							}
 						})
 						.error(err => {
 							reject(err);
