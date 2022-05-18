@@ -164,7 +164,14 @@ const internalGerritWebhook = {
 					event_types.push(['my_change_reviewed', 'my_change_commented']);
 					break;
 				case 'patchset-created':
-					event_types.push(['patch_created']);
+					// this event type only wants to trigger for the first patchset
+					if (
+						typeof webhook_data.patchSet !== "undefined" &&
+						typeof webhook_data.patchSet.number !== "undefined" &&
+						webhook_data.patchSet.number === 1
+					) {
+						event_types.push(['patch_created']);
+					}
 					break;
 				case 'private-state-changed':
 					// event_types.push(['my_pr_comment']);
