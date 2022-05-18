@@ -11,7 +11,7 @@
     "@slack/web-api": "^6.2.4",
     "ajv": "^5.5.1",
     "batchflow": "^0.4.0",
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.1",
     "compression": "^1.7.0",
     "config": "^1.26.2",
