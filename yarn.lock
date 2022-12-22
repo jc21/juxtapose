@@ -657,11 +657,6 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-any-promise@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
-  integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
-
 anymatch@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-2.0.0.tgz#bcb24b4f37934d9aa7ac17b4adaf89e7c76ef2eb"
@@ -6151,13 +6146,10 @@ liftoff@~2.2.0:
     rechoir "^0.6.2"
     resolve "^1.1.7"
 
-liquidjs@^3.1.0:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-3.1.3.tgz#6622cccb7b8fd6c20408884bf5bc5daa3601cd3e"
-  integrity sha512-8dsX5U+Bdj5Ir6KG8Fm5rxCBrv/wUKhPds8BX1AlmkNjZbyZxe2vtgWYFdURR05uHN2n0dfb7mEqP2pUZcDHBA==
-  dependencies:
-    any-promise "^1.3.0"
-    resolve-url "^0.2.1"
+liquidjs@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-10.0.0.tgz#282579e9f90f4bfd92ef7d09ad4f5aac3ec9fd61"
+  integrity sha512-uY3fKqBSRmnat0wB5qWk0W5N5iT78OUhuIXNRiMfhYQ3p35al9mEWKQ68/Z+WD54V2upaxEM8nHaZ6o1B8WCMA==
 
 load-json-file@^1.0.0:
   version "1.1.0"
