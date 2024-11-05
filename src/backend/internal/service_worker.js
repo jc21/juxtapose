@@ -36,7 +36,7 @@ const internalServiceWorker = {
 			internalServiceWorker.intervalProcessing = false;
 		}
 
-		_.map(internalServiceWorker.services, (unused, idx) => {
+		_.map(internalServiceWorker.services, (_, idx) => {
 			if (typeof internalServiceWorker.services[idx].handler !== 'undefined') {
 				if (internalServiceWorker.services[idx].type === 'slack' && typeof internalServiceWorker.services[idx].handler.ws !== 'undefined') {
 					internalServiceWorker.services[idx].handler.ws.close();
@@ -70,7 +70,7 @@ const internalServiceWorker = {
 			.then((services) => {
 				return new Promise((resolve, reject) => {
 					batchflow(services).sequential()
-						.each((i, service, next) => {
+						.each((_, service, next) => {
 							if (service.type === 'slack') {
 								internalServiceWorker.initSlack(service)
 									.then(() => {
@@ -562,34 +562,45 @@ const internalServiceWorker = {
 					//===================
 					// Slack
 					case 'slack':
+						// The `users.list` slack api returns a MAX of 1000 results
+						// despite pagination. So in order to get all the users,
+						// we need to keep hitting the API until we get all the users,
+						// The `response_metadata.next_cursor` will be set if there are
+						// more users to get, or will be an empty string if not.
 						try {
 							(async () => {
-								const result = await service.handler.users.list();
-								if (typeof result.members !== 'undefined') {
-									const real_users = _.filter(result.members, function (m) {
-										return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT' && !m.deleted && m.name.indexOf('disabled') === -1;
+								let cursor = '';
+								let users = [];
+
+								do {
+									const result = await service.handler.users.list({
+										limit: 500,
+										cursor: cursor,
 									});
 
-									let users = [];
-									_.map(real_users, (real_user) => {
-
-										if (real_user.name.indexOf('daniel') !== -1) {
-											console.log(real_user);
-										}
-
-										users.push({
-											id:           real_user.id,
-											name:         real_user.name,
-											real_name:    real_user.profile.real_name,
-											display_name: real_user.profile.display_name,
-											avatar:       real_user.profile.image_24
+									if (typeof result.response_metadata !== 'undefined' && typeof result.response_metadata.next_cursor !== 'undefined') {
+										cursor = result.response_metadata.next_cursor;
+									}
+									if (typeof result.members !== 'undefined') {
+										const real_users = _.filter(result.members, function (m) {
+											return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT' && !m.deleted && m.name.indexOf('disabled') === -1;
 										});
-									});
+										_.map(real_users, (real_user) => {
+											users.push({
+												id:           real_user.id,
+												name:         real_user.name,
+												real_name:    real_user.profile.real_name,
+												display_name: real_user.profile.display_name,
+												avatar:       real_user.profile.image_24
+											});
+										});
+									} else {
+										reject(new Error('Invalid response from service'));
+										return;
+									}
+								} while (cursor);
 
-									resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
-								} else {
-									reject(new Error('Invalid response from service'));
-								}
+								resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
 							})();
 						} catch (err) {
 							reject(err);
