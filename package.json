@@ -31,7 +31,7 @@
     "mysql": "^2.14.1",
     "node-rsa": "^0.4.2",
     "node-xmpp": "^1.1.0",
-    "objection": "^0.8.9",
+    "objection": "^2.2.16",
     "path": "^0.12.7",
     "proxy-agent": "^3.0.3",
     "pushover-notifications": "^1.0.0",
