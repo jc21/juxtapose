@@ -1,4 +1,4 @@
-FROM node:12-slim as build
+FROM node:20-slim AS build
 
 RUN apt-get update \
 	&& apt-get -y install git \
@@ -6,15 +6,15 @@ RUN apt-get update \
 
 COPY . /app
 WORKDIR /app
-RUN rm -rf node_modules
-RUN yarn install
-RUN yarn gulp build
-RUN rm -rf node_modules
-RUN yarn install --prod
+RUN rm -rf node_modules && \
+	yarn install && \
+	yarn gulp build && \
+	rm -rf node_modules && \
+	yarn install --prod
 
 # ---------------------
 # Final
-FROM node:12-slim
+FROM node:20-slim
 
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 ENV NODE_ENV=production
@@ -33,6 +33,6 @@ COPY --from=build /app/src/backend         /app/src/backend
 
 WORKDIR /app
 
-CMD node src/backend/index.js
+CMD [ "node", "src/backend/index.js" ]
 
-HEALTHCHECK --interval=15s --timeout=3s CMD curl -f http://localhost/ || exit 1
+HEALTHCHECK --interval=15s --timeout=3s CMD curl -f "http://localhost/" || exit 1
