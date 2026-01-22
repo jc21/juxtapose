@@ -495,8 +495,6 @@
 
 /* Pushover */
 
-/* JABBER */
-
 .template-pushover-preview {
   position: relative;
   color: #212121;
@@ -558,6 +556,104 @@
 
     .text {
       padding: 1px 0 3px 0;
+    }
+  }
+
+  a, & a:link, & a:visited {
+    color: #0576b9;
+    text-decoration: none;
+  }
+}
+
+/* Ntfy */
+
+.template-ntfy-preview {
+  position: relative;
+  color: #000000;
+  line-height: 22px;
+  word-wrap: break-word;
+  padding: .5rem;
+
+  .message-content {
+    margin: 1px 0 0 8px;
+    background-color: rgb(211, 211, 211);
+    color: rgba(0, 0, 0, 0.87);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 8px;
+
+    .message-content-time {
+      margin: 0px;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0.00938em;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+    }
+
+    .message-content-title {
+      margin: 0px;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: 1.5rem;
+      line-height: 1.334;
+      letter-spacing: 0em;
+    }
+
+    .message-content-msg {
+      margin: 0px;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.5;
+      letter-spacing: 0.00938em;
+      white-space: pre-line;
+    }
+
+    .actions {
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      padding: 0px 8px 8px;
+      overflow-x: auto;
+    }
+
+    .action-button {
+      border: none;
+      display: inline-flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      background-color: transparent;
+      cursor: pointer;
+      user-select: none;
+      vertical-align: middle;
+      appearance: none;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      font-size: 9pt;
+      line-height: 1.75;
+      letter-spacing: 0.02857em;
+      text-transform: uppercase;
+      min-width: 64px;
+      color: rgb(51, 133, 116);
+      outline: 0px;
+      border-width: 0px;
+      border-style: initial;
+      border-color: initial;
+      border-image: initial;
+      margin: 0px;
+      text-decoration: none;
+      padding: 6px 8px;
+      border-radius: 4px;
+      transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), border-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 

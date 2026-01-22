@@ -109,6 +109,19 @@ module.exports = {
 	},
 
 	/**
+	 * Ntfy Config
+	 *
+	 * @param model
+	 */
+	showNtfyConfig: function (model) {
+		if (Cache.User.isAdmin()) {
+			require(['./main', './services/ntfy/main'], function (App, View) {
+				App.UI.showModalDialog(new View({model: model}));
+			});
+		}
+	},
+
+	/**
 	 * Jira Webhook Config
 	 *
 	 * @param model

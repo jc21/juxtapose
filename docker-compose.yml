@@ -1,14 +1,13 @@
-version: "2"
+---
 services:
-
   app:
-    image: node:12-slim
+    image: node:21-slim
     ports:
-      - ${HTTP_PORT:-3000}:80
+      - "${HTTP_PORT:-3000}:80"
     environment:
-      - FORCE_COLOR=1
-      - DEBUG=${DEBUG:-}
-      - NODE_ENV=${NODE_ENV:-development}
+      FORCE_COLOR: 1
+      DEBUG: "${DEBUG:-}"
+      NODE_ENV: "${NODE_ENV:-development}"
     volumes:
       - .:/app
     depends_on:

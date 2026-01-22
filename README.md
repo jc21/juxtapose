@@ -93,7 +93,7 @@ Now it's time to start up the containers. First we'll start with the database fi
 app will crash if it can't connect to it. Hence we will initialize it on it's own first:
 
 ```bash
-docker-compose up db
+docker compose up db
 ```
 
 Check the output and make sure there were no errors.
@@ -101,7 +101,7 @@ Check the output and make sure there were no errors.
 Now start the app/whole stack:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 And observe the output.
@@ -132,7 +132,7 @@ Make sure your config database settings are correct! Juxtapose only needs a new,
 Now start the app:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 And observe the output.

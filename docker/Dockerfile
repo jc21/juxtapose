@@ -1,4 +1,4 @@
-FROM node:20-slim AS build
+FROM node:21-slim AS build
 
 RUN apt-get update \
 	&& apt-get -y install git \
@@ -14,7 +14,7 @@ RUN rm -rf node_modules && \
 
 # ---------------------
 # Final
-FROM node:20-slim
+FROM node:21-slim
 
 LABEL maintainer="Jamie Curnow <jc@jc21.com>"
 ENV NODE_ENV=production

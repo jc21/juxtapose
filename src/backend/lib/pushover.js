@@ -1,26 +1,26 @@
-'use strict';
-
-const Push       = require('pushover-notifications');
-const ProxyAgent = require('proxy-agent');
-const moment     = require('moment');
+const Push = require("pushover-notifications");
+const ProxyAgent = require("proxy-agent");
+const moment = require("moment");
 
 class Pushover {
-
 	/**
 	 * Constructor
 	 *
 	 * @param {String} [app_token]
 	 */
-	constructor (app_token) {
-		this.app_token = app_token || 'a3xn9sya41d53y17j26yh1zrr84sab';
+	constructor(app_token) {
+		this.app_token = app_token || "a3xn9sya41d53y17j26yh1zrr84sab";
 
-		let config = {
-			token: this.app_token
+		const config = {
+			token: this.app_token,
 		};
 
-		if (typeof process.env.HTTP_PROXY !== 'undefined' && process.env.HTTP_PROXY) {
+		if (
+			typeof process.env.HTTP_PROXY !== "undefined" &&
+			process.env.HTTP_PROXY
+		) {
 			config.httpOptions = {
-				agent: ProxyAgent(process.env.HTTP_PROXY)
+				agent: ProxyAgent(process.env.HTTP_PROXY),
 			};
 		}
 
@@ -36,42 +36,48 @@ class Pushover {
 	 * @param   {String|Number}   [content.priority]
 	 * @returns {Promise}
 	 */
-	sendMessage (user_token, content) {
+	sendMessage(user_token, content) {
 		return new Promise((resolve, reject) => {
-
-			if (typeof content === 'string') {
+			if (typeof content === "string") {
 				content = {
-					message: content
+					message: content,
 				};
 			}
 
-			let msg = {
-				user:      user_token,
-				title:     content.title || 'Juxtapose',
-				message:   content.message,
-				timestamp: typeof content.timestamp !== 'undefined' && content.timestamp ? content.timestamp : moment().unix()
+			const msg = {
+				user: user_token,
+				title: content.title || "Juxtapose",
+				message: content.message,
+				timestamp:
+					typeof content.timestamp !== "undefined" && content.timestamp
+						? content.timestamp
+						: moment().unix(),
 			};
 
-			if (typeof content.sound !== 'undefined' && content.sound && content.sound !== 'default') {
+			if (
+				typeof content.sound !== "undefined" &&
+				content.sound &&
+				content.sound !== "default"
+			) {
 				msg.sound = content.sound;
 			}
 
-			if (typeof content.priority !== 'undefined' && content.priority) {
+			if (typeof content.priority !== "undefined" && content.priority) {
 				switch (content.priority) {
-					case 'lowest':
+					case "lowest":
 						content.priority = -2;
 						break;
-					case 'low':
+					case "low":
 						content.priority = -1;
 						break;
-					case 'normal':
-					case 'default':
+					case "normal":
+					case "default":
 						content.priority = 0;
 						break;
-					case 'high':
+					case "high":
 						content.priority = 1;
 						break;
-					case 'emergency':
+					case "emergency":
 						content.priority = 2;
 						break;
 				}
@@ -79,15 +85,15 @@ class Pushover {
 				msg.priority = content.priority;
 			}
 
-			if (typeof content.url !== 'undefined' && content.url) {
+			if (typeof content.url !== "undefined" && content.url) {
 				msg.url = content.url;
 
-				if (typeof content.url_title !== 'undefined' && content.url_title) {
+				if (typeof content.url_title !== "undefined" && content.url_title) {
 					msg.url_title = content.url_title;
 				}
 			}
 
-			this.api.send(msg, function (err, result) {
+			this.api.send(msg, (err, result) => {
 				if (err) {
 					reject(err);
 				} else {

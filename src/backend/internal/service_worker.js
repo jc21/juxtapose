@@ -1,27 +1,25 @@
-'use strict';
-
-const _                      = require('lodash');
-const batchflow              = require('batchflow');
-const { WebClient }          = require('@slack/web-api');
-const logger                 = require('../logger').services;
-const notificationQueueModel = require('../models/notification_queue');
-const xmpp                   = require('../lib/xmpp');
-const GoogleChatBot          = require('../lib/gchat');
-const Pushover               = require('../lib/pushover');
-const internalService        = require('./service');
+const _ = require("lodash");
+const batchflow = require("batchflow");
+const { WebClient } = require("@slack/web-api");
+const logger = require("../logger").services;
+const notificationQueueModel = require("../models/notification_queue");
+const xmpp = require("../lib/xmpp");
+const GoogleChatBot = require("../lib/gchat");
+const Pushover = require("../lib/pushover");
+const Ntfy = require("../lib/ntfy");
+const internalService = require("./service");
 
 const internalServiceWorker = {
-
-	services:           {},
-	intervalTimeout:    5000,
-	interval:           null,
+	services: {},
+	intervalTimeout: 5000,
+	interval: null,
 	intervalProcessing: false,
 
 	/**
 	 * Starts the Service Worker
 	 */
 	start: () => {
-		logger.info('Starting');
+		logger.info("Starting");
 		internalServiceWorker.init();
 	},
 
@@ -29,7 +27,7 @@ const internalServiceWorker = {
 	 * Restarts the services
 	 */
 	restart: () => {
-		logger.info('Restarting');
+		logger.info("Restarting");
 
 		if (internalServiceWorker.interval) {
 			clearInterval(internalServiceWorker.interval);
@@ -37,16 +35,21 @@ const internalServiceWorker = {
 		}
 
 		_.map(internalServiceWorker.services, (_, idx) => {
-			if (typeof internalServiceWorker.services[idx].handler !== 'undefined') {
-				if (internalServiceWorker.services[idx].type === 'slack' && typeof internalServiceWorker.services[idx].handler.ws !== 'undefined') {
+			if (typeof internalServiceWorker.services[idx].handler !== "undefined") {
+				if (
+					internalServiceWorker.services[idx].type === "slack" &&
+					typeof internalServiceWorker.services[idx].handler.ws !== "undefined"
+				) {
 					internalServiceWorker.services[idx].handler.ws.close();
-
-				} else if (internalServiceWorker.services[idx].type === 'jabber') {
+				} else if (internalServiceWorker.services[idx].type === "jabber") {
 					internalServiceWorker.services[idx].handler.disconnect();
 				}
 
 				// Remove any interval timer if one applies to this service's handler
-				if (typeof internalServiceWorker.services[idx].handler.interval !== 'undefined') {
+				if (
+					typeof internalServiceWorker.services[idx].handler.interval !==
+					"undefined"
+				) {
 					clearInterval(internalServiceWorker.services[idx].handler.interval);
 				}
 
@@ -66,61 +69,81 @@ const internalServiceWorker = {
 
 		let started = 0;
 
-		return internalService.getActiveServices()
+		return internalService
+			.getActiveServices()
 			.then((services) => {
 				return new Promise((resolve, reject) => {
-					batchflow(services).sequential()
+					batchflow(services)
+						.sequential()
 						.each((_, service, next) => {
-							if (service.type === 'slack') {
-								internalServiceWorker.initSlack(service)
+							if (service.type === "slack") {
+								internalServiceWorker
+									.initSlack(service)
 									.then(() => {
 										started++;
 										next();
 									})
 									.catch((err) => {
-										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+										logger.error(
+											"Service #" + service.id + " ERROR: " + err.message,
+										);
 										next(err);
 									});
-
-							} else if (service.type === 'jabber') {
-								internalServiceWorker.initJabber(service)
+							} else if (service.type === "jabber") {
+								internalServiceWorker
+									.initJabber(service)
 									.then(() => {
 										started++;
 										next();
 									})
 									.catch((err) => {
-										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+										logger.error(
+											"Service #" + service.id + " ERROR: " + err.message,
+										);
 										next(err);
 									});
-
-							} else if (service.type === 'gchat') {
-								internalServiceWorker.initGchat(service)
+							} else if (service.type === "gchat") {
+								internalServiceWorker
+									.initGchat(service)
 									.then(() => {
 										started++;
 										next();
 									})
 									.catch((err) => {
-										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+										logger.error(
+											"Service #" + service.id + " ERROR: " + err.message,
+										);
 										next(err);
 									});
-
-							} else if (service.type === 'pushover') {
-								internalServiceWorker.initPushover(service)
+							} else if (service.type === "pushover") {
+								internalServiceWorker
+									.initPushover(service)
 									.then(() => {
 										started++;
 										next();
 									})
 									.catch((err) => {
-										logger.error('Service #' + service.id + ' ERROR: ' + err.message);
+										logger.error(
+											"Service #" + service.id + " ERROR: " + err.message,
+										);
 										next(err);
 									});
-
+							} else if (service.type === "ntfy") {
+								internalServiceWorker
+									.initNtfy(service)
+									.then(() => {
+										started++;
+										next();
+									})
+									.catch((err) => {
+										logger.error(`Service #${service.id} ERROR: ${err.message}`);
+										next(err);
+									});
 							} else if (service.type.match(/(.|\n)*-webhook$/im)) {
 								// can be ignored
 								next();
-
 							} else {
-								logger.warn('Service #' + service.id + ' of type "' + service.type + '" is not yet supported');
+								logger.warn(`Service #${service.id} of type "${service.type}" is not yet supported`);
 								next();
 							}
 						})
@@ -128,8 +151,11 @@ const internalServiceWorker = {
 							reject(err);
 						})
 						.end((/*results*/) => {
-							logger.success(started + ' Services Started');
-							internalServiceWorker.interval = setInterval(internalServiceWorker.checkNotificationQueue, internalServiceWorker.intervalTimeout);
+							logger.success(started + " Services Started");
+							internalServiceWorker.interval = setInterval(
+								internalServiceWorker.checkNotificationQueue,
+								internalServiceWorker.intervalTimeout,
+							);
 							resolve();
 						});
 				});
@@ -144,11 +170,14 @@ const internalServiceWorker = {
 	 * @returns {Promise}
 	 */
 	initSlack: (service) => {
-		return new Promise((resolve/*, reject*/) => {
-			logger.info('Starting Service #' + service.id + ' (slack): ' + service.name);
+		return new Promise((resolve /*, reject*/) => {
+			logger.info(
+				"Starting Service #" + service.id + " (slack): " + service.name,
+			);
 
 			// Set global
-			let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+			const obj = (internalServiceWorker.services["service-" + service.id] =
+				_.clone(service));
 			obj.online = false;
 
 			// create a bot
@@ -157,11 +186,11 @@ const internalServiceWorker = {
 			// list conversations to see if we're online
 			(async () => {
 				try {
-					await obj.handler.apiCall('conversations.list');
+					await obj.handler.apiCall("conversations.list");
 					obj.online = true;
-					logger.success('Service #' + service.id + ' (slack) Connected');
+					logger.success("Service #" + service.id + " (slack) Connected");
 				} catch (err) {
-					logger.error('Service #' + service.id + ' (slack) ' + err);
+					logger.error("Service #" + service.id + " (slack) " + err);
 				}
 			})();
 
@@ -175,59 +204,89 @@ const internalServiceWorker = {
 	 */
 	initJabber: (service) => {
 		return new Promise((resolve, reject) => {
-			logger.info('Starting Service #' + service.id + ' (jabber): ' + service.name);
+			logger.info(
+				"Starting Service #" + service.id + " (jabber): " + service.name,
+			);
 
 			// Set global
-			let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+			const obj = (internalServiceWorker.services["service-" + service.id] =
+				_.clone(service));
 
-			obj.online  = false;
+			obj.online = false;
 			obj.handler = new xmpp({
-				jid:      service.data.jid,
+				jid: service.data.jid,
 				password: service.data.password,
-				host:     service.data.server,
-				port:     service.data.port
+				host: service.data.server,
+				port: service.data.port,
 			});
 
-			obj.handler.on('online', (data) => {
-				logger.success('Service #' + service.id + ' (jabber) Connected with JID: ' + data.jid.user + '@' + data.jid._domain);
+			obj.handler.on("online", (data) => {
+				logger.success(
+					"Service #" +
+						service.id +
+						" (jabber) Connected with JID: " +
+						data.jid.user +
+						"@" +
+						data.jid._domain,
+				);
 				obj.online = true;
 			});
 
-			obj.handler.on('close', () => {
-				logger.info('Service #' + service.id + ' (jabber) Closed');
+			obj.handler.on("close", () => {
+				logger.info("Service #" + service.id + " (jabber) Closed");
 				obj.online = false;
 
-				if (typeof obj.handler !== 'undefined' && obj.handler !== null) {
+				if (typeof obj.handler !== "undefined" && obj.handler !== null) {
 					obj.handler.disconnect();
 				}
 
 				// reconnect
-				setTimeout(function () {
-					logger.info('Service #' + service.id + ' (jabber) reconnecting ...');
+				setTimeout(() => {
+					logger.info("Service #" + service.id + " (jabber) reconnecting ...");
 
-					internalServiceWorker.initJabber(service)
-						.catch((err) => {
-							logger.error('Service #' + service.id + ' (jabber) ERROR: ' + err.message);
-						});
+					internalServiceWorker.initJabber(service).catch((err) => {
+						logger.error(
+							"Service #" + service.id + " (jabber) ERROR: " + err.message,
+						);
+					});
 				}, 2000);
 			});
 
-			obj.handler.on('chat', (from, message) => {
-				logger.info('Service #' + service.id + ' (jabber) Chat:', message, from);
-				obj.handler.send(from, 'Hey, it\'s Juxtapose here. You said: ' + message);
+			obj.handler.on("chat", (from, message) => {
+				logger.info(
+					"Service #" + service.id + " (jabber) Chat:",
+					message,
+					from,
+				);
+				obj.handler.send(
+					from,
+					"Hey, it's Juxtapose here. You said: " + message,
+				);
 			});
 
-			obj.handler.on('error', (err) => {
-				logger.error('Service #' + service.id + ' (jabber) ERROR:', err.message);
+			obj.handler.on("error", (err) => {
+				logger.error(
+					"Service #" + service.id + " (jabber) ERROR:",
+					err.message,
+				);
 			});
 
-			obj.handler.on('subscribe', (from) => {
-				logger.info('Service #' + service.id + ' (jabber) Accepting subscription from:', from);
+			obj.handler.on("subscribe", (from) => {
+				logger.info(
+					"Service #" + service.id + " (jabber) Accepting subscription from:",
+					from,
+				);
 				obj.handler.acceptSubscription(from);
 			});
 
-			obj.handler.on('roster', (roster) => {
-				logger.info('Service #' + service.id + ' (jabber) Received Roster with ' + roster.length + ' people');
+			obj.handler.on("roster", (roster) => {
+				logger.info(
+					"Service #" +
+						service.id +
+						" (jabber) Received Roster with " +
+						roster.length +
+						" people",
+				);
 				obj.roster = roster;
 			});
 
@@ -243,29 +302,37 @@ const internalServiceWorker = {
 	 */
 	initGchat: (service) => {
 		return new Promise((resolve, reject) => {
-			logger.info('Starting Service #' + service.id + ' (gchat): ' + service.name);
+			logger.info(
+				"Starting Service #" + service.id + " (gchat): " + service.name,
+			);
 
 			// Set global
-			let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
+			const obj = (internalServiceWorker.services["service-" + service.id] =
+				_.clone(service));
 			obj.online = false;
 
-			let credentials = JSON.parse(service.data.credentials_json);
-			obj.handler     = new GoogleChatBot(credentials);
+			const credentials = JSON.parse(service.data.credentials_json);
+			obj.handler = new GoogleChatBot(credentials);
 
-			resolve(obj.handler.authorize()
-				.then(() => {
-					obj.online = true;
+			resolve(
+				obj.handler
+					.authorize()
+					.then(() => {
+						obj.online = true;
 
-					logger.success('Service #' + service.id + ' (gchat) Authorized');
-					internalServiceWorker.gchatIntervalFire(obj);
-
-					obj.handler.interval = setInterval(function () {
+						logger.success("Service #" + service.id + " (gchat) Authorized");
 						internalServiceWorker.gchatIntervalFire(obj);
-					}, 180000); // 3 mins
-				})
-				.catch((err) => {
-					logger.error('Service #' + service.id + ' (gchat) Failed to authorize: ', err);
-				})
+
+						obj.handler.interval = setInterval(() => {
+							internalServiceWorker.gchatIntervalFire(obj);
+						}, 180000); // 3 mins
+					})
+					.catch((err) => {
+						logger.error(
+							"Service #" + service.id + " (gchat) Failed to authorize: ",
+							err,
+						);
+					}),
 			);
 		});
 	},
@@ -276,15 +343,18 @@ const internalServiceWorker = {
 	 * @param {object} service
 	 */
 	gchatIntervalFire: (service) => {
-		service.handler.listSpaces()
+		service.handler
+			.listSpaces()
 			.then((spaces_result) => {
 				service.spaces = spaces_result.data.spaces;
 
 				return new Promise((resolve, reject) => {
 					// Now, for each SPACE, get members sequentially
-					batchflow(service.spaces).sequential()
+					batchflow(service.spaces)
+						.sequential()
 						.each((i, space, next) => {
-							service.handler.listMembers(space.name)
+							service.handler
+								.listMembers(space.name)
 								.then((members_result) => {
 									service.spaces[i].members = members_result.data.memberships;
 									next(true);
@@ -298,7 +368,10 @@ const internalServiceWorker = {
 				});
 			})
 			.catch((err) => {
-				logger.error('Service #' + service.id + ' (gchat) Failed to list spaces: ', err);
+				logger.error(
+					"Service #" + service.id + " (gchat) Failed to list spaces: ",
+					err,
+				);
 			});
 	},
 
@@ -308,16 +381,41 @@ const internalServiceWorker = {
 	 */
 	initPushover: (service) => {
 		return new Promise((resolve, reject) => {
-			logger.info('Starting Service #' + service.id + ' (pushover): ' + service.name);
+			logger.info(
+				"Starting Service #" + service.id + " (pushover): " + service.name,
+			);
 
 			// Set global
-			let obj = internalServiceWorker.services['service-' + service.id] = _.clone(service);
-			obj.online  = true;
+			const obj = (internalServiceWorker.services["service-" + service.id] =
+				_.clone(service));
+			obj.online = true;
 			obj.handler = new Pushover(service.data.app_token);
 
-			logger.success('Service #' + service.id + ' (pushover) Ready');
+			logger.success("Service #" + service.id + " (pushover) Ready");
 
 			resolve();
+		});
+	},
+
+	/**
+	 * @param   {object} service
+	 * @returns {Promise}
+	 */
+	initNtfy: (service) => {
+		return new Promise((resolve, reject) => {
+			logger.info(`Starting Service #${service.id} (ntfy): ${service.name}`);
+
+			// Set global
+			const obj = (internalServiceWorker.services[`service-${service.id}`] = _.clone(service));
+
+			return Ntfy.build(service?.data?.token, service?.data?.server, service?.data?.topic)
+				.then((instance) => {
+					obj.handler = instance;
+					obj.online = true;
+					logger.success(`Service #${service.id} (ntfy) Ready`);
+					resolve();
+				})
+				.catch(reject);
 		});
 	},
 
@@ -327,11 +425,17 @@ const internalServiceWorker = {
 	syncData: (serviceId) => {
 		const service = internalServiceWorker.getService(serviceId);
 
-		if (service && service.type === 'gchat') {
-			logger.info('Service #' + service.id + ' (' + service.type + ') Syncing');
+		if (service && service.type === "gchat") {
+			logger.info("Service #" + service.id + " (" + service.type + ") Syncing");
 			internalServiceWorker.gchatIntervalFire(service);
 		} else {
-			logger.warn('Service #' + service.id + ' (' + service.type + ') does not support syncing');
+			logger.warn(
+				"Service #" +
+					service.id +
+					" (" +
+					service.type +
+					") does not support syncing",
+			);
 		}
 	},
 
@@ -340,8 +444,11 @@ const internalServiceWorker = {
 	 * @returns {object|null}
 	 */
 	getService: (serviceId) => {
-		if (typeof internalServiceWorker.services['service-' + serviceId] !== 'undefined') {
-			return internalServiceWorker.services['service-' + serviceId];
+		if (
+			typeof internalServiceWorker.services["service-" + serviceId] !==
+			"undefined"
+		) {
+			return internalServiceWorker.services["service-" + serviceId];
 		}
 
 		return null;
@@ -353,7 +460,7 @@ const internalServiceWorker = {
 	 */
 	isOnline: (serviceId) => {
 		const service = internalServiceWorker.getService(serviceId);
-		if (service && typeof service.online !== 'undefined') {
+		if (service && typeof service.online !== "undefined") {
 			return service.online;
 		}
 
@@ -363,49 +470,58 @@ const internalServiceWorker = {
 	/**
 	 * Checks for queue items ready to process and processes them
 	 */
-	checkNotificationQueue: function () {
+	checkNotificationQueue: () => {
 		if (!internalServiceWorker.intervalProcessing) {
 			internalServiceWorker.intervalProcessing = true;
 
 			notificationQueueModel
 				.query()
 				.select()
-				.where('status', 'ready')
-				.eager('[user.services]')
+				.where("status", "ready")
+				.eager("[user.services,service]")
 				.then((notifications) => {
 					return new Promise((resolve, reject) => {
-						batchflow(notifications).sequential()
+						batchflow(notifications)
+							.sequential()
 							.each((i, notification, next) => {
 								// update row with processing
 								notificationQueueModel
 									.query()
 									.patch({
-										status: 'processing'
+										status: "processing",
 									})
-									.where('id', notification.id)
+									.where("id", notification.id)
 									.then(() => {
 										// Determine the service username for this notification
 										let serviceSettings = null;
 
 										_.map(notification.user.services, (service) => {
-											if (service.id === notification.service_id && service.service_username) {
+											if (
+												service.id === notification.service_id &&
+										 		service.service_username
+											) {
 												serviceSettings = _.clone(service);
 											}
 										});
 
-										if (serviceSettings) {
+										if (serviceSettings || notification.service.type === 'ntfy') {
 											// Send
-											logger.info('Sending notification #' + notification.id + ' to @' + serviceSettings.service_username + ' at ' + serviceSettings.type + ' service #' + notification.service_id);
+											logger.info(`Sending notification #${notification.id} to @${serviceSettings?.service_username} at ${serviceSettings?.type} service #${notification.service_id}`);
 
-											internalServiceWorker.sendMessage(notification.service_id, serviceSettings.service_username, notification.content)
+											internalServiceWorker
+												.sendMessage(
+													notification.service_id,
+													serviceSettings?.service_username || null,
+													notification.content,
+												)
 												.then(() => {
 													// update row with error
 													return notificationQueueModel
 														.query()
 														.patch({
-															status: 'completed'
+															status: "completed",
 														})
-														.where('id', notification.id);
+														.where("id", notification.id);
 												})
 												.catch((err) => {
 													logger.error(err);
@@ -413,23 +529,23 @@ const internalServiceWorker = {
 													return notificationQueueModel
 														.query()
 														.patch({
-															status: 'error'
+															status: "error",
 														})
-														.where('id', notification.id);
+														.where("id", notification.id);
 												})
 												.then(() => {
 													next();
 												});
 										} else {
-											logger.error('Could not send notification #' + notification.id + ' because destination username was not configured');
+											logger.error(`Could not send notification #${notification.id} because destination username was not configured`);
 
 											// update row with error
 											notificationQueueModel
 												.query()
 												.patch({
-													status: 'error'
+													status: "error",
 												})
-												.where('id', notification.id)
+												.where("id", notification.id)
 												.then(() => {
 													next();
 												});
@@ -463,62 +579,72 @@ const internalServiceWorker = {
 			const service = internalServiceWorker.getService(serviceId);
 			if (service) {
 				switch (service.type) {
-
 					// ===========================
 					// Slack
-					case 'slack':
+					case "slack": {
 						let slack_options = {
-							text: ''
+							text: "",
 						};
 
-						if (typeof service.data.post_as !== 'undefined' && service.data.post_as === 'slackbot') {
-							slack_options.as_user  = false;
-							slack_options.icon_url = service.data.icon_url || 'https://public.jc21.com/juxtapose/icons/default.png';
+						if (
+							typeof service.data.post_as !== "undefined" &&
+							service.data.post_as === "slackbot"
+						) {
+							slack_options.as_user = false;
+							slack_options.icon_url =
+								service.data.icon_url ||
+								"https://public.jc21.com/juxtapose/icons/default.png";
 							slack_options.username = service.data.name;
 						}
 
 						let channel = username;
-						if (username.indexOf('@') === -1 && username.indexOf('#') === -1) {
+						if (username.indexOf("@") === -1 && username.indexOf("#") === -1) {
 							channel = `@${username}`;
 						}
 
-						if (typeof message === 'object') {
+						if (typeof message === "object") {
 							slack_options = _.assign({}, slack_options, message);
 						} else {
-							slack_options = _.assign({}, {text: message}, slack_options);
+							slack_options = _.assign({}, { text: message }, slack_options);
 						}
 
-						slack_options = _.assign({}, {channel: channel}, message);
+						slack_options = _.assign({}, { channel: channel }, message);
 
 						// Remove icon_url if we're not posting as slackbot
-						if (typeof service.data.post_as === 'undefined' || service.data.post_as !== 'slackbot') {
+						if (
+							typeof service.data.post_as === "undefined" ||
+							service.data.post_as !== "slackbot"
+						) {
 							delete slack_options.icon_url;
 						}
 
 						(async () => {
 							try {
 								logger.info("SLACK OPTIONS:", slack_options);
-								const result = await service.handler.chat.postMessage(slack_options);
+								const result =
+									await service.handler.chat.postMessage(slack_options);
 								resolve(result || true);
 							} catch (err) {
 								reject(err);
 							}
 						})();
 						break;
+					}
 
 					// ===========================
 					// Jabber
-					case 'jabber':
+					case "jabber":
 						service.handler.send(username, message);
 						resolve(true);
 						break;
 
 					// ===========================
 					// Google Chat
-					case 'gchat':
+					case "gchat":
 						// The space name is the "username" variable supplied to this function
 
-						service.handler.createMessage(username, message)
+						service.handler
+							.createMessage(username, message)
 							.then((sent_message) => {
 								resolve(sent_message || true);
 							})
@@ -529,8 +655,32 @@ const internalServiceWorker = {
 
 					// ===========================
 					// Pushover
-					case 'pushover':
-						service.handler.sendMessage(username, message)
+					case "pushover":
+						service.handler
+							.sendMessage(username, message)
+							.then((result) => {
+								resolve(result || true);
+							})
+							.catch((err) => {
+								reject(err);
+							});
+						break;
+
+					// ===========================
+					// Ntfy
+					case "ntfy":
+						let content = message;
+						if (typeof message === "string") {
+							content = {
+								topic: username,
+								message,
+							};
+						} else if (!message?.topic) {
+							message.topic = username;
+						}
+
+						service.handler
+							.sendMessage(content)
 							.then((result) => {
 								resolve(result || true);
 							})
@@ -540,11 +690,15 @@ const internalServiceWorker = {
 						break;
 
 					default:
-						reject(new Error('Service type "' + service.type + '" is not yet supported'));
+						reject(
+							new Error(
+								'Service type "' + service.type + '" is not yet supported',
+							),
+						);
 						break;
 				}
 			} else {
-				reject(new Error('Could not find Service for #' + serviceId));
+				reject(new Error("Could not find Service for #" + serviceId));
 			}
 		});
 	},
@@ -558,10 +712,9 @@ const internalServiceWorker = {
 			const service = internalServiceWorker.getService(serviceId);
 			if (service) {
 				switch (service.type) {
-
 					//===================
 					// Slack
-					case 'slack':
+					case "slack":
 						// The `users.list` slack api returns a MAX of 1000 results
 						// despite pagination. So in order to get all the users,
 						// we need to keep hitting the API until we get all the users,
@@ -569,8 +722,8 @@ const internalServiceWorker = {
 						// more users to get, or will be an empty string if not.
 						try {
 							(async () => {
-								let cursor = '';
-								let users = [];
+								let cursor = "";
+								const users = [];
 
 								do {
 									const result = await service.handler.users.list({
@@ -578,29 +731,38 @@ const internalServiceWorker = {
 										cursor: cursor,
 									});
 
-									if (typeof result.response_metadata !== 'undefined' && typeof result.response_metadata.next_cursor !== 'undefined') {
+									if (
+										typeof result.response_metadata !== "undefined" &&
+										typeof result.response_metadata.next_cursor !== "undefined"
+									) {
 										cursor = result.response_metadata.next_cursor;
 									}
-									if (typeof result.members !== 'undefined') {
-										const real_users = _.filter(result.members, function (m) {
-											return !m.is_bot && !m.deleted && m.id !== 'USLACKBOT' && !m.deleted && m.name.indexOf('disabled') === -1;
-										});
+									if (typeof result.members !== "undefined") {
+										const real_users = _.filter(
+											result.members,
+											(m) =>
+												!m.is_bot &&
+												!m.deleted &&
+												m.id !== "USLACKBOT" &&
+												!m.deleted &&
+												m.name.indexOf("disabled") === -1,
+										);
 										_.map(real_users, (real_user) => {
 											users.push({
-												id:           real_user.id,
-												name:         real_user.name,
-												real_name:    real_user.profile.real_name,
+												id: real_user.id,
+												name: real_user.name,
+												real_name: real_user.profile.real_name,
 												display_name: real_user.profile.display_name,
-												avatar:       real_user.profile.image_24
+												avatar: real_user.profile.image_24,
 											});
 										});
 									} else {
-										reject(new Error('Invalid response from service'));
+										reject(new Error("Invalid response from service"));
 										return;
 									}
 								} while (cursor);
 
-								resolve(_.sortBy(users, ['real_name', 'display_name', 'name']));
+								resolve(_.sortBy(users, ["real_name", "display_name", "name"]));
 							})();
 						} catch (err) {
 							reject(err);
@@ -609,57 +771,63 @@ const internalServiceWorker = {
 
 					//===================
 					// Jabber
-					case 'jabber':
-						if (typeof service.roster !== 'undefined') {
-							resolve(_.sortBy(service.roster, ['name']));
+					case "jabber":
+						if (typeof service.roster !== "undefined") {
+							resolve(_.sortBy(service.roster, ["name"]));
 						} else {
-							reject(new Error('Roster is not set'));
+							reject(new Error("Roster is not set"));
 						}
 						break;
 
 					//===================
 					// Google Chat
-					case 'gchat':
-						if (typeof service.spaces !== 'undefined') {
-
+					case "gchat":
+						if (typeof service.spaces !== "undefined") {
 							// Massage the data to something easy for the UI
-							let data = [];
+							const data = [];
 
-							service.spaces.map(function (space) {
-								let members = [];
+							service.spaces.map((space) => {
+								const members = [];
 
-								space.members.map(function (member) {
-									if (member.state === 'JOINED' && member.member.type === 'HUMAN') {
-										members.push(member.member.displayName || member.member.name);
+								space.members.map((member) => {
+									if (
+										member.state === "JOINED" &&
+										member.member.type === "HUMAN"
+									) {
+										members.push(
+											member.member.displayName || member.member.name,
+										);
 									}
 								});
 
 								if (members.length) {
 									data.push({
-										type:        space.type,
-										name:        space.name,
-										displayName: space.type === 'DM' ? members.join(', ') : (space.displayName || space.name),
-										members:     members
+										type: space.type,
+										name: space.name,
+										displayName:
+											space.type === "DM"
+												? members.join(", ")
+												: space.displayName || space.name,
+										members: members,
 									});
 								}
 							});
 
-							resolve(_.sortBy(data, ['displayName']));
+							resolve(_.sortBy(data, ["displayName"]));
 						} else {
-							reject(new Error('Spaces are not set'));
+							reject(new Error("Spaces are not set"));
 						}
 						break;
 
 					default:
-						reject(new Error('Service type "' + service.type + '" is not yet supported'));
+						reject(new Error(`Service type "${service.type}" is not yet supported`));
 						break;
 				}
 			} else {
-				reject(new Error('Could not find Service for #' + serviceId));
+				reject(new Error("Could not find Service for #" + serviceId));
 			}
 		});
-	}
-
+	},
 };
 
 module.exports = internalServiceWorker;

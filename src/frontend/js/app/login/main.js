@@ -49,7 +49,6 @@ module.exports = Mn.View.extend({
 
 		return {
 			hasLdap: function () {
-				console.log('CALL TO hasLdap:', view.getOption('hasLdap'));
 				return view.getOption('hasLdap') || false;
 			}
 		};

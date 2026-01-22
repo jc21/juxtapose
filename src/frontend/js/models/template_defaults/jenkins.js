@@ -5,7 +5,7 @@ const _ = require('underscore');
 /**
  * @returns {{content: string, default_options: {icon_url: string, panel_color: string}}}
  */
-let getSlackDefaults = () => {
+const getSlackDefaults = () => {
 	return {
 		content: JSON.stringify({
 			icon_url:    '{{ icon_url }}',
@@ -40,7 +40,7 @@ let getSlackDefaults = () => {
 /**
  * @returns {{content: string, default_options: {}}}
  */
-let getGoogleChatDefaults = () => {
+const getGoogleChatDefaults = () => {
 	return {
 		content: JSON.stringify({
 			cards: [
@@ -98,7 +98,7 @@ let getGoogleChatDefaults = () => {
 /**
  * @returns {object}
  */
-let getPushoverDefaults = () => {
+const getPushoverDefaults = () => {
 	return {
 		content: JSON.stringify({
 			title:   '{{ project.full_name }}',
@@ -114,9 +114,33 @@ let getPushoverDefaults = () => {
 };
 
 /**
+ * @returns {object}
+ */
+const getNtfyDefaults = () => {
+	return {
+		content: JSON.stringify({
+			title:   '{{ project.full_name }}',
+			message: 'SUCCESS: #{{ build.number }}',
+			url:     '{{ project.url }}/{{ build.number }}/',
+			actions: [{
+				clear: false,
+				label: "View Build",
+				type: "view",
+				url: "{{ project.url }}/{{ build.number }}/",
+			}],
+		}, null, 2),
+
+		default_options: {
+			topic:   'juxtapose',
+			priority: 3,
+		}
+	};
+};
+
+/**
  * @returns {{content: string, default_options: {}}}
  */
-let getOtherDefaults = () => {
+const getOtherDefaults = () => {
 	return {
 		content:         'SUCCESS: {{ project.full_name }} #{{ build.number }}' + '\n' + '{{ project.url }}/{{ build.number }}/',
 		default_options: {}
@@ -140,6 +164,10 @@ module.exports = function (service_type) {
 
 		case 'pushover':
 			specifics = getPushoverDefaults();
+			break;
+
+		case 'ntfy':
+			specifics = getNtfyDefaults();
 			break;
 	}
 

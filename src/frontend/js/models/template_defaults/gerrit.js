@@ -1,11 +1,9 @@
-'use strict';
-
 const _ = require('underscore');
 
 /**
  * @returns {{content: string, default_options: {icon_url: string, panel_color: string}}}
  */
-let getSlackDefaults = () => {
+const getSlackDefaults = () => {
 	return {
 		content: JSON.stringify({
 			icon_url: "{{ icon_url }}",
@@ -40,7 +38,7 @@ let getSlackDefaults = () => {
 /**
  * @returns {{content: string, default_options: {}}}
  */
-let getGoogleChatDefaults = () => {
+const getGoogleChatDefaults = () => {
 	return {
 		content: JSON.stringify({
 			"cards": [
@@ -92,7 +90,7 @@ let getGoogleChatDefaults = () => {
 /**
  * @returns {object}
  */
-let getPushoverDefaults = () => {
+const getPushoverDefaults = () => {
 	return {
 		content: JSON.stringify({
 			title: "Added as reviewer by {{ event_user.name }}",
@@ -108,9 +106,33 @@ let getPushoverDefaults = () => {
 };
 
 /**
+ * @returns {object}
+ */
+const getNtfyDefaults = () => {
+	return {
+		content: JSON.stringify({
+			title: "Added as reviewer by {{ event_user.name }}",
+			message: "{{ project }}:{{ change.branch }} - {{ change.subject }}",
+			url: "{{ change.url }}",
+			actions: [{
+				clear: false,
+				label: "View Patch",
+				type: "view",
+				url: "{{ change.url }}",
+			}],
+		}, null, 2),
+
+		default_options: {
+			topic:   'juxtapose',
+			priority: 3,
+		}
+	};
+};
+
+/**
  * @returns {{content: string, default_options: {}}}
  */
-let getOtherDefaults = () => {
+const getOtherDefaults = () => {
 	return {
 		content:         "You were added as a reviewer by {{ event_user.name }}:\n{{ change.subject }}\n{{ change.url }}",
 		default_options: {}
@@ -134,6 +156,10 @@ module.exports = function (service_type) {
 
 		case 'pushover':
 			specifics = getPushoverDefaults();
+			break;
+
+		case 'ntfy':
+			specifics = getNtfyDefaults();
 			break;
 	}
 

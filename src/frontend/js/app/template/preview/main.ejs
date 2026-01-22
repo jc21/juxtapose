@@ -381,6 +381,46 @@ if (service_type === 'slack' ) {
         </div>
     </div>
     <%
+} else if (service_type === 'ntfy' ) {
+    var _title = typeof bot_name !== 'undefined' ? bot_name : 'Juxtapose';
+    var _message = preview;
+    var _actions = null;
+
+    if (typeof preview === 'object') {
+        _message = preview.message;
+        _title   = preview.title || _title;
+        _actions   = preview.title || null;
+    } else if (typeof preview === 'string') {
+        try {
+            _content = JSON.parse(preview);
+            _message = _content.message;
+            _title   = _content.title || _title;
+            _actions = _content.actions || null;
+        } catch (ex) {
+            // do nothing
+        }
+    }
+
+    %>
+    <div class="template-ntfy-preview">
+        <div class="message-content">
+            <p class="message-content-time"><%- (typeof created_on !== 'undefined' && typeof shortTime !== 'undefined' ? shortTime(created_on) : '10:00 AM') %></p>
+            <div class="message-content-title" role="rowheader"><%- _title %></div>
+            <p class="message-content-msg"><%- _message %></p>
+
+            <% if (_actions) { %>
+                <div class="actions"></div>
+                    <% for (var i = 0; i < _actions.length; i++) { %>
+                        <button class="action-button" onClick="return false;">
+                            <%- _actions[i].label || 'Link' %>
+                        </button>
+                    <% } %>
+                </div>
+            <% } %>
+
+        </div>
+    </div>
+    <%
 } else { %>
     <div>Error: Rendering template for service type "<%- service_type %>" is not yet implemented</div>
 <% } %>

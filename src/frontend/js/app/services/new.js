@@ -1,63 +1,65 @@
-'use strict';
-
-const Mn         = require('backbone.marionette');
-const template   = require('./new.ejs');
-const Controller = require('../controller');
+const Mn = require("backbone.marionette");
+const template = require("./new.ejs");
+const Controller = require("../controller");
 
 module.exports = Mn.View.extend({
 	template: template,
-	id:       'add-new-service',
+	id: "add-new-service",
 
 	ui: {
-		items: '.service-item.selectable'
+		items: ".service-item.selectable",
 	},
 
 	events: {
-		'click @ui.items': function (e) {
+		"click @ui.items": (e) => {
 			e.preventDefault();
-			let service = $(e.currentTarget).attr('rel');
+			const service = $(e.currentTarget).attr("rel");
 
 			switch (service) {
-				case 'slack':
+				case "slack":
 					Controller.showSlackConfig();
 					break;
 
-				case 'jabber':
+				case "jabber":
 					Controller.showJabberConfig();
 					break;
 
-				case 'gchat':
+				case "gchat":
 					Controller.showGoogleChatConfig();
 					break;
 
-				case 'pushover':
+				case "pushover":
 					Controller.showPushoverConfig();
 					break;
 
-				case 'jira-webhook':
+				case "ntfy":
+					Controller.showNtfyConfig();
+					break;
+
+				case "jira-webhook":
 					Controller.showJiraWebhookConfig();
 					break;
 
-				case 'bitbucket-webhook':
+				case "bitbucket-webhook":
 					Controller.showBitbucketWebhookConfig();
 					break;
 
-				case 'dockerhub-webhook':
+				case "dockerhub-webhook":
 					Controller.showDockerhubWebhookConfig();
 					break;
 
-				case 'zendesk-webhook':
+				case "zendesk-webhook":
 					Controller.showZendeskWebhookConfig();
 					break;
 
-				case 'jenkins-webhook':
+				case "jenkins-webhook":
 					Controller.showJenkinsWebhookConfig();
 					break;
 
-				case 'gerrit-webhook':
+				case "gerrit-webhook":
 					Controller.showGerritWebhookConfig();
 					break;
 			}
-		}
-	}
+		},
+	},
 });
